@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { PTypeOrmModule } from './datasource/typeorm.module';
 import { databaseConfig } from './config';
 import { AccountsModule } from './modules/accounts/accounts.module';
+import { UsersModule } from './modules/users/users.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { AccountsModule } from './modules/accounts/accounts.module';
     }),
     PTypeOrmModule,
     AccountsModule,
+    UsersModule,
   ],
 })
 export class AppModule {}
