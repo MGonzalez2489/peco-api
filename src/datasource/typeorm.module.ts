@@ -11,7 +11,6 @@ import { DataSource } from 'typeorm';
       inject: [],
       useFactory: async () => {
         const dbConfig = databaseConfig().database;
-        console.log('dbConfig', dbConfig);
         try {
           const dataSource = new DataSource({
             type: 'mysql',

@@ -1,4 +1,4 @@
-import { Column, Entity, OneToMany } from 'typeorm';
+import { BeforeInsert, Column, Entity, OneToMany } from 'typeorm';
 import { PBaseEntity } from './_base';
 import { Account } from './account.entity';
 
@@ -9,4 +9,10 @@ export class User extends PBaseEntity {
 
   @OneToMany(() => Account, (account) => account.user)
   accounts: Account[];
+
+  //lifecycle
+  @BeforeInsert()
+  format() {
+    this.email = this.email.trim().toLowerCase();
+  }
 }

@@ -9,6 +9,7 @@ import {
 } from 'typeorm';
 
 export abstract class PBaseEntity {
+  @Exclude()
   @PrimaryGeneratedColumn()
   id: number;
 

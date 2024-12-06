@@ -5,6 +5,6 @@ export const databaseConfig = () => ({
     username: process.env.DB_USER || 'unknown',
     password: process.env.DB_PASSWORD || 'unknown',
     database: process.env.DB_NAME || 'unknown',
-    synchronize: process.env.DB_SYNC === 'true' || false,
+    synchronize: false, //process.env.DB_SYNC === 'true' || false,
   },
 });
