@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { AccountConstants } from 'src/common/constants';
 import { Account, User } from 'src/datasource/entities';
 import { Repository } from 'typeorm';
 
@@ -12,10 +13,17 @@ export class AccountService {
   async createDefaultAccount(user: User) {
     try {
       let account = this.repository.create({
-        name: 'default',
+        name: AccountConstants.DEFAULT_NAME,
         user,
       });
       account = await this.repository.save(account);
+      return account;
+    } catch (error) {}
+  }
+
+  async getAccountById(id: string) {
+    try {
+      const account = this.repository.findOneBy({ publicId: id });
       return account;
     } catch (error) {}
   }

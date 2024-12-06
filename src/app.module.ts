@@ -4,6 +4,7 @@ import { PTypeOrmModule } from './datasource/typeorm.module';
 import { databaseConfig } from './config';
 import { AccountsModule } from './modules/accounts/accounts.module';
 import { UsersModule } from './modules/users/users.module';
+import { EntriesModule } from './modules/entries/entries.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { UsersModule } from './modules/users/users.module';
     PTypeOrmModule,
     AccountsModule,
     UsersModule,
+    EntriesModule,
   ],
 })
 export class AppModule {}
