@@ -8,7 +8,7 @@ export class User extends PBaseEntity {
   @Column({ unique: true })
   email: string;
 
-  @Column({ nullable: true })
+  @Column({ nullable: false })
   @Exclude()
   password: string;
 

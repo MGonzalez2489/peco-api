@@ -6,13 +6,16 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from 'src/modules/users/services/user.service';
 import { RegisterDto, SignInDto } from '../dto';
-import * as bcrypt from 'bcrypt';
+import { User } from 'src/datasource/entities';
+import { UserConstants } from 'src/common/constants';
+import { CryptService } from 'src/common/services';
 
 @Injectable()
 export class AuthService {
   constructor(
     private userService: UserService,
     private jwtService: JwtService,
+    private cryptoService: CryptService,
   ) {}
 
   async signIn(dto: SignInDto) {
@@ -22,6 +25,14 @@ export class AuthService {
     }
 
     if (!dto.password) {
+      throw new UnauthorizedException();
+    }
+
+    const passwordMatch = await this.cryptoService.compare(
+      dto.password,
+      user.password,
+    );
+    if (!passwordMatch) {
       throw new UnauthorizedException();
     }
 
@@ -37,24 +48,37 @@ export class AuthService {
       throw new BadRequestException('email already used.');
     }
 
-    return await this.userService.create({ email: dto.email });
+    const newUser = await this.userService.create({ email: dto.email });
+
+    const authentication = await this.signIn({
+      email: newUser.email,
+      password: await this.cryptoService.encryptText(
+        UserConstants.DEFAULT_PASSWORD,
+      ),
+    });
+
+    return authentication;
   }
 
-  async updatePassword(dto: RegisterDto, userId: string) {
+  async updatePassword(dto: RegisterDto, user: User) {
     if (!dto.password) {
       throw new BadRequestException('Password required');
     }
 
-    const user = await this.userService.findUserByPublicId(userId);
-
-    if (user && user.password) {
-      const passwordMatch = await bcrypt.compare(dto.password, user.password);
+    if (user.password) {
+      console.log('dto-pass', dto.password);
+      console.log('usr-pass', user.password);
+      const passwordMatch = await this.cryptoService.compare(
+        dto.password,
+        user.password,
+      );
+      console.log('pass-match', passwordMatch);
       if (passwordMatch) {
         throw new BadRequestException('El password ya fue utilizado');
       }
     }
 
-    const newPassword = await bcrypt.hash(dto.password, 10);
+    const newPassword = dto.password; // await bcrypt.hash(dto.password, 10);
 
     await this.userService.updatePassword(newPassword, user.publicId);
     return user;
