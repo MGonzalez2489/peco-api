@@ -1,14 +1,16 @@
-import { Controller, Get, Param, ParseUUIDPipe } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
 import { AccountService } from '../services/account.service';
 import { ApiTags } from '@nestjs/swagger';
+import { GetUser } from 'src/common/decorators';
+import { User } from 'src/datasource/entities';
 
 @Controller('accounts')
 @ApiTags('Accounts')
 export class AccountController {
   constructor(private readonly service: AccountService) {}
 
-  @Get(':userId')
-  getAllByUserId(@Param('userId', ParseUUIDPipe) id: string) {
-    return this.service.getAccountsByUserId(id);
+  @Get()
+  getAllByUserId(@GetUser() user: User) {
+    return this.service.getAccountsByUser(user);
   }
 }

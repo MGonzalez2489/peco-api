@@ -28,10 +28,13 @@ export class AuthService {
       throw new UnauthorizedException();
     }
 
+    console.log(`compare ${dto.password} with ${user.password}`);
     const passwordMatch = await this.cryptoService.compare(
       dto.password,
       user.password,
     );
+
+    console.log('pass match', passwordMatch);
     if (!passwordMatch) {
       throw new UnauthorizedException();
     }
@@ -52,9 +55,7 @@ export class AuthService {
 
     const authentication = await this.signIn({
       email: newUser.email,
-      password: await this.cryptoService.encryptText(
-        UserConstants.DEFAULT_PASSWORD,
-      ),
+      password: UserConstants.DEFAULT_PASSWORD,
     });
 
     return authentication;
