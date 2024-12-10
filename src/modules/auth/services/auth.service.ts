@@ -28,7 +28,6 @@ export class AuthService {
       throw new UnauthorizedException();
     }
 
-    console.log(`compare ${dto.password} with ${user.password}`);
     const passwordMatch = await this.cryptoService.compare(
       dto.password,
       user.password,
@@ -67,21 +66,17 @@ export class AuthService {
     }
 
     if (user.password) {
-      console.log('dto-pass', dto.password);
-      console.log('usr-pass', user.password);
       const passwordMatch = await this.cryptoService.compare(
         dto.password,
         user.password,
       );
-      console.log('pass-match', passwordMatch);
+
       if (passwordMatch) {
         throw new BadRequestException('El password ya fue utilizado');
       }
     }
 
-    const newPassword = dto.password; // await bcrypt.hash(dto.password, 10);
-
-    await this.userService.updatePassword(newPassword, user.publicId);
+    await this.userService.updatePassword(dto.password, user.publicId);
     return user;
   }
 }

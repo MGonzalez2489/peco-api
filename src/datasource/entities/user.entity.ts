@@ -13,6 +13,7 @@ export class User extends PBaseEntity {
   password: string;
 
   @OneToMany(() => Account, (account) => account.user)
+  @Exclude()
   accounts: Account[];
 
   //lifecycle

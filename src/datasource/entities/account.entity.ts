@@ -18,6 +18,7 @@ export class Account extends PBaseEntity {
   userId: number;
 
   @OneToMany(() => Entry, (entry) => entry.account)
+  @Exclude()
   entries: Entry[];
 
   @Column('double', { precision: 10, scale: 2 })

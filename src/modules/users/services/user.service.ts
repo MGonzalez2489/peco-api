@@ -41,7 +41,7 @@ export class UserService {
 
       return user;
     } catch (error) {
-      console.log('error al crear usuario', error);
+      console.log('UserService::Create', error);
     }
   }
   /**
