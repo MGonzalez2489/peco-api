@@ -12,6 +12,13 @@ export class UserService {
     @Inject(AccountService) private readonly accountService: AccountService,
   ) {}
 
+  async findUserByEmail(email: string) {
+    return this.repository.findOneBy({ email });
+  }
+  async findUserByPublicId(id: string) {
+    return this.repository.findOneBy({ publicId: id });
+  }
+
   async create(dto: UserCreateDto) {
     try {
       const user = this.repository.create({
@@ -30,5 +37,18 @@ export class UserService {
     } catch (error) {
       console.log('error al crear usuario', error);
     }
+  }
+  /**
+   *@param newPassword New password value, it should be encrypted by auth service
+   *@param userId User's publicId to update the value
+   * // This Function is only used by auth service
+   */
+  async updatePassword(newPassword: string, userId: string) {
+    const user = await this.findUserByPublicId(userId);
+
+    return await this.repository.save({
+      id: user.id,
+      password: newPassword,
+    });
   }
 }

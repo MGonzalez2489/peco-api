@@ -8,7 +8,6 @@ export function SetSwaggerConfig(
     .setTitle('Peco-Api')
     .setDescription('some description here')
     .setVersion('1.0')
-    .addTag('algun tag raro aqui')
     .build();
 
   const documentFactory = () => SwaggerModule.createDocument(app, config);
