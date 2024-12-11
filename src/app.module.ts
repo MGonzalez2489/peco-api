@@ -29,7 +29,4 @@ import { JwtAuthGuard } from './modules/auth/guards';
     },
   ],
 })
-export class AppModule {
-  //TODO: verify account soft delete response
-  //TODO: verify account update because is returning account id
-}
+export class AppModule {}

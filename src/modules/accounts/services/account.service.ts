@@ -89,19 +89,21 @@ export class AccountService {
 
   async updateAccount(dto: CreateAccountDto, accountId: string, user: User) {
     const account = await this.getAccountById(accountId, user);
-    console.log('deleted account', account);
 
-    await this.repository.save({
+    const updatedValue = await this.repository.save({
       id: account.id,
       name: dto.name,
       balance: dto.initialBalance,
     });
+    account.name = updatedValue.name;
+    account.balance = updatedValue.balance;
     return account;
   }
   async deleteAccount(accountId: string, user: User) {
-    return await this.repository.softDelete({
+    await this.repository.softDelete({
       publicId: accountId,
       userId: user.id,
     });
+    return true;
   }
 }
