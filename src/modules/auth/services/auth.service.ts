@@ -1,14 +1,16 @@
 import {
   BadRequestException,
+  HttpStatus,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from 'src/modules/users/services/user.service';
-import { RegisterDto, SignInDto } from '../dto';
+import { RegisterDto, SignInDto, TokenDto } from '../dto';
 import { User } from 'src/datasource/entities';
 import { UserConstants } from 'src/common/constants';
 import { CryptService } from 'src/common/services';
+import { ResponseDto } from 'src/common/dtos/responses';
 
 @Injectable()
 export class AuthService {
@@ -18,7 +20,7 @@ export class AuthService {
     private cryptoService: CryptService,
   ) {}
 
-  async signIn(dto: SignInDto) {
+  async signIn(dto: SignInDto): Promise<ResponseDto<TokenDto>> {
     const user = await this.userService.findUserByEmail(dto.email);
     if (!user) {
       throw new UnauthorizedException();
@@ -33,18 +35,19 @@ export class AuthService {
       user.password,
     );
 
-    console.log('pass match', passwordMatch);
     if (!passwordMatch) {
       throw new UnauthorizedException();
     }
 
     const payload = { sub: user.publicId };
-    return {
+    const res: TokenDto = {
       access_token: await this.jwtService.signAsync(payload),
     };
+
+    return new ResponseDto(res, HttpStatus.OK);
   }
 
-  async register(dto: RegisterDto) {
+  async register(dto: RegisterDto): Promise<ResponseDto<TokenDto>> {
     const existingUser = await this.userService.findUserByEmail(dto.email);
     if (existingUser) {
       throw new BadRequestException('email already used.');
@@ -52,15 +55,16 @@ export class AuthService {
 
     const newUser = await this.userService.create({ email: dto.email });
 
-    const authentication = await this.signIn({
+    return await this.signIn({
       email: newUser.email,
       password: UserConstants.DEFAULT_PASSWORD,
     });
-
-    return authentication;
   }
 
-  async updatePassword(dto: RegisterDto, user: User) {
+  async updatePassword(
+    dto: RegisterDto,
+    user: User,
+  ): Promise<ResponseDto<any>> {
     if (!dto.password) {
       throw new BadRequestException('Password required');
     }
@@ -77,6 +81,7 @@ export class AuthService {
     }
 
     await this.userService.updatePassword(dto.password, user.publicId);
-    return user;
+
+    return new ResponseDto(user, HttpStatus.OK);
   }
 }

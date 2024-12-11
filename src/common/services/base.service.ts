@@ -3,11 +3,18 @@ import { ObjectLiteral, Repository } from 'typeorm';
 import {
   PageOptionsDto,
   PageMetaDto,
-  PaginatedResponse,
+  PaginatedResponseDto,
 } from '../dtos/pagination';
+import { HttpStatus } from '@nestjs/common';
+import { ResponseDto } from '../dtos/responses';
 
 export class BaseService<Entity extends PBaseEntity> {
   constructor(public repository: Repository<Entity>) {}
+
+  Response(data: any, statusCode?: HttpStatus): ResponseDto<Entity> {
+    const code = statusCode ? statusCode : HttpStatus.OK;
+    return new ResponseDto(data, code);
+  }
 
   async Search(pageOptionsDto: PageOptionsDto, where: ObjectLiteral) {
     const queryBuilder = this.repository.createQueryBuilder();
@@ -23,6 +30,6 @@ export class BaseService<Entity extends PBaseEntity> {
 
     const pageMetaDto = new PageMetaDto({ itemCount, pageOptionsDto });
 
-    return new PaginatedResponse(entities, pageMetaDto);
+    return new PaginatedResponseDto(entities, pageMetaDto);
   }
 }

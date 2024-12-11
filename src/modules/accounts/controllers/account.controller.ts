@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { AccountService } from '../services/account.service';
 import { ApiTags } from '@nestjs/swagger';
-import { GetUser } from 'src/common/decorators';
+import { ApiOkPaginatedResponse, GetUser } from 'src/common/decorators';
 import { User } from 'src/datasource/entities';
 import { CreateAccountDto } from '../dto';
 import { PageOptionsDto } from 'src/common/dtos/pagination';
@@ -21,6 +21,7 @@ export class AccountController {
   constructor(private readonly service: AccountService) {}
 
   @Get()
+  @ApiOkPaginatedResponse(User)
   getAllByUserId(
     @Query() paginationDto: PageOptionsDto,
     @GetUser() user: User,
