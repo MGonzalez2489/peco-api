@@ -4,12 +4,16 @@ import { AccountConstants } from 'src/common/constants';
 import { Account, User } from 'src/datasource/entities';
 import { Repository } from 'typeorm';
 import { CreateAccountDto } from '../dto';
+import { BaseService } from 'src/common/services';
+import { PageOptionsDto } from 'src/common/dtos/pagination';
 
 @Injectable()
-export class AccountService {
+export class AccountService extends BaseService<Account> {
   constructor(
-    @InjectRepository(Account) private readonly repository: Repository<Account>,
-  ) {}
+    @InjectRepository(Account) readonly repository: Repository<Account>,
+  ) {
+    super(repository);
+  }
 
   //Create one initial and default account
   //THis function is used only on usersCreate
@@ -63,17 +67,9 @@ export class AccountService {
 
   //Get accounts by user
   //TODO: Improve documentation
-  async getAccountsByUser(user: User) {
+  async getAccountsByUser(pageOptionsDto: PageOptionsDto, user: User) {
     try {
-      const result = await this.repository.find({
-        relations: { user: true },
-        where: {
-          user: {
-            publicId: user.publicId,
-          },
-        },
-      });
-      return result;
+      return await this.Search(pageOptionsDto, { userId: user.id });
     } catch (error) {}
   }
 

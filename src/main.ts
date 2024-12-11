@@ -4,9 +4,9 @@ import { SetSwaggerConfig } from './config';
 import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
-  let app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule);
   //swagger
-  app = SetSwaggerConfig(app);
+  SetSwaggerConfig(app);
   //
   app.setGlobalPrefix('api');
   //
@@ -14,6 +14,7 @@ async function bootstrap() {
     new ValidationPipe({
       whitelist: true,
       forbidNonWhitelisted: true,
+      transform: true,
     }),
   );
   //

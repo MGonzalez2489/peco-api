@@ -1,9 +1,7 @@
 import { INestApplication } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
-export function SetSwaggerConfig(
-  app: INestApplication<any>,
-): INestApplication<any> {
+export function SetSwaggerConfig(app: INestApplication<any>): void {
   const config = new DocumentBuilder()
     .setTitle('Peco-Api')
     .setDescription('some description here')
@@ -13,6 +11,4 @@ export function SetSwaggerConfig(
   const documentFactory = () => SwaggerModule.createDocument(app, config);
 
   SwaggerModule.setup('api', app, documentFactory);
-
-  return app;
 }
