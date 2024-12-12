@@ -27,7 +27,7 @@ export class AccountService extends BaseService<Account> {
 
       return await this.createAccount(defaultAccountDto, user);
     } catch (error) {
-      console.log('AccountService::createDefaultAccount', error);
+      this.ThrowException('AccountService::createDefaultAccount', error);
     }
   }
 
@@ -43,7 +43,7 @@ export class AccountService extends BaseService<Account> {
       account = await this.repository.save(account);
       return account;
     } catch (error) {
-      console.log('AccountService::createAccount', error);
+      this.ThrowException('AccountService::createAccount', error);
     }
   }
 
@@ -61,7 +61,7 @@ export class AccountService extends BaseService<Account> {
       const account = await this.repository.findOneBy(condition);
       return account;
     } catch (error) {
-      console.log('AccountService::getAccountById', error);
+      this.ThrowException('AccountService::getAccountById', error);
     }
   }
 
@@ -70,36 +70,50 @@ export class AccountService extends BaseService<Account> {
   async getAccountsByUser(pageOptionsDto: PageOptionsDto, user: User) {
     try {
       return await this.Search(pageOptionsDto, { userId: user.id });
-    } catch (error) {}
+    } catch (error) {
+      this.ThrowException('AccountService::getAccountsByUser', error);
+    }
   }
 
   //Update account balance
   //This function is only called from entry creation service
   //TODO: Improve documentation
   async updateAccountBalance(accountPrivateId: number, newBalance: number) {
-    return await this.repository.save({
-      id: accountPrivateId,
-      balance: newBalance,
-    });
+    try {
+      return await this.repository.save({
+        id: accountPrivateId,
+        balance: newBalance,
+      });
+    } catch (error) {
+      this.ThrowException('AccountService::updateAccountBalance', error);
+    }
   }
 
   async updateAccount(dto: CreateAccountDto, accountId: string, user: User) {
-    const account = await this.getAccountById(accountId, user);
+    try {
+      const account = await this.getAccountById(accountId, user);
 
-    const updatedValue = await this.repository.save({
-      id: account.id,
-      name: dto.name,
-      balance: dto.initialBalance,
-    });
-    account.name = updatedValue.name;
-    account.balance = updatedValue.balance;
-    return account;
+      const updatedValue = await this.repository.save({
+        id: account.id,
+        name: dto.name,
+        balance: dto.initialBalance,
+      });
+      account.name = updatedValue.name;
+      account.balance = updatedValue.balance;
+      return account;
+    } catch (error) {
+      this.ThrowException('AccountService::updateAccount', error);
+    }
   }
   async deleteAccount(accountId: string, user: User) {
-    await this.repository.softDelete({
-      publicId: accountId,
-      userId: user.id,
-    });
-    return true;
+    try {
+      await this.repository.softDelete({
+        publicId: accountId,
+        userId: user.id,
+      });
+      return true;
+    } catch (error) {
+      this.ThrowException('AccountService::deleteAccount', error);
+    }
   }
 }

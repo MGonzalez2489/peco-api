@@ -4,22 +4,32 @@ import { User } from 'src/datasource/entities';
 import { Repository } from 'typeorm';
 import { UserCreateDto } from '../dto';
 import { AccountService } from 'src/modules/accounts/services/account.service';
-import { CryptService } from 'src/common/services';
+import { BaseService, CryptService } from 'src/common/services';
 import { UserConstants } from 'src/common/constants';
 
 @Injectable()
-export class UserService {
+export class UserService extends BaseService<User> {
   constructor(
-    @InjectRepository(User) private readonly repository: Repository<User>,
+    @InjectRepository(User) protected readonly repository: Repository<User>,
     @Inject(AccountService) private readonly accountService: AccountService,
     @Inject(CryptService) private readonly cryptoService: CryptService,
-  ) {}
+  ) {
+    super(repository);
+  }
 
   async findUserByEmail(email: string) {
-    return this.repository.findOneBy({ email });
+    try {
+      return this.repository.findOneBy({ email });
+    } catch (error) {
+      this.ThrowException('UserService::findUserByEmail', error);
+    }
   }
   async findUserByPublicId(id: string) {
-    return this.repository.findOneBy({ publicId: id });
+    try {
+      return this.repository.findOneBy({ publicId: id });
+    } catch (error) {
+      this.ThrowException('UserService::findUserByPublicId', error);
+    }
   }
 
   async create(dto: UserCreateDto) {
@@ -41,7 +51,7 @@ export class UserService {
 
       return user;
     } catch (error) {
-      console.log('UserService::Create', error);
+      this.ThrowException('UserService::create', error);
     }
   }
   /**
@@ -50,11 +60,15 @@ export class UserService {
    * // This Function is only used by auth service
    */
   async updatePassword(newPassword: string, userId: string) {
-    const user = await this.findUserByPublicId(userId);
+    try {
+      const user = await this.findUserByPublicId(userId);
 
-    return await this.repository.save({
-      id: user.id,
-      password: await this.cryptoService.encryptText(newPassword),
-    });
+      return await this.repository.save({
+        id: user.id,
+        password: await this.cryptoService.encryptText(newPassword),
+      });
+    } catch (error) {
+      this.ThrowException('UserService::updatePassword', error);
+    }
   }
 }

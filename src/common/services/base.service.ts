@@ -5,11 +5,11 @@ import {
   PageMetaDto,
   PaginatedResponseDto,
 } from '../dtos/pagination';
-import { HttpStatus } from '@nestjs/common';
+import { HttpStatus, InternalServerErrorException } from '@nestjs/common';
 import { ResponseDto } from '../dtos/responses';
 
-export class BaseService<Entity extends PBaseEntity> {
-  constructor(public repository: Repository<Entity>) {}
+export class BaseService<Entity extends PBaseEntity | any> {
+  constructor(protected repository?: Repository<Entity>) {}
 
   Response(data: any, statusCode?: HttpStatus): ResponseDto<Entity> {
     const code = statusCode ? statusCode : HttpStatus.OK;
@@ -17,19 +17,32 @@ export class BaseService<Entity extends PBaseEntity> {
   }
 
   async Search(pageOptionsDto: PageOptionsDto, where: ObjectLiteral) {
-    const queryBuilder = this.repository.createQueryBuilder();
+    try {
+      if (!this.repository) {
+        throw new InternalServerErrorException('Repository not implemented');
+      }
 
-    queryBuilder
-      .where(where)
-      .orderBy('', pageOptionsDto.order)
-      .skip(pageOptionsDto.skip)
-      .take(pageOptionsDto.take);
+      const queryBuilder = this.repository.createQueryBuilder();
 
-    const itemCount = await queryBuilder.getCount();
-    const { entities } = await queryBuilder.getRawAndEntities();
+      queryBuilder
+        .where(where)
+        .orderBy('', pageOptionsDto.order)
+        .skip(pageOptionsDto.skip)
+        .take(pageOptionsDto.take);
 
-    const pageMetaDto = new PageMetaDto({ itemCount, pageOptionsDto });
+      const itemCount = await queryBuilder.getCount();
+      const { entities } = await queryBuilder.getRawAndEntities();
 
-    return new PaginatedResponseDto(entities, pageMetaDto);
+      const pageMetaDto = new PageMetaDto({ itemCount, pageOptionsDto });
+
+      return new PaginatedResponseDto(entities, pageMetaDto);
+    } catch (error) {
+      this.ThrowException('BaseService::Search', error);
+    }
+  }
+
+  ThrowException(place: string, error: any) {
+    console.log(place, error);
+    throw new InternalServerErrorException(error);
   }
 }

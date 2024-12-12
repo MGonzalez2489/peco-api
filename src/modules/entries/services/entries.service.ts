@@ -6,19 +6,26 @@ import { Repository } from 'typeorm';
 import { CreateEntryDto } from '../dtos';
 import { AccountService } from 'src/modules/accounts/services/account.service';
 import { User } from 'src/datasource/entities';
+import { BaseService } from 'src/common/services';
 
 @Injectable()
-export class EntriesService {
+export class EntriesService extends BaseService<Entry> {
   constructor(
-    @InjectRepository(Entry) private readonly repository: Repository<Entry>,
+    @InjectRepository(Entry) readonly repository: Repository<Entry>,
     @Inject(AccountService) private readonly accountService: AccountService,
-  ) {}
+  ) {
+    super(repository);
+  }
 
   async getEntriesByAccount(accountId: string, user: User) {
-    const account = await this.accountService.getAccountById(accountId, user);
+    try {
+      const account = await this.accountService.getAccountById(accountId, user);
 
-    const entries = await this.repository.findBy({ accountId: account.id });
-    return entries;
+      const entries = await this.repository.findBy({ accountId: account.id });
+      return entries;
+    } catch (error) {
+      this.ThrowException('EntriesService::getEntriesByAccount', error);
+    }
   }
 
   async createIncome(dto: CreateEntryDto, accountId: string, user: User) {
@@ -40,7 +47,7 @@ export class EntriesService {
       await this.accountService.updateAccountBalance(account.id, newAccBalance);
       return entry;
     } catch (error) {
-      console.log('create income', error);
+      this.ThrowException('EntriesService::createIncome', error);
     }
   }
   async createOutcome(dto: CreateEntryDto, accountId: string, user: User) {
@@ -62,6 +69,8 @@ export class EntriesService {
       await this.accountService.updateAccountBalance(account.id, newAccBalance);
 
       return entry;
-    } catch (error) {}
+    } catch (error) {
+      this.ThrowException('EntriesService::createOutcome', error);
+    }
   }
 }
