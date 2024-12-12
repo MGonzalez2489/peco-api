@@ -5,16 +5,10 @@ import {
   PageMetaDto,
   PaginatedResponseDto,
 } from '../dtos/pagination';
-import { HttpStatus, InternalServerErrorException } from '@nestjs/common';
-import { ResponseDto } from '../dtos/responses';
+import { InternalServerErrorException } from '@nestjs/common';
 
 export class BaseService<Entity extends PBaseEntity | any> {
   constructor(protected repository?: Repository<Entity>) {}
-
-  Response(data: any, statusCode?: HttpStatus): ResponseDto<Entity> {
-    const code = statusCode ? statusCode : HttpStatus.OK;
-    return new ResponseDto(data, code);
-  }
 
   async Search(pageOptionsDto: PageOptionsDto, where: ObjectLiteral) {
     try {
@@ -43,6 +37,7 @@ export class BaseService<Entity extends PBaseEntity | any> {
 
   ThrowException(place: string, error: any) {
     console.log(place, error);
-    throw new InternalServerErrorException(error);
+
+    throw error;
   }
 }

@@ -5,27 +5,34 @@ import { RegisterDto, TokenDto } from '../dto';
 import { ApiModelOkResponse, GetUser, Public } from 'src/common/decorators';
 import { User } from 'src/datasource/entities';
 import { ResponseDto } from 'src/common/dtos/responses';
+import { BaseController } from 'src/common/controllers/base.controller';
 
 @Controller('auth')
 @ApiTags('Auth')
-export class AuthController {
-  constructor(private readonly service: AuthService) {}
+export class AuthController extends BaseController<TokenDto> {
+  constructor(private readonly service: AuthService) {
+    super();
+  }
 
   @Post('register')
+  @ApiModelOkResponse(TokenDto)
   @Public()
-  register(@Body() dto: RegisterDto): Promise<ResponseDto<any>> {
-    return this.service.register(dto);
+  async register(@Body() dto: RegisterDto): Promise<ResponseDto<TokenDto>> {
+    const result = await this.service.register(dto);
+    return this.Response(result);
   }
   @Patch('secure')
   @ApiModelOkResponse(TokenDto)
-  secure(@Body() dto: RegisterDto, @GetUser() user: User) {
-    return this.service.updatePassword(dto, user);
+  async secure(@Body() dto: RegisterDto, @GetUser() user: User) {
+    const result = await this.service.updatePassword(dto, user);
+    return this.Response(result);
   }
 
   @Post('signIn')
   @ApiModelOkResponse(TokenDto)
   @Public()
-  signIn(@Body() dto: RegisterDto) {
-    return this.service.signIn(dto);
+  async signIn(@Body() dto: RegisterDto): Promise<ResponseDto<TokenDto>> {
+    const result = this.service.signIn(dto);
+    return this.Response(result);
   }
 }

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AccountConstants } from 'src/common/constants';
 import { Account, User } from 'src/datasource/entities';
@@ -92,6 +92,9 @@ export class AccountService extends BaseService<Account> {
   async updateAccount(dto: CreateAccountDto, accountId: string, user: User) {
     try {
       const account = await this.getAccountById(accountId, user);
+      if (!account) {
+        throw new BadRequestException('Account not found');
+      }
 
       const updatedValue = await this.repository.save({
         id: account.id,

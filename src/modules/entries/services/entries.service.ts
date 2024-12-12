@@ -1,4 +1,9 @@
-import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntryTypeEnum } from 'src/common/enums';
 import { Entry } from 'src/datasource/entities/entry.entity';
@@ -7,6 +12,7 @@ import { CreateEntryDto } from '../dtos';
 import { AccountService } from 'src/modules/accounts/services/account.service';
 import { User } from 'src/datasource/entities';
 import { BaseService } from 'src/common/services';
+import { PageOptionsDto } from 'src/common/dtos/pagination';
 
 @Injectable()
 export class EntriesService extends BaseService<Entry> {
@@ -16,13 +22,22 @@ export class EntriesService extends BaseService<Entry> {
   ) {
     super(repository);
   }
-
-  async getEntriesByAccount(accountId: string, user: User) {
+  //TODO: Apply pagination
+  async getEntriesByAccount(
+    accountId: string,
+    pageOptionsDto: PageOptionsDto,
+    user: User,
+  ) {
     try {
       const account = await this.accountService.getAccountById(accountId, user);
+      if (!account) {
+        throw new BadRequestException('Account not found');
+      }
 
-      const entries = await this.repository.findBy({ accountId: account.id });
-      return entries;
+      return await this.Search(pageOptionsDto, { accountId: account.id });
+
+      // const entries = await this.repository.findBy({ accountId: account.id });
+      // return entries;
     } catch (error) {
       this.ThrowException('EntriesService::getEntriesByAccount', error);
     }
@@ -31,6 +46,9 @@ export class EntriesService extends BaseService<Entry> {
   async createIncome(dto: CreateEntryDto, accountId: string, user: User) {
     try {
       const account = await this.accountService.getAccountById(accountId, user);
+      if (!account) {
+        throw new BadRequestException('Account not found');
+      }
 
       if (account.userId !== user.id) {
         throw new UnauthorizedException();
@@ -53,6 +71,9 @@ export class EntriesService extends BaseService<Entry> {
   async createOutcome(dto: CreateEntryDto, accountId: string, user: User) {
     try {
       const account = await this.accountService.getAccountById(accountId, user);
+      if (!account) {
+        throw new BadRequestException('Account not found');
+      }
 
       if (account.userId !== user.id) {
         throw new UnauthorizedException();

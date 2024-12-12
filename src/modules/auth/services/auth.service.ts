@@ -22,7 +22,7 @@ export class AuthService extends BaseService<any> {
     super();
   }
 
-  async signIn(dto: SignInDto): Promise<ResponseDto<TokenDto>> {
+  async signIn(dto: SignInDto): Promise<TokenDto> {
     try {
       const user = await this.userService.findUserByEmail(dto.email);
       if (!user) {
@@ -47,13 +47,13 @@ export class AuthService extends BaseService<any> {
         access_token: await this.jwtService.signAsync(payload),
       };
 
-      return this.Response(res);
+      return res;
     } catch (error) {
       this.ThrowException('AuthService::signIn', error);
     }
   }
 
-  async register(dto: RegisterDto): Promise<ResponseDto<TokenDto>> {
+  async register(dto: RegisterDto): Promise<TokenDto> {
     try {
       const existingUser = await this.userService.findUserByEmail(dto.email);
       if (existingUser) {
@@ -71,10 +71,7 @@ export class AuthService extends BaseService<any> {
     }
   }
 
-  async updatePassword(
-    dto: RegisterDto,
-    user: User,
-  ): Promise<ResponseDto<User>> {
+  async updatePassword(dto: RegisterDto, user: User): Promise<User> {
     try {
       if (!dto.password) {
         throw new BadRequestException('Password required');
@@ -92,7 +89,7 @@ export class AuthService extends BaseService<any> {
       }
 
       await this.userService.updatePassword(dto.password, user.publicId);
-      return this.Response(user);
+      return user;
     } catch (error) {
       this.ThrowException('AuthService::updateUser', error);
     }
