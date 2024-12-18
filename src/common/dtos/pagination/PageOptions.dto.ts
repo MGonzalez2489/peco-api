@@ -1,6 +1,6 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsEnum, IsInt, IsOptional, Max, Min } from 'class-validator';
+import { IsEnum, IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
 import { PaginationOrderEnum } from 'src/common/enums';
 
 export class PageOptionsDto {
@@ -11,6 +11,10 @@ export class PageOptionsDto {
   @IsEnum(PaginationOrderEnum)
   @IsOptional()
   readonly order?: PaginationOrderEnum = PaginationOrderEnum.ASC;
+
+  @IsOptional()
+  @IsString()
+  readonly orderBy?: string = 'CreatedAt';
 
   @ApiPropertyOptional({
     minimum: 1,

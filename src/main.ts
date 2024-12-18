@@ -18,7 +18,13 @@ async function bootstrap() {
     }),
   );
   //
+  app.enableCors({
+    origin: ['http://localhost:4200'],
+    methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE'],
+  });
+
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
   await app.listen(3000);
+  console.log('==========================================');
 }
 bootstrap();

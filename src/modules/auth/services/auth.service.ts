@@ -1,6 +1,5 @@
 import {
   BadRequestException,
-  HttpStatus,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -10,7 +9,6 @@ import { RegisterDto, SignInDto, TokenDto } from '../dto';
 import { User } from 'src/datasource/entities';
 import { UserConstants } from 'src/common/constants';
 import { BaseService, CryptService } from 'src/common/services';
-import { ResponseDto } from 'src/common/dtos/responses';
 
 @Injectable()
 export class AuthService extends BaseService<any> {
@@ -23,34 +21,30 @@ export class AuthService extends BaseService<any> {
   }
 
   async signIn(dto: SignInDto): Promise<TokenDto> {
-    try {
-      const user = await this.userService.findUserByEmail(dto.email);
-      if (!user) {
-        throw new UnauthorizedException();
-      }
-
-      if (!dto.password) {
-        throw new UnauthorizedException();
-      }
-
-      const passwordMatch = await this.cryptoService.compare(
-        dto.password,
-        user.password,
-      );
-
-      if (!passwordMatch) {
-        throw new UnauthorizedException();
-      }
-
-      const payload = { sub: user.publicId };
-      const res: TokenDto = {
-        access_token: await this.jwtService.signAsync(payload),
-      };
-
-      return res;
-    } catch (error) {
-      this.ThrowException('AuthService::signIn', error);
+    const user = await this.userService.findUserByEmail(dto.email);
+    if (!user) {
+      throw new UnauthorizedException('User not found');
     }
+
+    if (!dto.password) {
+      throw new UnauthorizedException();
+    }
+
+    const passwordMatch = await this.cryptoService.compare(
+      dto.password,
+      user.password,
+    );
+
+    if (!passwordMatch) {
+      throw new UnauthorizedException();
+    }
+
+    const payload = { sub: user.publicId };
+    const res: TokenDto = {
+      access_token: await this.jwtService.signAsync(payload),
+    };
+
+    return res;
   }
 
   async register(dto: RegisterDto): Promise<TokenDto> {
@@ -60,11 +54,14 @@ export class AuthService extends BaseService<any> {
         throw new BadRequestException('email already used.');
       }
 
-      const newUser = await this.userService.create({ email: dto.email });
+      const newUser = await this.userService.create({
+        email: dto.email,
+        password: dto.password,
+      });
 
       return await this.signIn({
         email: newUser.email,
-        password: UserConstants.DEFAULT_PASSWORD,
+        password: dto.password,
       });
     } catch (error) {
       this.ThrowException('AuthService::register', error);

@@ -40,6 +40,15 @@ export class AccountController extends BaseController<any> {
     return this.service.getAccountsByUser(paginationDto, user);
   }
 
+  @Get(':accountId')
+  async getByid(
+    @Param('accountId') accountId: string,
+    @GetUser() user: User,
+  ): Promise<ResponseDto<Account>> {
+    const result = await this.service.getAccountById(accountId, user);
+    return this.Response(result);
+  }
+
   @Post()
   @ApiModelOkResponse(Account)
   async create(

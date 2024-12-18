@@ -36,9 +36,7 @@ export class UserService extends BaseService<User> {
     try {
       const user = this.repository.create({
         email: dto.email,
-        password: await this.cryptoService.encryptText(
-          UserConstants.DEFAULT_PASSWORD,
-        ),
+        password: await this.cryptoService.encryptText(dto.password),
       });
       await this.repository.save(user);
       const newAccount = await this.accountService.createDefaultAccount(user);
@@ -68,7 +66,7 @@ export class UserService extends BaseService<User> {
         password: await this.cryptoService.encryptText(newPassword),
       });
     } catch (error) {
-      this.ThrowException('UserService::updatePassword', error);
+      this.ThrowException('UserService::updatePass', error);
     }
   }
 }

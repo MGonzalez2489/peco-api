@@ -18,7 +18,7 @@ import { CommonModule } from 'src/common/common.module';
       imports: [ConfigModule],
       useFactory: async () => {
         const config = jwtConfig().jwt;
-        console.log('jwt configuration ========', config);
+        // console.log('jwt configuration ========', config);
         return {
           secret: config.secret,
         };

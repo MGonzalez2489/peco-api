@@ -20,7 +20,7 @@ export class BaseService<Entity extends PBaseEntity | any> {
 
       queryBuilder
         .where(where)
-        .orderBy('', pageOptionsDto.order)
+        .orderBy(pageOptionsDto.orderBy, pageOptionsDto.order)
         .skip(pageOptionsDto.skip)
         .take(pageOptionsDto.take);
 

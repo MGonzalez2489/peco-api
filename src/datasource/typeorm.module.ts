@@ -11,7 +11,7 @@ import { DataSource } from 'typeorm';
       inject: [],
       useFactory: async () => {
         const dbConfig = databaseConfig().database;
-        console.log('db configuration ========', dbConfig);
+        // console.log('db configuration ========', dbConfig);
 
         try {
           const dataSource = new DataSource({

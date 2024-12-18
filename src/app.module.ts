@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { PTypeOrmModule } from './datasource/typeorm.module';
 import { databaseConfig, jwtConfig } from './config';
@@ -8,6 +8,7 @@ import { EntriesModule } from './modules/entries/entries.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './modules/auth/guards';
+import { HttpLoggerMiddleware } from './common/middlewares';
 
 @Module({
   imports: [
@@ -29,4 +30,8 @@ import { JwtAuthGuard } from './modules/auth/guards';
     },
   ],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer): void {
+    consumer.apply(HttpLoggerMiddleware).forRoutes('*');
+  }
+}
