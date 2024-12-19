@@ -23,6 +23,7 @@ export class AccountService extends BaseService<Account> {
       const defaultAccountDto: CreateAccountDto = {
         name: AccountConstants.DEFAULT_NAME,
         initialBalance: 0,
+        isDefault: true,
       };
 
       return await this.createAccount(defaultAccountDto, user);
@@ -39,6 +40,7 @@ export class AccountService extends BaseService<Account> {
         name: dto.name,
         user,
         balance: dto.initialBalance,
+        isDefault: dto.isDefault,
       });
       account = await this.repository.save(account);
       return account;

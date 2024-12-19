@@ -9,10 +9,17 @@ export class Account extends PBaseEntity {
   @Column()
   name: string;
 
+  @Column('double', { precision: 10, scale: 2 })
+  balance: number;
+
+  @Column({ default: false })
+  isDefault: boolean;
+
   @Exclude()
   @ManyToOne(() => User, (user) => user.accounts)
   @JoinColumn({ name: 'userId' })
   user: User;
+
   @Column()
   @Exclude()
   userId: number;
@@ -20,7 +27,4 @@ export class Account extends PBaseEntity {
   @OneToMany(() => Entry, (entry) => entry.account)
   @Exclude()
   entries: Entry[];
-
-  @Column('double', { precision: 10, scale: 2 })
-  balance: number;
 }

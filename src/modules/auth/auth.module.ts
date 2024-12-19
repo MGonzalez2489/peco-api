@@ -18,9 +18,11 @@ import { CommonModule } from 'src/common/common.module';
       imports: [ConfigModule],
       useFactory: async () => {
         const config = jwtConfig().jwt;
+        const expiration = '22225s';
         // console.log('jwt configuration ========', config);
         return {
           secret: config.secret,
+          signOptions: { expiresIn: expiration },
         };
       },
     }),
