@@ -15,6 +15,10 @@ export class Entry extends PBaseEntity {
   @Column({ type: 'enum', enum: EntryTypeEnum, nullable: false })
   type: EntryTypeEnum;
 
+  //////////Relationships
+  //Categories
+
+  //Accounts
   @ManyToOne(() => Account, (account) => account.entries)
   @Exclude()
   @JoinColumn({ name: 'accountId' })
