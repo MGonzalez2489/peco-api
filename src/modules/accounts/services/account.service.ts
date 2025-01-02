@@ -2,7 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AccountConstants } from 'src/common/constants';
 import { Account, User } from 'src/datasource/entities';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { CreateAccountDto } from '../dto';
 import { BaseService } from 'src/common/services';
 import { PageOptionsDto } from 'src/common/dtos/pagination';
@@ -71,7 +71,15 @@ export class AccountService extends BaseService<Account> {
   //TODO: Improve documentation
   async getAccountsByUser(pageOptionsDto: PageOptionsDto, user: User) {
     try {
-      return await this.Search(pageOptionsDto, { userId: user.id });
+      const filter = {
+        userId: user.id,
+      };
+
+      if (pageOptionsDto.hint && pageOptionsDto.hint !== '') {
+        filter['name'] = Like(`%${pageOptionsDto.hint}%`);
+      }
+
+      return await this.Search(pageOptionsDto, filter);
     } catch (error) {
       this.ThrowException('AccountService::getAccountsByUser', error);
     }
@@ -112,6 +120,12 @@ export class AccountService extends BaseService<Account> {
   }
   async deleteAccount(accountId: string, user: User) {
     try {
+      const account = await this.getAccountById(accountId, user);
+
+      if (account.isDefault) {
+        throw new BadRequestException("Default account can't be deleted");
+      }
+
       await this.repository.softDelete({
         publicId: accountId,
         userId: user.id,

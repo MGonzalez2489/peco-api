@@ -9,6 +9,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './modules/auth/guards';
 import { HttpLoggerMiddleware } from './common/middlewares';
+import { CatalogsModule } from './modules/catalogs/catalogs.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { HttpLoggerMiddleware } from './common/middlewares';
     AccountsModule,
     UsersModule,
     EntriesModule,
+    CatalogsModule,
   ],
   providers: [
     {
