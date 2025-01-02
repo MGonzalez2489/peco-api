@@ -11,15 +11,15 @@ export class Category extends PBaseEntity {
   @Exclude()
   @ManyToOne(() => User, (user) => user.categories)
   @JoinColumn({ name: 'userId' })
-  user: User;
+  user?: User;
 
   @Exclude()
   @Column({ nullable: false })
-  userId: number;
+  userId?: number;
 
   //Parent-child
   @Column({ nullable: true })
-  parentId: number;
+  parentId?: number;
 
   subCategories: Category[];
 }

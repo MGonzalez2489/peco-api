@@ -3,20 +3,26 @@ import { PassportStrategy } from '@nestjs/passport';
 import { UserService } from 'src/modules/users/services/user.service';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { User } from 'src/datasource/entities';
-import { jwtConfig } from 'src/config';
+import { ConfigService } from '@nestjs/config';
+import { IJwtConfiguration } from 'src/config/iConfiguration.interface';
+import { ConfigNameEnum } from 'src/config/config-name.enum';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-  constructor(private userService: UserService) {
+  constructor(
+    private userService: UserService,
+    private configService: ConfigService,
+  ) {
     super({
-      secretOrKey: jwtConfig().jwt.secret,
-      ignoreExpiration: false,
+      secretOrKey: configService.get<IJwtConfiguration>(ConfigNameEnum.jwt)
+        .secret,
+      ignoreExpiration: configService.get<IJwtConfiguration>(ConfigNameEnum.jwt)
+        .ignoreExpiration,
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
     });
   }
   async validate(payload: any): Promise<User> {
     const { publicId } = payload;
-    console.log('payload', payload);
     const user = await this.userService.findUserByPublicId(publicId);
     if (!user) {
       throw new UnauthorizedException('Token no valido.');

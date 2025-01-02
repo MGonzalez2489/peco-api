@@ -3,26 +3,29 @@ import { AuthController } from './controllers/auth.controller';
 import { AuthService } from './services/auth.service';
 import { UsersModule } from '../users/users.module';
 import { JwtModule } from '@nestjs/jwt';
-import { jwtConfig } from 'src/config';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from './strategies';
 import { CommonModule } from 'src/common/common.module';
+import { ConfigNameEnum } from 'src/config/config-name.enum';
+import { IJwtConfiguration } from 'src/config/iConfiguration.interface';
 
 @Module({
   imports: [
+    ConfigModule,
     PassportModule.register({
       defaultStrategy: 'jwt',
     }),
     JwtModule.registerAsync({
-      imports: [ConfigModule],
-      useFactory: async () => {
-        const config = jwtConfig().jwt;
-        const expiration = '22225s';
-        // console.log('jwt configuration ========', config);
+      inject: [ConfigService],
+      useFactory: async (configService: ConfigService) => {
+        const jwtConfig = configService.get<IJwtConfiguration>(
+          ConfigNameEnum.jwt,
+        );
+        console.log('config', jwtConfig);
         return {
-          secret: config.secret,
-          signOptions: { expiresIn: expiration },
+          secret: jwtConfig.secret,
+          signOptions: { expiresIn: jwtConfig.expiresIn },
         };
       },
     }),

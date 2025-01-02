@@ -1,8 +1,8 @@
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { PBaseEntity } from './_base';
-import { EntryTypeEnum } from 'src/common/enums';
 import { Account } from './account.entity';
 import { Exclude } from 'class-transformer';
+import { EntryTypeEnum } from '../../common/enums/';
 
 @Entity()
 export class Entry extends PBaseEntity {
