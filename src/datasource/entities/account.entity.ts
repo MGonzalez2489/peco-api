@@ -15,9 +15,11 @@ export class Account extends PBaseEntity {
   @Column({ default: false })
   isDefault: boolean;
 
+  //////////Relationships
+
   @Exclude()
   @ManyToOne(() => User, (user) => user.accounts)
-  @JoinColumn({ name: 'userId' })
+  @JoinColumn({ name: 'userId', foreignKeyConstraintName: 'FK_Account_User' })
   user: User;
 
   @Column()

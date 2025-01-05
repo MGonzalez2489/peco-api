@@ -10,6 +10,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './modules/auth/guards';
 import { HttpLoggerMiddleware } from './common/middlewares';
 import { CatalogsModule } from './modules/catalogs/catalogs.module';
+import { CategoriesModule } from './modules/categories/categories.module';
 
 const envFilePath = `${__dirname}/config/${process.env.NODE_ENV || ''}.env`;
 
@@ -27,6 +28,7 @@ const envFilePath = `${__dirname}/config/${process.env.NODE_ENV || ''}.env`;
     UsersModule,
     EntriesModule,
     CatalogsModule,
+    CategoriesModule,
   ],
   providers: [
     {

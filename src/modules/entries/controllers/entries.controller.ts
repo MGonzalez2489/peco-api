@@ -11,7 +11,7 @@ import { PageOptionsDto } from 'src/common/dtos/pagination';
 
 @Controller('entries')
 @ApiTags('Entries')
-export class EntriesController extends BaseController<any> {
+export class EntriesController extends BaseController<Entry> {
   constructor(private readonly service: EntriesService) {
     super();
   }

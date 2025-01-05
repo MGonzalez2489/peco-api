@@ -1,7 +1,7 @@
 export default () => ({
   jwt: {
     secret: process.env.JWT_SECRET || 'qwerty',
-    expiresIn: process.env.JWT_EXPIRATION || '60s',
+    expiresIn: '5h', //process.env.JWT_EXPIRATION || '60s',
     ignoreExpiration: false,
   },
   database: {

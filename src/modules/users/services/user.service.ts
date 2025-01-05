@@ -3,16 +3,15 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/datasource/entities';
 import { Repository } from 'typeorm';
 import { UserCreateDto } from '../dto';
-import { AccountService } from 'src/modules/accounts/services/account.service';
 import { BaseService, CryptService } from 'src/common/services';
-import { UserConstants } from 'src/common/constants';
+import { UserSeedService } from './user-seed.service';
 
 @Injectable()
 export class UserService extends BaseService<User> {
   constructor(
     @InjectRepository(User) protected readonly repository: Repository<User>,
-    @Inject(AccountService) private readonly accountService: AccountService,
     @Inject(CryptService) private readonly cryptoService: CryptService,
+    @Inject(UserSeedService) private readonly userSeedService: UserSeedService,
   ) {
     super(repository);
   }
@@ -39,13 +38,16 @@ export class UserService extends BaseService<User> {
         password: await this.cryptoService.encryptText(dto.password),
       });
       await this.repository.save(user);
-      const newAccount = await this.accountService.createDefaultAccount(user);
 
-      if (!user.accounts) {
-        user.accounts = [];
-      }
+      //seed default info
+      await this.userSeedService.seed(user);
+      //categories
 
-      user.accounts.push(newAccount);
+      // if (!user.accounts) {
+      //   user.accounts = [];
+      // }
+      //
+      // user.accounts.push(newAccount);
 
       return user;
     } catch (error) {

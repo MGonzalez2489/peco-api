@@ -13,7 +13,7 @@ export abstract class PBaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ nullable: false })
+  @Column({ nullable: false, update: false })
   @Generated('uuid')
   publicId: string;
 

@@ -6,4 +6,7 @@ export class CreateEntryDto {
 
   @IsString()
   description: string;
+
+  @IsString()
+  categoryId: string;
 }

@@ -1,0 +1,22 @@
+[
+  {
+    "name": "Comida y Bebida",
+    "subCategories": [
+      { "name": "Supermercados" },
+      { "name": "Bar, Cafe" },
+      { "name": "Restaurantes y Comida Rapida" }
+    ]
+  },
+  {
+    "name": "Compras"
+  },
+  {
+    "name": "Vivienda"
+  },
+  {
+    "name": "Transporte"
+  },
+  {
+    "name": "Ingresos"
+  }
+]

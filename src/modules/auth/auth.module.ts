@@ -22,7 +22,6 @@ import { IJwtConfiguration } from 'src/config/iConfiguration.interface';
         const jwtConfig = configService.get<IJwtConfiguration>(
           ConfigNameEnum.jwt,
         );
-        console.log('config', jwtConfig);
         return {
           secret: jwtConfig.secret,
           signOptions: { expiresIn: jwtConfig.expiresIn },

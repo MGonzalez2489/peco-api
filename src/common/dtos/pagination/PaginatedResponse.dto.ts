@@ -5,7 +5,7 @@ import { PageMetaDto } from './PageMeta.dto';
 export class PaginatedResponseDto<T> {
   @IsArray()
   @ApiProperty({ isArray: true })
-  readonly data: T[];
+  data: T[];
 
   @ApiProperty({ type: () => PageMetaDto })
   readonly meta: PageMetaDto;

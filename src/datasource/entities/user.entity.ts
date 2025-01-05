@@ -6,6 +6,7 @@ import { Category } from './category.entity';
 
 @Entity()
 export class User extends PBaseEntity {
+  //////////Properties
   @Column({ unique: true })
   email: string;
 
@@ -19,6 +20,7 @@ export class User extends PBaseEntity {
   accounts: Account[];
 
   @OneToMany(() => Category, (category) => category.user)
+  @Exclude()
   categories: Category[];
 
   //lifecycle
