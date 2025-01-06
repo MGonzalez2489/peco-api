@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Entry } from 'src/datasource/entities/entry.entity';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { CreateEntryDto, EntryDto } from '../dtos';
 import { AccountService } from 'src/modules/accounts/services/account.service';
 import { User } from 'src/datasource/entities';
@@ -37,10 +37,16 @@ export class EntriesService extends BaseService<Entry> {
       }
 
       const query = this.repository.createQueryBuilder('entry');
+
+      const filter = {
+        accountId: account.id,
+      };
+      if (pageOptionsDto.hint && pageOptionsDto.hint !== '') {
+        filter['description'] = Like(`%${pageOptionsDto.hint}%`);
+      }
+
       query
-        .where({
-          accountId: account.id,
-        })
+        .where(filter)
         .leftJoinAndSelect('entry.category', 'category')
         .leftJoinAndSelect('entry.type', 'type')
         .orderBy(`entry.${pageOptionsDto.orderBy}`, pageOptionsDto.order);
