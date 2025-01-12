@@ -26,6 +26,9 @@ export class CatalogsService {
   async getEntryTypes() {
     return await this.catEntryTypeRepo.find();
   }
+  async getEntryByPublicId(publicId: string) {
+    return await this.catEntryTypeRepo.findOneBy({ publicId });
+  }
 
   ///////////////////////////PRIVATE FUNCTIONS
   private async EntryTypeSeed() {

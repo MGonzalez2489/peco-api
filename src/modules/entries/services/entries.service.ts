@@ -13,6 +13,7 @@ import { User } from 'src/datasource/entities';
 import { BaseService } from 'src/common/services';
 import { PageOptionsDto } from 'src/common/dtos/pagination';
 import { CategoriesService } from 'src/modules/categories/services/categories.service';
+import { CatalogsService } from 'src/modules/catalogs/services/catalogs.service';
 
 @Injectable()
 export class EntriesService extends BaseService<Entry> {
@@ -21,6 +22,7 @@ export class EntriesService extends BaseService<Entry> {
     @Inject(AccountService) private readonly accountService: AccountService,
     @Inject(CategoriesService)
     private readonly categoryService: CategoriesService,
+    @Inject(CatalogsService) private readonly catalogsService: CatalogsService,
   ) {
     super(repository);
   }
@@ -66,9 +68,13 @@ export class EntriesService extends BaseService<Entry> {
     }
   }
 
-  async createIncome(dto: CreateEntryDto, accountId: string, user: User) {
+  //crear un metodo para crear todo tipo de categoria
+  async createEntry(dto: CreateEntryDto, accountPublicId: string, user: User) {
     try {
-      const account = await this.accountService.getAccountById(accountId, user);
+      const account = await this.accountService.getAccountById(
+        accountPublicId,
+        user,
+      );
       if (!account) {
         throw new BadRequestException('Account not found');
       }
@@ -81,46 +87,27 @@ export class EntriesService extends BaseService<Entry> {
         dto.categoryId,
         user,
       );
+      const entryType = await this.catalogsService.getEntryByPublicId(
+        dto.entryTypeId,
+      );
 
       const entry = this.repository.create({
         amount: dto.amount,
         description: dto.description,
-        typeId: 1,
+        typeId: entryType.id,
         account: account,
         categoryId: category.id,
       });
       await this.repository.save(entry);
-      const newAccBalance = account.balance + dto.amount;
-      await this.accountService.updateAccountBalance(account.id, newAccBalance);
-      return entry;
-    } catch (error) {
-      this.ThrowException('EntriesService::createIncome', error);
-    }
-  }
-  async createOutcome(dto: CreateEntryDto, accountId: string, user: User) {
-    try {
-      const account = await this.accountService.getAccountById(accountId, user);
-      if (!account) {
-        throw new BadRequestException('Account not found');
+      let newAccBalance = account.balance;
+      if (entryType.name === 'income') {
+        newAccBalance += entry.amount;
+      } else {
+        newAccBalance -= entry.amount;
       }
 
-      if (account.userId !== user.id) {
-        throw new UnauthorizedException();
-      }
-
-      const entry = this.repository.create({
-        amount: dto.amount,
-        description: dto.description,
-        typeId: 1,
-        account: account,
-      });
-      await this.repository.save(entry);
-      const newAccBalance = account.balance - dto.amount;
       await this.accountService.updateAccountBalance(account.id, newAccBalance);
-
       return entry;
-    } catch (error) {
-      this.ThrowException('EntriesService::createOutcome', error);
-    }
+    } catch (error) {}
   }
 }

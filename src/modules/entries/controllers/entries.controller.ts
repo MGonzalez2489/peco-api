@@ -16,23 +16,13 @@ export class EntriesController extends BaseController<Entry> {
     super();
   }
 
-  @Post(':accountId/income')
+  @Post(':accountId/entry')
   async createIncome(
     @Body() createDto: CreateEntryDto,
     @Param('accountId') accountId: string,
     @GetUser() user: User,
   ): Promise<ResponseDto<Entry>> {
-    const result = await this.service.createIncome(createDto, accountId, user);
-    return this.Response(result);
-  }
-
-  @Post(':accountId/outcome')
-  async createOutcome(
-    @Body() createDto: CreateEntryDto,
-    @Param('accountId') accountId: string,
-    @GetUser() user: User,
-  ): Promise<ResponseDto<Entry>> {
-    const result = await this.service.createOutcome(createDto, accountId, user);
+    const result = await this.service.createEntry(createDto, accountId, user);
     return this.Response(result);
   }
 

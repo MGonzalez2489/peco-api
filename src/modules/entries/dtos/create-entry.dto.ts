@@ -1,4 +1,4 @@
-import { IsNumber, IsString } from 'class-validator';
+import { IsNumber, IsString, IsUUID } from 'class-validator';
 
 export class CreateEntryDto {
   @IsNumber()
@@ -9,4 +9,7 @@ export class CreateEntryDto {
 
   @IsString()
   categoryId: string;
+
+  @IsUUID()
+  entryTypeId: string;
 }

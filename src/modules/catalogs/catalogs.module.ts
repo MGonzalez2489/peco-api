@@ -8,5 +8,6 @@ import { CatEntryType } from 'src/datasource/entities/catalogs';
   imports: [TypeOrmModule.forFeature([CatEntryType])],
   controllers: [CatalogsController],
   providers: [CatalogsService],
+  exports: [CatalogsService],
 })
 export class CatalogsModule {}
