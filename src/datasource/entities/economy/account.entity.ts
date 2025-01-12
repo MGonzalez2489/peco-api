@@ -1,8 +1,8 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
-import { PBaseEntity } from './_base';
-import { User } from './user.entity';
 import { Exclude } from 'class-transformer';
 import { Entry } from './entry.entity';
+import { PBaseEntity } from '../_base';
+import { User } from '../user.entity';
 
 @Entity()
 export class Account extends PBaseEntity {

@@ -1,16 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BaseService } from 'src/common/services';
-import { Category, User } from 'src/datasource/entities';
+import { User } from 'src/datasource/entities';
 import { Repository } from 'typeorm';
-import { CategoryCreateDto } from '../dto';
 import { PageOptionsDto } from 'src/common/dtos/pagination';
+import { EntryCategory } from 'src/datasource/entities/catalogs';
+import { EntryCategoryCreateDto } from '../dtos/entry-category.dto';
 
 @Injectable()
-export class CategoriesService extends BaseService<Category> {
+export class EntryCategoryService extends BaseService<EntryCategory> {
   constructor(
-    @InjectRepository(Category)
-    protected readonly repository: Repository<Category>,
+    @InjectRepository(EntryCategory)
+    protected readonly repository: Repository<EntryCategory>,
   ) {
     super(repository);
   }
@@ -32,7 +33,10 @@ export class CategoriesService extends BaseService<Category> {
     return categories;
   }
 
-  async getByPublicId(catId: string, user: User): Promise<Category | null> {
+  async getByPublicId(
+    catId: string,
+    user: User,
+  ): Promise<EntryCategory | null> {
     return await this.repository.findOneBy({
       publicId: catId,
       userId: user.id,
@@ -40,11 +44,11 @@ export class CategoriesService extends BaseService<Category> {
   }
 
   async createCategory(
-    categoryDto: CategoryCreateDto,
+    categoryDto: EntryCategoryCreateDto,
     user: User,
     isDefault: boolean = false,
-  ): Promise<Category | null> {
-    let parentCat: Category;
+  ): Promise<EntryCategory | null> {
+    let parentCat: EntryCategory;
     if (categoryDto.parentId) {
       parentCat = await this.getByPublicId(categoryDto.parentId, user);
     }

@@ -6,8 +6,8 @@ import { GetUser } from 'src/common/decorators';
 import { User } from 'src/datasource/entities';
 import { BaseController } from 'src/common/controllers/base.controller';
 import { ResponseDto } from 'src/common/dtos/responses';
-import { Entry } from 'src/datasource/entities/entry.entity';
 import { PageOptionsDto } from 'src/common/dtos/pagination';
+import { Entry } from 'src/datasource/entities/economy';
 
 @Controller('entries')
 @ApiTags('Entries')

@@ -1,9 +1,8 @@
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
-import { PBaseEntity } from './_base';
 import { Account } from './account.entity';
 import { Exclude } from 'class-transformer';
-import { Category } from './category.entity';
-import { CatEntryType } from './catalogs';
+import { PBaseEntity } from '../_base';
+import { EntryCategory, EntryType } from '../catalogs';
 
 @Entity()
 export class Entry extends PBaseEntity {
@@ -14,24 +13,24 @@ export class Entry extends PBaseEntity {
   description: string;
 
   //////////Relationships
-  @ManyToOne(() => CatEntryType)
+  @ManyToOne(() => EntryType)
   @JoinColumn({
     name: 'typeId',
     foreignKeyConstraintName: 'FK_Entry_EntryType',
   })
-  type: CatEntryType;
+  type: EntryType;
 
   @Exclude()
   @Column({ nullable: false })
   typeId: number;
 
   //Categories
-  @ManyToOne(() => Category, (cat) => cat.subCategories)
+  @ManyToOne(() => EntryCategory, (cat) => cat.subCategories)
   @JoinColumn({
     name: 'categoryId',
     foreignKeyConstraintName: 'FK_Entry_Category',
   })
-  category: Category;
+  category: EntryCategory;
 
   @Exclude()
   @Column({ nullable: false })

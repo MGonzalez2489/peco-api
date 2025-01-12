@@ -3,17 +3,11 @@ import { EntriesController } from './controllers/entries.controller';
 import { EntriesService } from './services/entries.service';
 import { AccountsModule } from '../accounts/accounts.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Entry } from 'src/datasource/entities/entry.entity';
-import { CategoriesModule } from '../categories/categories.module';
-import { CatalogsModule } from '../catalogs/catalogs.module';
+import { Entry } from 'src/datasource/entities/economy';
+import { CatalogsModule } from 'src/modules/catalogs/catalogs.module';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([Entry]),
-    AccountsModule,
-    CategoriesModule,
-    CatalogsModule,
-  ],
+  imports: [TypeOrmModule.forFeature([Entry]), AccountsModule, CatalogsModule],
   controllers: [EntriesController],
   providers: [EntriesService],
 })

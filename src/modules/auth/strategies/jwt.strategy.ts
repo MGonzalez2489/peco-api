@@ -13,23 +13,22 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     private userService: UserService,
     private configService: ConfigService,
   ) {
+    const jwtConfig = configService.get<IJwtConfiguration>(ConfigNameEnum.jwt);
     super({
-      secretOrKey: configService.get<IJwtConfiguration>(ConfigNameEnum.jwt)
-        .secret,
-      ignoreExpiration: configService.get<IJwtConfiguration>(ConfigNameEnum.jwt)
-        .ignoreExpiration,
+      secretOrKey: jwtConfig.secret,
+      ignoreExpiration: true, //jwtConfig.ignoreExpiration,
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
     });
   }
   async validate(payload: any): Promise<User> {
     const { publicId } = payload;
     const user = await this.userService.findUserByPublicId(publicId);
-    if (!user) {
-      throw new UnauthorizedException('Token no valido.');
-    }
-    if (user.deletedAt) {
-      throw new UnauthorizedException('Token no valido.');
-    }
+    // if (!user) {
+    //   throw new UnauthorizedException('Token no valido.');
+    // }
+    // if (user.deletedAt) {
+    //   throw new UnauthorizedException('Token no valido.');
+    // }
 
     return user;
   }

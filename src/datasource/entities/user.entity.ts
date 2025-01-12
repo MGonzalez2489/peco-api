@@ -1,8 +1,8 @@
 import { BeforeInsert, Column, Entity, OneToMany } from 'typeorm';
 import { PBaseEntity } from './_base';
-import { Account } from './account.entity';
 import { Exclude } from 'class-transformer';
-import { Category } from './category.entity';
+import { EntryCategory } from './catalogs';
+import { Account } from './economy/account.entity';
 
 @Entity()
 export class User extends PBaseEntity {
@@ -19,9 +19,9 @@ export class User extends PBaseEntity {
   @Exclude()
   accounts: Account[];
 
-  @OneToMany(() => Category, (category) => category.user)
+  @OneToMany(() => EntryCategory, (category) => category.user)
   @Exclude()
-  categories: Category[];
+  categories: EntryCategory[];
 
   //lifecycle
   @BeforeInsert()

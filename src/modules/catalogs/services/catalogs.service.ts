@@ -1,15 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CatEntryType } from 'src/datasource/entities/catalogs';
 //seed
 import * as EntryTypeSeed from './../seeds/entry-type.seed.json';
+import { EntryType } from 'src/datasource/entities/catalogs';
 
 @Injectable()
 export class CatalogsService {
   constructor(
-    @InjectRepository(CatEntryType)
-    protected readonly catEntryTypeRepo: Repository<CatEntryType>,
+    @InjectRepository(EntryType)
+    protected readonly catEntryTypeRepo: Repository<EntryType>,
   ) {}
 
   async initCatalogs() {

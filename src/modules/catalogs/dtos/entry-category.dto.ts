@@ -1,6 +1,6 @@
 import { IsOptional, IsString, IsUUID } from 'class-validator';
 
-export class CategoryCreateDto {
+export class EntryCategoryCreateDto {
   @IsString()
   name: string;
 

@@ -1,11 +1,12 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AccountConstants } from 'src/common/constants';
-import { Account, User } from 'src/datasource/entities';
+import { User } from 'src/datasource/entities';
 import { Like, Repository } from 'typeorm';
 import { CreateAccountDto } from '../dto';
 import { BaseService } from 'src/common/services';
 import { PageOptionsDto } from 'src/common/dtos/pagination';
+import { Account } from 'src/datasource/entities/economy/account.entity';
 
 @Injectable()
 export class AccountService extends BaseService<Account> {

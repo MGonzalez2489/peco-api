@@ -1,19 +1,20 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { BaseController } from 'src/common/controllers/base.controller';
-import { Category, User } from 'src/datasource/entities';
-import { CategoriesService } from '../services/categories.service';
+import { User } from 'src/datasource/entities';
 import { GetUser } from 'src/common/decorators';
 import { PageOptionsDto } from 'src/common/dtos/pagination';
+import { EntryCategory } from 'src/datasource/entities/catalogs';
+import { EntryCategoryService } from '../services/entry-category.service';
 
 @Controller('categories')
-@ApiTags('Categories')
-export class CategoriesController extends BaseController<Category> {
-  constructor(private readonly service: CategoriesService) {
+@ApiTags('Catalogs')
+export class EntryCategoryController extends BaseController<EntryCategory> {
+  constructor(private readonly service: EntryCategoryService) {
     super();
   }
 
-  @Get()
+  @Get('entry-category')
   getCategories(@Query() paginationDto: PageOptionsDto, @GetUser() user: User) {
     return this.service.getAll(user, paginationDto);
   }

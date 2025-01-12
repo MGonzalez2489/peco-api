@@ -1,8 +1,8 @@
 import { Exclude } from 'class-transformer';
 import { Column, Entity, Generated, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity({ name: 'CatEntryType' })
-export class CatEntryType {
+@Entity()
+export class EntryType {
   @Exclude()
   @PrimaryGeneratedColumn()
   id: number;

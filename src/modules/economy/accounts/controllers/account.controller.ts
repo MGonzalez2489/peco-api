@@ -15,7 +15,7 @@ import {
   ApiOkPaginatedResponse,
   GetUser,
 } from 'src/common/decorators';
-import { Account, User } from 'src/datasource/entities';
+import { User } from 'src/datasource/entities';
 import { CreateAccountDto } from '../dto';
 import {
   PageOptionsDto,
@@ -23,6 +23,7 @@ import {
 } from 'src/common/dtos/pagination';
 import { BaseController } from 'src/common/controllers/base.controller';
 import { ResponseDto } from 'src/common/dtos/responses';
+import { Account } from 'src/datasource/entities/economy';
 
 @Controller('accounts')
 @ApiTags('Accounts')

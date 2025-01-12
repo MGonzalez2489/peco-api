@@ -1,11 +1,11 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
-import { PBaseEntity } from './_base';
-import { User } from './user.entity';
+import { PBaseEntity } from '../_base';
+import { User } from '../user.entity';
 import { Exclude } from 'class-transformer';
-import { Entry } from './entry.entity';
+import { Entry } from '../economy';
 
 @Entity()
-export class Category extends PBaseEntity {
+export class EntryCategory extends PBaseEntity {
   @Column({ nullable: false })
   name: string;
 
@@ -30,12 +30,12 @@ export class Category extends PBaseEntity {
   @Column({ nullable: true, default: null })
   parentId?: number;
 
-  @ManyToOne(() => Category, (cat) => cat.subCategories)
+  @ManyToOne(() => EntryCategory, (cat) => cat.subCategories)
   @JoinColumn({
     name: 'parentId',
     foreignKeyConstraintName: 'FK_Category_Category',
   })
-  subCategories: Category[];
+  subCategories: EntryCategory[];
 
   @OneToMany(() => Entry, (ent) => ent.category)
   @Exclude()

@@ -5,23 +5,23 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Entry } from 'src/datasource/entities/entry.entity';
 import { Like, Repository } from 'typeorm';
 import { CreateEntryDto, EntryDto } from '../dtos';
-import { AccountService } from 'src/modules/accounts/services/account.service';
 import { User } from 'src/datasource/entities';
 import { BaseService } from 'src/common/services';
 import { PageOptionsDto } from 'src/common/dtos/pagination';
-import { CategoriesService } from 'src/modules/categories/services/categories.service';
 import { CatalogsService } from 'src/modules/catalogs/services/catalogs.service';
+import { Entry } from 'src/datasource/entities/economy';
+import { AccountService } from '../../accounts/services/account.service';
+import { EntryCategoryService } from 'src/modules/catalogs/services/entry-category.service';
 
 @Injectable()
 export class EntriesService extends BaseService<Entry> {
   constructor(
     @InjectRepository(Entry) readonly repository: Repository<Entry>,
     @Inject(AccountService) private readonly accountService: AccountService,
-    @Inject(CategoriesService)
-    private readonly categoryService: CategoriesService,
+    @Inject(EntryCategoryService)
+    private readonly categoryService: EntryCategoryService,
     @Inject(CatalogsService) private readonly catalogsService: CatalogsService,
   ) {
     super(repository);

@@ -1,18 +1,19 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { Category, User } from 'src/datasource/entities';
-import { AccountService } from 'src/modules/accounts/services/account.service';
+import { User } from 'src/datasource/entities';
 
 //seeds
 import * as CatSeedData from './../seed/categories.seed.json';
-import { CategoriesService } from 'src/modules/categories/services/categories.service';
+import { AccountService } from 'src/modules/economy/accounts/services/account.service';
+import { EntryCategory } from 'src/datasource/entities/catalogs';
+import { EntryCategoryService } from 'src/modules/catalogs/services/entry-category.service';
 
 //This service will seed all the default data for a new user
 @Injectable()
 export class UserSeedService {
   constructor(
     @Inject(AccountService) private readonly accountService: AccountService,
-    @Inject(CategoriesService)
-    private readonly userCatService: CategoriesService,
+    @Inject(EntryCategoryService)
+    private readonly userCatService: EntryCategoryService,
   ) {}
 
   async seed(user: User) {
@@ -24,7 +25,11 @@ export class UserSeedService {
     }
   }
 
-  private async seedCategories(source: any, user: User, parentCat?: Category) {
+  private async seedCategories(
+    source: any,
+    user: User,
+    parentCat?: EntryCategory,
+  ) {
     for (let i = 0; i < source.length; i++) {
       const element = source[i];
 
