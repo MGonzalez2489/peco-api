@@ -4,8 +4,8 @@ import { BaseController } from 'src/common/controllers/base.controller';
 import { User } from 'src/datasource/entities';
 import { GetUser } from 'src/common/decorators';
 import { PageOptionsDto } from 'src/common/dtos/pagination';
-import { EntryCategory } from 'src/datasource/entities/catalogs';
 import { EntryCategoryService } from '../services/entry-category.service';
+import { EntryCategory } from 'src/datasource/entities/economy';
 
 @Controller('categories')
 @ApiTags('Catalogs')

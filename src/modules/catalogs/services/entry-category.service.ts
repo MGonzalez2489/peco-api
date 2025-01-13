@@ -4,8 +4,8 @@ import { BaseService } from 'src/common/services';
 import { User } from 'src/datasource/entities';
 import { Repository } from 'typeorm';
 import { PageOptionsDto } from 'src/common/dtos/pagination';
-import { EntryCategory } from 'src/datasource/entities/catalogs';
 import { EntryCategoryCreateDto } from '../dtos/entry-category.dto';
+import { EntryCategory } from 'src/datasource/entities/economy';
 
 @Injectable()
 export class EntryCategoryService extends BaseService<EntryCategory> {

@@ -2,7 +2,8 @@ import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { Account } from './account.entity';
 import { Exclude } from 'class-transformer';
 import { PBaseEntity } from '../_base';
-import { EntryCategory, EntryType } from '../catalogs';
+import { EntryType } from '../catalogs';
+import { EntryCategory } from './entry-category.entity';
 
 @Entity()
 export class Entry extends PBaseEntity {

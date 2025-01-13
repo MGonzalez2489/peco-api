@@ -1,8 +1,8 @@
 import { BeforeInsert, Column, Entity, OneToMany } from 'typeorm';
 import { PBaseEntity } from './_base';
 import { Exclude } from 'class-transformer';
-import { EntryCategory } from './catalogs';
 import { Account } from './economy/account.entity';
+import { EntryCategory } from './economy';
 
 @Entity()
 export class User extends PBaseEntity {
