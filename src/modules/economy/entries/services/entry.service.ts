@@ -13,10 +13,10 @@ import { PageOptionsDto } from 'src/common/dtos/pagination';
 import { CatalogsService } from 'src/modules/catalogs/services/catalogs.service';
 import { Entry } from 'src/datasource/entities/economy';
 import { AccountService } from '../../accounts/services/account.service';
-import { EntryCategoryService } from 'src/modules/catalogs/services/entry-category.service';
+import { EntryCategoryService } from '../../entry-category/services/entry-category.service';
 
 @Injectable()
-export class EntriesService extends BaseService<Entry> {
+export class EntryService extends BaseService<Entry> {
   constructor(
     @InjectRepository(Entry) readonly repository: Repository<Entry>,
     @Inject(AccountService) private readonly accountService: AccountService,

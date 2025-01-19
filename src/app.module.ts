@@ -8,7 +8,8 @@ import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './modules/auth/guards';
 import { HttpLoggerMiddleware } from './common/middlewares';
 import { CatalogsModule } from './modules/catalogs/catalogs.module';
-import { AccountsModule, EntriesModule } from './modules/economy';
+import { AccountsModule, EntryModule } from './modules/economy';
+import { EntryCategoryModule } from './modules/economy/entry-category/entry-category.module';
 
 const envFilePath = `${__dirname}/config/${process.env.NODE_ENV || ''}.env`;
 
@@ -24,7 +25,7 @@ const envFilePath = `${__dirname}/config/${process.env.NODE_ENV || ''}.env`;
     AuthModule,
     AccountsModule,
     UsersModule,
-    EntriesModule,
+    EntryCategoryModule,
     CatalogsModule,
   ],
   providers: [

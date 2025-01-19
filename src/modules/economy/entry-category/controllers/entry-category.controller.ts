@@ -7,14 +7,14 @@ import { PageOptionsDto } from 'src/common/dtos/pagination';
 import { EntryCategoryService } from '../services/entry-category.service';
 import { EntryCategory } from 'src/datasource/entities/economy';
 
-@Controller('categories')
-@ApiTags('Catalogs')
+@Controller('entry-category')
+@ApiTags('Entry Category')
 export class EntryCategoryController extends BaseController<EntryCategory> {
   constructor(private readonly service: EntryCategoryService) {
     super();
   }
 
-  @Get('entry-category')
+  @Get()
   getCategories(@Query() paginationDto: PageOptionsDto, @GetUser() user: User) {
     return this.service.getAll(user, paginationDto);
   }

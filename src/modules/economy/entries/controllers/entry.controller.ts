@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { EntriesService } from '../services/entries.service';
+import { EntryService } from '../services/entry.service';
 import { CreateEntryDto } from '../dtos';
 import { GetUser } from 'src/common/decorators';
 import { User } from 'src/datasource/entities';
@@ -11,8 +11,8 @@ import { Entry } from 'src/datasource/entities/economy';
 
 @Controller('entries')
 @ApiTags('Entries')
-export class EntriesController extends BaseController<Entry> {
-  constructor(private readonly service: EntriesService) {
+export class EntryController extends BaseController<Entry> {
+  constructor(private readonly service: EntryService) {
     super();
   }
 

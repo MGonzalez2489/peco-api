@@ -4,8 +4,8 @@ import { User } from 'src/datasource/entities';
 //seeds
 import * as CatSeedData from './../seed/categories.seed.json';
 import { AccountService } from 'src/modules/economy/accounts/services/account.service';
-import { EntryCategoryService } from 'src/modules/catalogs/services/entry-category.service';
 import { EntryCategory } from 'src/datasource/entities/economy';
+import { EntryCategoryService } from 'src/modules/economy/entry-category/services/entry-category.service';
 
 //This service will seed all the default data for a new user
 @Injectable()

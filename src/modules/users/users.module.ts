@@ -6,6 +6,7 @@ import { UserSeedService, UserService } from './services';
 import { UserController } from './controllers';
 import { AccountsModule } from '../economy';
 import { CatalogsModule } from '../catalogs/catalogs.module';
+import { EntryCategoryModule } from '../economy/entry-category/entry-category.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { CatalogsModule } from '../catalogs/catalogs.module';
     AccountsModule,
     CommonModule,
     CatalogsModule,
+    EntryCategoryModule,
   ],
   providers: [UserService, UserSeedService],
   exports: [UserService],
