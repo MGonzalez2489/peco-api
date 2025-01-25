@@ -22,11 +22,12 @@ const envFilePath = `${__dirname}/config/${process.env.NODE_ENV || ''}.env`;
       isGlobal: true,
     }),
     PTypeOrmModule,
-    AuthModule,
-    AccountsModule,
     UsersModule,
+    AccountsModule,
+    EntryModule,
     EntryCategoryModule,
     CatalogsModule,
+    AuthModule,
   ],
   providers: [
     {

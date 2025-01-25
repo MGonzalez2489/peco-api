@@ -19,10 +19,10 @@ import { EntryCategoryService } from '../../entry-category/services/entry-catego
 export class EntryService extends BaseService<Entry> {
   constructor(
     @InjectRepository(Entry) readonly repository: Repository<Entry>,
-    @Inject(AccountService) private readonly accountService: AccountService,
+    @Inject(AccountService) readonly accountService: AccountService,
     @Inject(EntryCategoryService)
-    private readonly categoryService: EntryCategoryService,
-    @Inject(CatalogsService) private readonly catalogsService: CatalogsService,
+    readonly categoryService: EntryCategoryService,
+    @Inject(CatalogsService) readonly catalogsService: CatalogsService,
   ) {
     super(repository);
   }

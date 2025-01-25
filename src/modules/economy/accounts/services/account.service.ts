@@ -110,7 +110,7 @@ export class AccountService extends BaseService<Account> {
       const updatedValue = await this.repository.save({
         id: account.id,
         name: dto.name,
-        balance: dto.initialBalance,
+        //balance: dto.initialBalance,
       });
       account.name = updatedValue.name;
       account.balance = updatedValue.balance;
