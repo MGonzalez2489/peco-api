@@ -5,7 +5,7 @@ export class CreateAccountDto {
   name: string;
 
   @IsNumber()
-  initialBalance: number;
+  balance: number;
 
   @IsBoolean()
   @IsOptional()

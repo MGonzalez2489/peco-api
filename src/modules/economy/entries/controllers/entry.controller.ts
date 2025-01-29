@@ -15,6 +15,10 @@ export class EntryController extends BaseController<Entry> {
   constructor(private readonly service: EntryService) {
     super();
   }
+  @Get()
+  getAllEntries(@Query() paginationDto: PageOptionsDto, @GetUser() user: User) {
+    return this.service.getAllEntries(paginationDto, user);
+  }
 
   @Post(':accountId/entry')
   async createIncome(

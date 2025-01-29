@@ -19,11 +19,11 @@ export class AccountService extends BaseService<Account> {
   //Create one initial and default account
   //THis function is used only on usersCreate
   //TODO: Improve documentation
-  async createDefaultAccount(user: User) {
+  async createRootAccount(user: User) {
     try {
       const defaultAccountDto: CreateAccountDto = {
         name: AccountConstants.DEFAULT_NAME,
-        initialBalance: 0,
+        balance: 0,
         isDefault: true,
       };
 
@@ -40,7 +40,8 @@ export class AccountService extends BaseService<Account> {
       let account = this.repository.create({
         name: dto.name,
         user,
-        balance: dto.initialBalance,
+        balance: dto.balance,
+        initialBalance: dto.balance,
         isDefault: dto.isDefault,
       });
       account = await this.repository.save(account);
@@ -110,6 +111,7 @@ export class AccountService extends BaseService<Account> {
       const updatedValue = await this.repository.save({
         id: account.id,
         name: dto.name,
+        isDefault: dto.isDefault,
         //balance: dto.initialBalance,
       });
       account.name = updatedValue.name;

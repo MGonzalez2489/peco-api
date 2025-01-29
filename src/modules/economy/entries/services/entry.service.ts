@@ -26,6 +26,41 @@ export class EntryService extends BaseService<Entry> {
   ) {
     super(repository);
   }
+
+  async getAllEntries(pageOptionsDto: PageOptionsDto, user: User) {
+    try {
+      const query = this.repository.createQueryBuilder('entry');
+
+      const filter = {
+        // account: account.id,
+      };
+      if (pageOptionsDto.hint && pageOptionsDto.hint !== '') {
+        filter['description'] = Like(`%${pageOptionsDto.hint}%`);
+      }
+
+      query
+        .where(filter)
+        .leftJoinAndSelect('entry.category', 'category')
+        .leftJoinAndSelect('entry.account', 'account')
+        .leftJoinAndSelect('entry.type', 'type')
+        .orderBy(`entry.${pageOptionsDto.orderBy}`, pageOptionsDto.order);
+
+      const response = await this.SearchByQuery(query, pageOptionsDto);
+      console.log('entries', response);
+
+      const mappedData: EntryDto[] = [];
+      response.data.forEach((element: Entry) => {
+        mappedData.push(new EntryDto(element));
+      });
+
+      response.data = mappedData;
+
+      return response;
+    } catch (error) {
+      this.ThrowException('EntriesService::getEntriesByUser', error);
+    }
+  }
+
   //TODO: Apply pagination
   async getEntriesByAccount(
     accountId: string,

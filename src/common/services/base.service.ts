@@ -37,7 +37,8 @@ export class BaseService<Entity extends PBaseEntity | any> {
     pageOptions: PageOptionsDto,
     query: SelectQueryBuilder<any>,
   ): Promise<PaginatedResponseDto<Entity | any>> {
-    query = query.skip(pageOptions.skip).take(pageOptions.take);
+    if (!pageOptions.showAll)
+      query = query.skip(pageOptions.skip).take(pageOptions.take);
 
     const itemCount = await query.getCount();
     const { entities } = await query.getRawAndEntities();

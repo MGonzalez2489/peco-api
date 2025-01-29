@@ -4,13 +4,17 @@ import { Repository } from 'typeorm';
 //seed
 import * as EntryTypeSeed from './../seeds/entry-type.seed.json';
 import { EntryType } from 'src/datasource/entities/catalogs';
+import { BaseService } from 'src/common/services';
+import { PageOptionsDto } from 'src/common/dtos/pagination';
 
 @Injectable()
-export class CatalogsService {
+export class CatalogsService extends BaseService<any> {
   constructor(
     @InjectRepository(EntryType)
     protected readonly catEntryTypeRepo: Repository<EntryType>,
-  ) {}
+  ) {
+    super();
+  }
 
   async initCatalogs() {
     try {
@@ -23,8 +27,10 @@ export class CatalogsService {
     }
   }
 
-  async getEntryTypes() {
-    return await this.catEntryTypeRepo.find();
+  async getEntryTypes(paginationDto: PageOptionsDto) {
+    this.repository = this.catEntryTypeRepo;
+    return this.Search(paginationDto, {});
+    // return await this.catEntryTypeRepo.find();
   }
   async getEntryByPublicId(publicId: string) {
     return await this.catEntryTypeRepo.findOneBy({ publicId });

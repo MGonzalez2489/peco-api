@@ -5,7 +5,6 @@ import { Repository } from 'typeorm';
 import { UserCreateDto } from '../dto';
 import { BaseService, CryptService } from 'src/common/services';
 import { UserSeedService } from './user-seed.service';
-
 @Injectable()
 export class UserService extends BaseService<User> {
   constructor(

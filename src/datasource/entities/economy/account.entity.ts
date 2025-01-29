@@ -12,8 +12,14 @@ export class Account extends PBaseEntity {
   @Column('double', { precision: 10, scale: 2 })
   balance: number;
 
+  @Column({ readonly: true })
+  initialBalance: number;
+
   @Column({ default: false })
   isDefault: boolean;
+
+  @Column({ readonly: true, default: true })
+  isRoot: boolean;
 
   //////////Relationships
 
