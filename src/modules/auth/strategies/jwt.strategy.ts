@@ -21,14 +21,15 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
   async validate(payload: any): Promise<User> {
-    const { publicId } = payload;
-    const user = await this.userService.findUserByPublicId(publicId);
-    // if (!user) {
-    //   throw new UnauthorizedException('Token no valido.');
-    // }
-    // if (user.deletedAt) {
-    //   throw new UnauthorizedException('Token no valido.');
-    // }
+    const { sub } = payload;
+    console.log('publicId', sub);
+    const user = await this.userService.findUserByPublicId(sub);
+    if (!user) {
+      throw new UnauthorizedException('Token no valido.');
+    }
+    if (user.deletedAt) {
+      throw new UnauthorizedException('Token no valido.');
+    }
 
     return user;
   }

@@ -11,7 +11,7 @@ import { User } from 'src/datasource/entities';
 import { BaseService } from 'src/common/services';
 import { PageOptionsDto } from 'src/common/dtos/pagination';
 import { CatalogsService } from 'src/modules/catalogs/services/catalogs.service';
-import { Entry } from 'src/datasource/entities/economy';
+import { Account, Entry } from 'src/datasource/entities/economy';
 import { AccountService } from '../../accounts/services/account.service';
 import { EntryCategoryService } from '../../entry-category/services/entry-category.service';
 
@@ -31,22 +31,14 @@ export class EntryService extends BaseService<Entry> {
     try {
       const query = this.repository.createQueryBuilder('entry');
 
-      const filter = {
-        // account: account.id,
-      };
-      if (pageOptionsDto.hint && pageOptionsDto.hint !== '') {
-        filter['description'] = Like(`%${pageOptionsDto.hint}%`);
-      }
-
       query
-        .where(filter)
-        .leftJoinAndSelect('entry.category', 'category')
         .leftJoinAndSelect('entry.account', 'account')
+        .leftJoinAndSelect('entry.category', 'category')
         .leftJoinAndSelect('entry.type', 'type')
+        .where('account.userId = :userId', { userId: user.id })
         .orderBy(`entry.${pageOptionsDto.orderBy}`, pageOptionsDto.order);
 
       const response = await this.SearchByQuery(query, pageOptionsDto);
-      console.log('entries', response);
 
       const mappedData: EntryDto[] = [];
       response.data.forEach((element: Entry) => {
@@ -83,9 +75,9 @@ export class EntryService extends BaseService<Entry> {
       }
 
       query
-        .where(filter)
         .leftJoinAndSelect('entry.category', 'category')
         .leftJoinAndSelect('entry.type', 'type')
+        .where(filter)
         .orderBy(`entry.${pageOptionsDto.orderBy}`, pageOptionsDto.order);
 
       const response = await this.SearchByQuery(query, pageOptionsDto);

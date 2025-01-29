@@ -7,6 +7,7 @@ export class EntryDto {
   category: string;
   type: string;
   createdAt: string;
+  account: string;
 
   constructor(entry: Entry) {
     this.amount = entry.amount;
@@ -15,5 +16,6 @@ export class EntryDto {
     this.category = entry.category?.name;
     this.type = entry.type?.displayName;
     this.createdAt = entry.createdAt;
+    this.account = entry.account ? entry.account?.name : 'no ta la cuenta';
   }
 }

@@ -33,7 +33,6 @@ export class AuthController extends BaseController<TokenDto> {
   @Public()
   async signIn(@Body() dto: RegisterDto): Promise<ResponseDto<TokenDto>> {
     const result = await this.service.signIn(dto);
-    console.log('result', result);
     return this.Response(result);
   }
 }

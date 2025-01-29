@@ -80,7 +80,6 @@ export class AccountService extends BaseService<Account> {
       if (pageOptionsDto.hint && pageOptionsDto.hint !== '') {
         filter['name'] = Like(`%${pageOptionsDto.hint}%`);
       }
-
       return await this.Search(pageOptionsDto, filter);
     } catch (error) {
       this.ThrowException('AccountService::getAccountsByUser', error);
