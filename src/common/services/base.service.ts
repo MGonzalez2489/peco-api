@@ -37,8 +37,10 @@ export class BaseService<Entity extends PBaseEntity | any> {
     pageOptions: PageOptionsDto,
     query: SelectQueryBuilder<any>,
   ): Promise<PaginatedResponseDto<Entity | any>> {
-    if (!pageOptions.showAll)
+    //this weird comparation is due to "showAll" property, take a look soon
+    if (pageOptions.showAll.toString() === 'false') {
       query = query.skip(pageOptions.skip).take(pageOptions.take);
+    }
 
     const itemCount = await query.getCount();
     const { entities } = await query.getRawAndEntities();

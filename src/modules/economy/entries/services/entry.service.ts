@@ -11,7 +11,7 @@ import { User } from 'src/datasource/entities';
 import { BaseService } from 'src/common/services';
 import { PageOptionsDto } from 'src/common/dtos/pagination';
 import { CatalogsService } from 'src/modules/catalogs/services/catalogs.service';
-import { Account, Entry } from 'src/datasource/entities/economy';
+import { Entry } from 'src/datasource/entities/economy';
 import { AccountService } from '../../accounts/services/account.service';
 import { EntryCategoryService } from '../../entry-category/services/entry-category.service';
 
@@ -53,7 +53,6 @@ export class EntryService extends BaseService<Entry> {
     }
   }
 
-  //TODO: Apply pagination
   async getEntriesByAccount(
     accountId: string,
     pageOptionsDto: PageOptionsDto,
@@ -75,6 +74,7 @@ export class EntryService extends BaseService<Entry> {
       }
 
       query
+        .leftJoinAndSelect('entry.account', 'account')
         .leftJoinAndSelect('entry.category', 'category')
         .leftJoinAndSelect('entry.type', 'type')
         .where(filter)
