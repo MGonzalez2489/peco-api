@@ -4,7 +4,7 @@ import { BaseController } from 'src/common/controllers/base.controller';
 import { ApiModelOkResponse, GetUser, Public } from 'src/common/decorators';
 import { ResponseDto } from 'src/common/dtos/responses';
 import { User } from 'src/datasource/entities';
-import { RegisterDto, TokenDto } from '../dto';
+import { ChangePasswordDto, RegisterDto, TokenDto } from '../dto';
 import { AuthService } from '../services/auth.service';
 
 @Controller('auth')
@@ -22,7 +22,7 @@ export class AuthController extends BaseController<TokenDto> {
   ): Promise<ResponseDto<TokenDto>> {
     try {
       const registrationResponse =
-        await this.service.register(registrationRequest);
+        await this.service.registerAsync(registrationRequest);
       return this.Response(registrationResponse);
     } catch (error) {
       // Handle the error
@@ -34,11 +34,11 @@ export class AuthController extends BaseController<TokenDto> {
   @Patch('secure')
   @ApiModelOkResponse(TokenDto)
   async secure(
-    @Body() updatePasswordRequest: RegisterDto,
+    @Body() updatePasswordRequest: ChangePasswordDto,
     @GetUser() user: User,
   ): Promise<ResponseDto<TokenDto>> {
     try {
-      const updatePasswordResponse = await this.service.updatePassword(
+      const updatePasswordResponse = await this.service.changePasswordAsync(
         updatePasswordRequest,
         user,
       );

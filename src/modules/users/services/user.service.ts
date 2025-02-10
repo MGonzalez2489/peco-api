@@ -31,7 +31,7 @@ export class UserService extends BaseService<User> {
     }
   }
 
-  async create(dto: UserCreateDto) {
+  async createAsync(dto: UserCreateDto) {
     try {
       const user = this.repository.create({
         email: dto.email,
@@ -59,7 +59,7 @@ export class UserService extends BaseService<User> {
    *@param userId User's publicId to update the value
    * // This Function is only used by auth service
    */
-  async updatePassword(newPassword: string, userId: string) {
+  async updatePasswordAsync(newPassword: string, userId: string) {
     try {
       const user = await this.findUserByPublicId(userId);
 
