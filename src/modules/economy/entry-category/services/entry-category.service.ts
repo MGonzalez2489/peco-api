@@ -1,10 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import {
+  PageOptionsDto,
+  PaginatedResponseDto,
+} from 'src/common/dtos/pagination';
 import { BaseService } from 'src/common/services';
 import { User } from 'src/datasource/entities';
-import { Repository } from 'typeorm';
-import { PageOptionsDto } from 'src/common/dtos/pagination';
 import { EntryCategory } from 'src/datasource/entities/economy';
+import { Repository } from 'typeorm';
 import { EntryCategoryCreateDto } from '../dto/entry-category.dto';
 
 @Injectable()
@@ -16,23 +19,36 @@ export class EntryCategoryService extends BaseService<EntryCategory> {
     super(repository);
   }
 
-  async getAll(user: User, pageOptions: PageOptionsDto) {
+  /**
+   * Retrieves all categories for a user, including subcategories.
+   *
+   * @param user The user object.
+   * @param pageOptions Page options for pagination.
+   * @returns Categories with subcategories.
+   */
+  async getAllAsync(
+    user: User,
+    pageOptions: PageOptionsDto,
+  ): Promise<PaginatedResponseDto<EntryCategory>> {
     const categories = await this.Search(pageOptions, { userId: user.id });
 
-    const organizedCatArray = [];
-    categories.data.forEach((cat) => {
-      if (!cat.parentId) {
-        cat.subCategories = categories.data.filter(
-          (f) => f.parentId === cat.id,
-        );
-        organizedCatArray.push(cat);
-      }
-    });
+    categories.data = categories.data
+      .filter((cat) => !cat.parentId)
+      .map((cat) => ({
+        ...cat,
+        subCategories: categories.data.filter((c) => c.parentId == cat.id),
+      }));
 
-    categories.data = organizedCatArray;
     return categories;
   }
 
+  /**
+   * Creates a new category for a user.
+   *
+   * @param user The user object.
+   * @param createCategoryDto Category creation data.
+   * @returns The created category.
+   */
   async getByPublicIdAsync(
     catId: string,
     user: User,
@@ -43,20 +59,28 @@ export class EntryCategoryService extends BaseService<EntryCategory> {
     });
   }
 
+  /**
+   * Creates a new category for a user.
+   *
+   * @param categoryDto Category creation data.
+   * @param user The user object.
+   * @param isDefault Whether the category is default.
+   * @returns The created category, or null if not found.
+   */
   async createCategory(
     categoryDto: EntryCategoryCreateDto,
     user: User,
     isDefault: boolean = false,
   ): Promise<EntryCategory | null> {
-    let parentCat: EntryCategory;
-    if (categoryDto.parentId) {
-      parentCat = await this.getByPublicIdAsync(categoryDto.parentId, user);
-    }
+    const parentCategory = await this.getByPublicIdAsync(
+      categoryDto.parentId,
+      user,
+    );
 
     const newCategory = this.repository.create({
       name: categoryDto.name,
       userId: user.id,
-      parentId: parentCat?.id,
+      parentId: parentCategory?.id,
       isDefault,
     });
 

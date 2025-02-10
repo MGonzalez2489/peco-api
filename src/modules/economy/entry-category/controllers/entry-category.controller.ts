@@ -16,6 +16,6 @@ export class EntryCategoryController extends BaseController<EntryCategory> {
 
   @Get()
   getCategories(@Query() paginationDto: PageOptionsDto, @GetUser() user: User) {
-    return this.service.getAll(user, paginationDto);
+    return this.service.getAllAsync(user, paginationDto);
   }
 }
