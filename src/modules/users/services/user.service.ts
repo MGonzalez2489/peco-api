@@ -16,7 +16,7 @@ export class UserService extends BaseService<User> {
     super(repository);
   }
 
-  async findUserByEmail(email: string) {
+  async findUserByEmailAsync(email: string) {
     try {
       return this.repository.findOneBy({ email });
     } catch (error) {
