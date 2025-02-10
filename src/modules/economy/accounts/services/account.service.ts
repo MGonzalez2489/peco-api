@@ -5,7 +5,6 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { AccountConstants } from 'src/common/constants';
 import { User } from 'src/datasource/entities';
 import { Like, Repository } from 'typeorm';
 import { CreateAccountDto } from '../dto';
@@ -13,6 +12,8 @@ import { BaseService } from 'src/common/services';
 import { PageOptionsDto } from 'src/common/dtos/pagination';
 import { Account } from 'src/datasource/entities/economy/account.entity';
 import { CatAccountTypeService } from 'src/modules/catalogs/services';
+
+import * as AccountConstants from './../constants';
 
 @Injectable()
 export class AccountService extends BaseService<Account> {

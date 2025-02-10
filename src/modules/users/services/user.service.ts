@@ -1,10 +1,11 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { BaseService, CryptService } from 'src/common/services';
 import { User } from 'src/datasource/entities';
 import { Repository } from 'typeorm';
 import { UserCreateDto } from '../dto';
-import { BaseService, CryptService } from 'src/common/services';
 import { UserSeedService } from './user-seed.service';
+
 @Injectable()
 export class UserService extends BaseService<User> {
   constructor(
