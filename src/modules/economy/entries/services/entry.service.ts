@@ -5,15 +5,15 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Like, Repository } from 'typeorm';
-import { CreateEntryDto, EntryDto } from '../dtos';
-import { User } from 'src/datasource/entities';
 import { BaseService } from 'src/common/services';
-import { PageOptionsDto } from 'src/common/dtos/pagination';
-import { CatalogsService } from 'src/modules/catalogs/services/catalogs.service';
+import { User } from 'src/datasource/entities';
 import { Entry } from 'src/datasource/entities/economy';
+import { CatEntryTypeService } from 'src/modules/catalogs/services';
+import { LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm';
 import { AccountService } from '../../accounts/services/account.service';
 import { EntryCategoryService } from '../../entry-category/services/entry-category.service';
+import { CreateEntryDto, EntryDto } from '../dtos';
+import { SearchEntriesDto } from '../dtos/search.dto';
 
 @Injectable()
 export class EntryService extends BaseService<Entry> {
@@ -22,55 +22,43 @@ export class EntryService extends BaseService<Entry> {
     @Inject(AccountService) readonly accountService: AccountService,
     @Inject(EntryCategoryService)
     readonly categoryService: EntryCategoryService,
-    @Inject(CatalogsService) readonly catalogsService: CatalogsService,
+    @Inject(CatEntryTypeService)
+    readonly catEntryTypeService: CatEntryTypeService,
   ) {
     super(repository);
   }
 
-  async getAllEntries(pageOptionsDto: PageOptionsDto, user: User) {
+  async getEntriesByAccount(searchDto: SearchEntriesDto, user: User) {
     try {
+      //Query
       const query = this.repository.createQueryBuilder('entry');
+      const account = searchDto.accountId
+        ? await this.accountService.getAccountByPublicIdAsync(
+            searchDto.accountId,
+            user,
+          )
+        : undefined;
 
-      query
-        .leftJoinAndSelect('entry.account', 'account')
-        .leftJoinAndSelect('entry.category', 'category')
-        .leftJoinAndSelect('entry.type', 'type')
-        .where('account.userId = :userId', { userId: user.id })
-        .orderBy(`entry.${pageOptionsDto.orderBy}`, pageOptionsDto.order);
+      const category = searchDto.categoryId
+        ? await this.categoryService.getByPublicId(searchDto.categoryId, user)
+        : undefined;
+      const entryType = searchDto.entryTypeId
+        ? await this.catEntryTypeService.getEntryTypeByPublicIdAsync(
+            searchDto.entryTypeId,
+          )
+        : undefined;
 
-      const response = await this.SearchByQuery(query, pageOptionsDto);
+      const filter = {};
 
-      const mappedData: EntryDto[] = [];
-      response.data.forEach((element: Entry) => {
-        mappedData.push(new EntryDto(element));
-      });
-
-      response.data = mappedData;
-
-      return response;
-    } catch (error) {
-      this.ThrowException('EntriesService::getEntriesByUser', error);
-    }
-  }
-
-  async getEntriesByAccount(
-    accountId: string,
-    pageOptionsDto: PageOptionsDto,
-    user: User,
-  ) {
-    try {
-      const account = await this.accountService.getAccountById(accountId, user);
-      if (!account) {
-        throw new BadRequestException('Account not found');
+      if (account) {
+        filter['accountId'] = account.id;
       }
 
-      const query = this.repository.createQueryBuilder('entry');
-
-      const filter = {
-        accountId: account.id,
-      };
-      if (pageOptionsDto.hint && pageOptionsDto.hint !== '') {
-        filter['description'] = Like(`%${pageOptionsDto.hint}%`);
+      if (category) {
+        filter['categoryId'] = category.id;
+      }
+      if (entryType) {
+        filter['typeId'] = entryType.id;
       }
 
       query
@@ -78,9 +66,15 @@ export class EntryService extends BaseService<Entry> {
         .leftJoinAndSelect('entry.category', 'category')
         .leftJoinAndSelect('entry.type', 'type')
         .where(filter)
-        .orderBy(`entry.${pageOptionsDto.orderBy}`, pageOptionsDto.order);
+        .andWhere({
+          createdAt: MoreThanOrEqual(new Date(searchDto.fromDate)),
+        })
+        .andWhere({
+          createdAt: LessThanOrEqual(new Date(searchDto.toDate)),
+        })
+        .orderBy(`entry.${searchDto.orderBy}`, searchDto.order);
 
-      const response = await this.SearchByQuery(query, pageOptionsDto);
+      const response = await this.SearchByQuery(query, searchDto);
 
       const mappedData: EntryDto[] = [];
       response.data.forEach((element: Entry) => {
@@ -98,7 +92,7 @@ export class EntryService extends BaseService<Entry> {
   //crear un metodo para crear todo tipo de categoria
   async createEntry(dto: CreateEntryDto, accountPublicId: string, user: User) {
     try {
-      const account = await this.accountService.getAccountById(
+      const account = await this.accountService.getAccountByPublicIdAsync(
         accountPublicId,
         user,
       );
@@ -114,9 +108,10 @@ export class EntryService extends BaseService<Entry> {
         dto.categoryId,
         user,
       );
-      const entryType = await this.catalogsService.getEntryByPublicId(
-        dto.entryTypeId,
-      );
+      const entryType =
+        await this.catEntryTypeService.getEntryTypeByPublicIdAsync(
+          dto.entryTypeId,
+        );
 
       const entry = this.repository.create({
         amount: dto.amount,

@@ -1,0 +1,10 @@
+[
+  {
+    "name": "cash",
+    "displayName": "Efectivo"
+  },
+  {
+    "name": "debit",
+    "displayName": "Debito"
+  }
+]

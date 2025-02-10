@@ -2,7 +2,7 @@ import { Column, Entity } from 'typeorm';
 import { PBaseEntity } from '../_base';
 
 @Entity()
-export class EntryType extends PBaseEntity {
+export class AccountType extends PBaseEntity {
   @Column({ update: false })
   name: string;
 

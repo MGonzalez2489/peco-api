@@ -6,8 +6,8 @@ import { GetUser } from 'src/common/decorators';
 import { User } from 'src/datasource/entities';
 import { BaseController } from 'src/common/controllers/base.controller';
 import { ResponseDto } from 'src/common/dtos/responses';
-import { PageOptionsDto } from 'src/common/dtos/pagination';
 import { Entry } from 'src/datasource/entities/economy';
+import { SearchEntriesDto } from '../dtos/search.dto';
 
 @Controller('entries')
 @ApiTags('Entries')
@@ -15,10 +15,10 @@ export class EntryController extends BaseController<Entry> {
   constructor(private readonly service: EntryService) {
     super();
   }
-  @Get()
-  getAllEntries(@Query() paginationDto: PageOptionsDto, @GetUser() user: User) {
-    return this.service.getAllEntries(paginationDto, user);
-  }
+  // @Get()
+  // getAllEntries(@Query() paginationDto: PageOptionsDto, @GetUser() user: User) {
+  //   return this.service.getAllEntries(paginationDto, user);
+  // }
 
   @Post(':accountId/entry')
   async createIncome(
@@ -30,12 +30,8 @@ export class EntryController extends BaseController<Entry> {
     return this.Response(result);
   }
 
-  @Get(':accountId')
-  getEntriesByAccount(
-    @Query() paginationDto: PageOptionsDto,
-    @Param('accountId') accountId: string,
-    @GetUser() user: User,
-  ) {
-    return this.service.getEntriesByAccount(accountId, paginationDto, user);
+  @Get()
+  getEntries(@Query() paginationDto: SearchEntriesDto, @GetUser() user: User) {
+    return this.service.getEntriesByAccount(paginationDto, user);
   }
 }

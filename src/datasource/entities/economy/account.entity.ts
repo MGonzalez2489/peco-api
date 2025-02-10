@@ -3,6 +3,7 @@ import { Exclude } from 'class-transformer';
 import { Entry } from './entry.entity';
 import { PBaseEntity } from '../_base';
 import { User } from '../user.entity';
+import { AccountType } from '../catalogs';
 
 @Entity()
 export class Account extends PBaseEntity {
@@ -35,4 +36,16 @@ export class Account extends PBaseEntity {
   @OneToMany(() => Entry, (entry) => entry.account)
   @Exclude()
   entries: Entry[];
+
+  //
+  @ManyToOne(() => AccountType)
+  @JoinColumn({
+    name: 'typeId',
+    foreignKeyConstraintName: 'FK_Account_AccountType',
+  })
+  type: AccountType;
+
+  @Exclude()
+  @Column({ nullable: false })
+  typeId: number;
 }

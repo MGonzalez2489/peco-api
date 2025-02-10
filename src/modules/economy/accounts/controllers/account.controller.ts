@@ -8,22 +8,22 @@ import {
   Put,
   Query,
 } from '@nestjs/common';
-import { AccountService } from '../services/account.service';
 import { ApiTags } from '@nestjs/swagger';
+import { BaseController } from 'src/common/controllers/base.controller';
 import {
   ApiModelOkResponse,
   ApiOkPaginatedResponse,
   GetUser,
 } from 'src/common/decorators';
-import { User } from 'src/datasource/entities';
-import { CreateAccountDto } from '../dto';
 import {
   PageOptionsDto,
   PaginatedResponseDto,
 } from 'src/common/dtos/pagination';
-import { BaseController } from 'src/common/controllers/base.controller';
 import { ResponseDto } from 'src/common/dtos/responses';
+import { User } from 'src/datasource/entities';
 import { Account } from 'src/datasource/entities/economy';
+import { CreateAccountDto } from '../dto';
+import { AccountService } from '../services/account.service';
 
 @Controller('accounts')
 @ApiTags('Accounts')
@@ -42,11 +42,14 @@ export class AccountController extends BaseController<any> {
   }
 
   @Get(':accountId')
-  async getByid(
+  async getAccountById(
     @Param('accountId') accountId: string,
     @GetUser() user: User,
   ): Promise<ResponseDto<Account>> {
-    const result = await this.service.getAccountById(accountId, user);
+    const result = await this.service.getAccountByPublicIdAsync(
+      accountId,
+      user,
+    );
     return this.Response(result);
   }
 

@@ -1,8 +1,7 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import {
   IsBoolean,
-  IsBooleanString,
   IsEnum,
   IsInt,
   IsOptional,
@@ -15,7 +14,7 @@ import { PaginationOrderEnum } from 'src/common/enums';
 export class PageOptionsDto {
   @ApiPropertyOptional({
     enum: PaginationOrderEnum,
-    default: PaginationOrderEnum.ASC,
+    default: PaginationOrderEnum.DESC,
   })
   @IsEnum(PaginationOrderEnum)
   @IsOptional()
@@ -23,8 +22,7 @@ export class PageOptionsDto {
 
   @IsOptional()
   @IsString()
-  readonly orderBy?: string = 'id';
-  // readonly orderBy?: string = 'CreatedAt';
+  readonly orderBy?: string = 'CreatedAt';
 
   @ApiPropertyOptional({
     minimum: 1,
@@ -52,7 +50,8 @@ export class PageOptionsDto {
   @IsOptional()
   readonly hint: string;
 
-  @IsBooleanString()
+  @IsBoolean()
+  @Transform(({ value }) => value === 'true')
   showAll: boolean;
 
   get skip(): number {

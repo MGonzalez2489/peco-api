@@ -10,4 +10,7 @@ export class CreateAccountDto {
   @IsBoolean()
   @IsOptional()
   isDefault?: boolean;
+
+  @IsString()
+  accountTypeId: string;
 }

@@ -1,4 +1,9 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AccountConstants } from 'src/common/constants';
 import { User } from 'src/datasource/entities';
@@ -7,27 +12,50 @@ import { CreateAccountDto } from '../dto';
 import { BaseService } from 'src/common/services';
 import { PageOptionsDto } from 'src/common/dtos/pagination';
 import { Account } from 'src/datasource/entities/economy/account.entity';
+import { CatAccountTypeService } from 'src/modules/catalogs/services';
 
 @Injectable()
 export class AccountService extends BaseService<Account> {
   constructor(
     @InjectRepository(Account) readonly repository: Repository<Account>,
+    @Inject(CatAccountTypeService)
+    private readonly catAccountTypeService: CatAccountTypeService,
   ) {
     super(repository);
   }
 
-  //Create one initial and default account
-  //THis function is used only on usersCreate
-  //TODO: Improve documentation
-  async createRootAccount(user: User) {
-    try {
-      const defaultAccountDto: CreateAccountDto = {
-        name: AccountConstants.DEFAULT_NAME,
-        balance: 0,
-        isDefault: true,
-      };
+  async createRootAccountAsync(user: User) {
+    if (!user) {
+      throw new BadRequestException('user is required');
+    }
 
-      return await this.createAccount(defaultAccountDto, user);
+    try {
+      const accountTypes =
+        await this.catAccountTypeService.getAccountTypesAsync();
+      const defaultAccountType = accountTypes.find(
+        (accountType) =>
+          accountType.name.toLowerCase() ===
+          AccountConstants.DEFAULT_ACCOUNT_TYPE,
+      );
+      if (!defaultAccountType) {
+        throw new InternalServerErrorException(
+          'Default account type not found',
+        );
+      }
+
+      let account = this.repository.create({
+        name: AccountConstants.DEFAULT_NAME,
+        user,
+        balance: 0,
+        initialBalance: 0,
+        isDefault: true,
+        isRoot: true,
+        typeId: accountTypes.find(
+          (f) => f.name.toLowerCase() === AccountConstants.DEFAULT_ACCOUNT_TYPE,
+        ).id,
+      });
+      account = await this.repository.save(account);
+      return account;
     } catch (error) {
       this.ThrowException('AccountService::createDefaultAccount', error);
     }
@@ -51,12 +79,21 @@ export class AccountService extends BaseService<Account> {
     }
   }
 
-  //Get account by id
-  //TODO: Improve documentation
-  async getAccountById(id: string, user?: User) {
+  /**
+   * Retrieves an account by its public ID, optionally filtered by the provided user.
+   *
+   * @param publicId The public ID of the account to retrieve.
+   * @param user The optional user object to filter accounts by.
+   * @returns A promise resolving to the account with the specified public ID.
+   * @throws {BadRequestException} If the public ID is not provided.
+   */
+  async getAccountByPublicIdAsync(publicId: string, user?: User) {
+    if (!publicId) {
+      throw new BadRequestException('Public ID is required');
+    }
     try {
       const condition = {
-        publicId: id,
+        publicId,
       };
       if (user) {
         condition['userId'] = user.id;
@@ -77,6 +114,7 @@ export class AccountService extends BaseService<Account> {
         userId: user.id,
       };
 
+      //TODO: Fix the filter
       if (pageOptionsDto.hint && pageOptionsDto.hint !== '') {
         filter['name'] = Like(`%${pageOptionsDto.hint}%`);
       }
@@ -102,7 +140,7 @@ export class AccountService extends BaseService<Account> {
 
   async updateAccount(dto: CreateAccountDto, accountId: string, user: User) {
     try {
-      const account = await this.getAccountById(accountId, user);
+      const account = await this.getAccountByPublicIdAsync(accountId, user);
       if (!account) {
         throw new BadRequestException('Account not found');
       }
@@ -120,9 +158,13 @@ export class AccountService extends BaseService<Account> {
       this.ThrowException('AccountService::updateAccount', error);
     }
   }
+  /**
+   *
+   *
+   */
   async deleteAccount(accountId: string, user: User) {
     try {
-      const account = await this.getAccountById(accountId, user);
+      const account = await this.getAccountByPublicIdAsync(accountId, user);
 
       if (account.isDefault) {
         throw new BadRequestException("Default account can't be deleted");

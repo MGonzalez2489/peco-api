@@ -18,7 +18,7 @@ export class UserSeedService {
 
   async seed(user: User) {
     try {
-      await this.accountService.createRootAccount(user);
+      await this.accountService.createRootAccountAsync(user);
       await this.seedCategories(CatSeedData, user);
     } catch (error) {
       throw error;
