@@ -1,18 +1,17 @@
-import {
-  BadRequestException,
-  Inject,
-  Injectable,
-  InternalServerErrorException,
-} from '@nestjs/common';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from 'src/datasource/entities';
-import { Like, Repository } from 'typeorm';
-import { CreateAccountDto } from '../dto';
+import {
+  PageOptionsDto,
+  PaginatedResponseDto,
+} from 'src/common/dtos/pagination';
 import { BaseService } from 'src/common/services';
-import { PageOptionsDto } from 'src/common/dtos/pagination';
+import { User } from 'src/datasource/entities';
 import { Account } from 'src/datasource/entities/economy/account.entity';
 import { CatAccountTypeService } from 'src/modules/catalogs/services';
+import { Like, Repository } from 'typeorm';
+import { CreateAccountDto } from '../dto';
 
+import { AccountTypeEnum } from '../enums/account-type.enum';
 import * as AccountConstants from './../constants';
 
 @Injectable()
@@ -24,25 +23,24 @@ export class AccountService extends BaseService<Account> {
   ) {
     super(repository);
   }
-
-  async createRootAccountAsync(user: User) {
+  /**
+   * Creates a root account for a given user.
+   *
+   * @param user The user to create a root account for.
+   * @returns The created root account.
+   * @throws {BadRequestException} If the user is not provided.
+   * @throws {InternalServerErrorException} If the default account type is not found.
+   */
+  async createRootAccountAsync(user: User): Promise<Account> {
     if (!user) {
       throw new BadRequestException('user is required');
     }
 
     try {
-      const accountTypes =
-        await this.catAccountTypeService.getAccountTypesAsync();
-      const defaultAccountType = accountTypes.find(
-        (accountType) =>
-          accountType.name.toLowerCase() ===
-          AccountConstants.DEFAULT_ACCOUNT_TYPE,
-      );
-      if (!defaultAccountType) {
-        throw new InternalServerErrorException(
-          'Default account type not found',
+      const cashAccountType =
+        await this.catAccountTypeService.getAccountTypeByValueAsync(
+          AccountTypeEnum.Cash,
         );
-      }
 
       let account = this.repository.create({
         name: AccountConstants.DEFAULT_NAME,
@@ -51,9 +49,7 @@ export class AccountService extends BaseService<Account> {
         initialBalance: 0,
         isDefault: true,
         isRoot: true,
-        typeId: accountTypes.find(
-          (f) => f.name.toLowerCase() === AccountConstants.DEFAULT_ACCOUNT_TYPE,
-        ).id,
+        typeId: cashAccountType.id,
       });
       account = await this.repository.save(account);
       return account;
@@ -62,9 +58,18 @@ export class AccountService extends BaseService<Account> {
     }
   }
 
-  //Create an account
-  //TODO: Improve documentation
-  async createAccount(dto: CreateAccountDto, user: User) {
+  /**
+   * Creates a new account based on the provided DTO.
+   *
+   * @param dto The data transfer object containing the account details.
+   * @param user The user who owns the account.
+   * @returns The created account.
+   * @throws {Exception} If an error occurs during account creation.
+   */
+  async createAccountAsync(
+    dto: CreateAccountDto,
+    user: User,
+  ): Promise<Account> {
     try {
       let account = this.repository.create({
         name: dto.name,
@@ -107,15 +112,23 @@ export class AccountService extends BaseService<Account> {
     }
   }
 
-  //Get accounts by user
-  //TODO: Improve documentation
-  async getAccountsByUser(pageOptionsDto: PageOptionsDto, user: User) {
+  /**
+   * Retrieves a list of accounts owned by the specified user.
+   *
+   * @param pageOptionsDto The page options DTO containing filtering and pagination details.
+   * @param user The user whose accounts are to be retrieved.
+   * @returns A list of accounts matching the specified criteria.
+   * @throws {Exception} If an error occurs during account retrieval.
+   */
+  async getAccountsByUserAsync(
+    pageOptionsDto: PageOptionsDto,
+    user: User,
+  ): Promise<PaginatedResponseDto<Account>> {
     try {
       const filter = {
         userId: user.id,
       };
 
-      //TODO: Fix the filter
       if (pageOptionsDto.hint && pageOptionsDto.hint !== '') {
         filter['name'] = Like(`%${pageOptionsDto.hint}%`);
       }

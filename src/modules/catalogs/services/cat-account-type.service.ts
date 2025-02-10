@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { PageOptionsDto } from 'src/common/dtos/pagination';
 import { BaseService } from 'src/common/services';
 import { AccountType } from 'src/datasource/entities/catalogs';
+import { AccountTypeEnum } from 'src/modules/economy/accounts/enums/account-type.enum';
 import { Repository } from 'typeorm';
 
 @Injectable()
@@ -30,5 +31,17 @@ export class CatAccountTypeService extends BaseService<AccountType> {
    */
   async getAccountTypesAsync() {
     return await this.catAccountTypeRepo.find();
+  }
+
+  /**
+   * Retrieves an account type by its value.
+   *
+   * @param value The value of the account type to retrieve.
+   * @returns The account type with the matching value, or `undefined` if not found.
+   */
+  async getAccountTypeByValueAsync(
+    value: AccountTypeEnum,
+  ): Promise<AccountType | undefined> {
+    return await this.catAccountTypeRepo.findOneBy({ name: value.toString() });
   }
 }

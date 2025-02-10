@@ -38,7 +38,7 @@ export class AccountController extends BaseController<any> {
     @Query() paginationDto: PageOptionsDto,
     @GetUser() user: User,
   ): Promise<PaginatedResponseDto<Account>> {
-    return this.service.getAccountsByUser(paginationDto, user);
+    return this.service.getAccountsByUserAsync(paginationDto, user);
   }
 
   @Get(':accountId')
@@ -59,7 +59,7 @@ export class AccountController extends BaseController<any> {
     @Body() dto: CreateAccountDto,
     @GetUser() user: User,
   ): Promise<ResponseDto<Account>> {
-    const result = await this.service.createAccount(dto, user);
+    const result = await this.service.createAccountAsync(dto, user);
     return this.Response(result);
   }
 
