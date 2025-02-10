@@ -128,7 +128,10 @@ export class EntryService extends BaseService<Entry> {
         newAccBalance -= entry.amount;
       }
 
-      await this.accountService.updateAccountBalance(account.id, newAccBalance);
+      await this.accountService.updateAccountBalanceAsync(
+        account.id,
+        newAccBalance,
+      );
       return entry;
     } catch (error) {}
   }

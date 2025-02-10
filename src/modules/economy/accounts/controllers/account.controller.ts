@@ -70,7 +70,7 @@ export class AccountController extends BaseController<any> {
     @Param('accountId') accountId: string,
     @GetUser() user: User,
   ): Promise<ResponseDto<Account>> {
-    const result = await this.service.updateAccount(dto, accountId, user);
+    const result = await this.service.updateAccountAsync(dto, accountId, user);
     return this.Response(result);
   }
   @Delete(':accountId')

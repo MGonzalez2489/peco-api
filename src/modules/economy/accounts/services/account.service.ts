@@ -138,13 +138,21 @@ export class AccountService extends BaseService<Account> {
     }
   }
 
-  //Update account balance
-  //This function is only called from entry creation service
-  //TODO: Improve documentation
-  async updateAccountBalance(accountPrivateId: number, newBalance: number) {
+  /**
+   * Updates the balance of an account by its private ID.
+   *
+   * @param id The private ID of the account to update.
+   * @param newBalance The new balance to set for the account.
+   * @returns The updated account.
+   * @throws {Exception} If an error occurs during account balance update.
+   */
+  async updateAccountBalanceAsync(
+    id: number,
+    newBalance: number,
+  ): Promise<Account> {
     try {
       return await this.repository.save({
-        id: accountPrivateId,
+        id: id,
         balance: newBalance,
       });
     } catch (error) {
@@ -152,40 +160,60 @@ export class AccountService extends BaseService<Account> {
     }
   }
 
-  async updateAccount(dto: CreateAccountDto, accountId: string, user: User) {
+  /**
+   * Updates an account by its public ID.
+   *
+   * @param dto The data transfer object containing the updated account details.
+   * @param accountId The public ID of the account to update.
+   * @param user The user who owns the account.
+   * @returns The updated account.
+   * @throws {BadRequestException} If the account is not found.
+   * @throws {Exception} If an error occurs during account update.
+   */
+  async updateAccountAsync(
+    dto: CreateAccountDto,
+    accountId: string,
+    user: User,
+  ): Promise<Account> {
     try {
-      const account = await this.getAccountByPublicIdAsync(accountId, user);
+      let account = await this.getAccountByPublicIdAsync(accountId, user);
       if (!account) {
         throw new BadRequestException('Account not found');
       }
 
-      const updatedValue = await this.repository.save({
+      account = await this.repository.save({
         id: account.id,
         name: dto.name,
         isDefault: dto.isDefault,
-        //balance: dto.initialBalance,
+        balance: dto.balance,
       });
-      account.name = updatedValue.name;
-      account.balance = updatedValue.balance;
+      // account.name = updatedValue.name;
+      // account.balance = updatedValue.balance;
       return account;
     } catch (error) {
       this.ThrowException('AccountService::updateAccount', error);
     }
   }
+
   /**
+   * Performs a soft delete on an account by its public ID.
    *
-   *
+   * @param publicId The public ID of the account to delete.
+   * @param user The user who owns the account.
+   * @returns `true` if the account was successfully deleted, or `false` if an error occurred.
+   * @throws {BadRequestException} If the account is the default account.
+   * @throws {Exception} If an error occurs during account deletion.
    */
-  async deleteAccount(accountId: string, user: User) {
+  async deleteAccount(publicId: string, user: User): Promise<boolean> {
     try {
-      const account = await this.getAccountByPublicIdAsync(accountId, user);
+      const account = await this.getAccountByPublicIdAsync(publicId, user);
 
       if (account.isDefault) {
         throw new BadRequestException("Default account can't be deleted");
       }
 
       await this.repository.softDelete({
-        publicId: accountId,
+        publicId: publicId,
         userId: user.id,
       });
       return true;
