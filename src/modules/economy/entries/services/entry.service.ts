@@ -5,6 +5,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { PaginatedResponseDto } from 'src/common/dtos/pagination';
 import { BaseService } from 'src/common/services';
 import { User } from 'src/datasource/entities';
 import { Entry } from 'src/datasource/entities/economy';
@@ -28,19 +29,31 @@ export class EntryService extends BaseService<Entry> {
     super(repository);
   }
 
-  async getEntriesByAccount(searchDto: SearchEntriesDto, user: User) {
+  /**
+   * Retrieves a list of entries by account, category, and entry type.
+   *
+   * @param searchDto The search DTO containing filtering and pagination details.
+   * @param user The user who owns the account.
+   * @returns A list of entries matching the specified criteria.
+   * @throws {Exception} If an error occurs during entry retrieval.
+   */
+  async getEntriesByAccountAsync(
+    searchDto: SearchEntriesDto,
+    user: User,
+  ): Promise<PaginatedResponseDto<EntryDto>> {
     try {
-      //Query
-      const query = this.repository.createQueryBuilder('entry');
+      // Retrieve the account, category, and entry type if specified
       const account = searchDto.accountId
         ? await this.accountService.getAccountByPublicIdAsync(
             searchDto.accountId,
             user,
           )
         : undefined;
-
       const category = searchDto.categoryId
-        ? await this.categoryService.getByPublicId(searchDto.categoryId, user)
+        ? await this.categoryService.getByPublicIdAsync(
+            searchDto.categoryId,
+            user,
+          )
         : undefined;
       const entryType = searchDto.entryTypeId
         ? await this.catEntryTypeService.getEntryTypeByPublicIdAsync(
@@ -48,19 +61,17 @@ export class EntryService extends BaseService<Entry> {
           )
         : undefined;
 
-      const filter = {};
+      // Create a filter object to specify the account, category, and entry type
+      const filter = {
+        accountId: account ? account.id : undefined,
+        categoryId: category ? category.id : undefined,
+        typeId: entryType ? entryType.id : undefined,
+      };
 
-      if (account) {
-        filter['accountId'] = account.id;
-      }
+      // Create a query builder to retrieve the entries
+      const query = this.repository.createQueryBuilder('entry');
 
-      if (category) {
-        filter['categoryId'] = category.id;
-      }
-      if (entryType) {
-        filter['typeId'] = entryType.id;
-      }
-
+      // Add joins and selects to retrieve related data
       query
         .leftJoinAndSelect('entry.account', 'account')
         .leftJoinAndSelect('entry.category', 'category')
@@ -74,13 +85,13 @@ export class EntryService extends BaseService<Entry> {
         })
         .orderBy(`entry.${searchDto.orderBy}`, searchDto.order);
 
+      // Retrieve the entries from the database
       const response = await this.SearchByQuery(query, searchDto);
 
-      const mappedData: EntryDto[] = [];
-      response.data.forEach((element: Entry) => {
-        mappedData.push(new EntryDto(element));
-      });
-
+      // Map the response data to the EntryDto type
+      const mappedData: EntryDto[] = response.data.map(
+        (entry: Entry) => new EntryDto(entry),
+      );
       response.data = mappedData;
 
       return response;
@@ -89,8 +100,19 @@ export class EntryService extends BaseService<Entry> {
     }
   }
 
-  //crear un metodo para crear todo tipo de categoria
-  async createEntry(dto: CreateEntryDto, accountPublicId: string, user: User) {
+  /**
+   * Creates a new entry for the given account.
+   *
+   * @param {CreateEntryDto} dto - The entry data transfer object.
+   * @param {string} accountPublicId - The public ID of the account.
+   * @param {User} user - The current user.
+   * @returns {Promise<Entry>} The created entry.
+   */
+  async createEntryAsync(
+    dto: CreateEntryDto,
+    accountPublicId: string,
+    user: User,
+  ): Promise<Entry> {
     try {
       const account = await this.accountService.getAccountByPublicIdAsync(
         accountPublicId,
@@ -104,7 +126,7 @@ export class EntryService extends BaseService<Entry> {
         throw new UnauthorizedException();
       }
 
-      const category = await this.categoryService.getByPublicId(
+      const category = await this.categoryService.getByPublicIdAsync(
         dto.categoryId,
         user,
       );
@@ -120,7 +142,9 @@ export class EntryService extends BaseService<Entry> {
         account: account,
         categoryId: category.id,
       });
+
       await this.repository.save(entry);
+
       let newAccBalance = account.balance;
       if (entryType.name === 'income') {
         newAccBalance += entry.amount;
@@ -133,6 +157,8 @@ export class EntryService extends BaseService<Entry> {
         newAccBalance,
       );
       return entry;
-    } catch (error) {}
+    } catch (error) {
+      this.ThrowException('EntriesService::createEntryAsync', error);
+    }
   }
 }

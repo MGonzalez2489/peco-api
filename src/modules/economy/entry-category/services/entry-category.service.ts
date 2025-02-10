@@ -33,7 +33,7 @@ export class EntryCategoryService extends BaseService<EntryCategory> {
     return categories;
   }
 
-  async getByPublicId(
+  async getByPublicIdAsync(
     catId: string,
     user: User,
   ): Promise<EntryCategory | null> {
@@ -50,7 +50,7 @@ export class EntryCategoryService extends BaseService<EntryCategory> {
   ): Promise<EntryCategory | null> {
     let parentCat: EntryCategory;
     if (categoryDto.parentId) {
-      parentCat = await this.getByPublicId(categoryDto.parentId, user);
+      parentCat = await this.getByPublicIdAsync(categoryDto.parentId, user);
     }
 
     const newCategory = this.repository.create({

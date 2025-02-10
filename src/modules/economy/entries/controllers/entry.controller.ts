@@ -26,12 +26,16 @@ export class EntryController extends BaseController<Entry> {
     @Param('accountId') accountId: string,
     @GetUser() user: User,
   ): Promise<ResponseDto<Entry>> {
-    const result = await this.service.createEntry(createDto, accountId, user);
+    const result = await this.service.createEntryAsync(
+      createDto,
+      accountId,
+      user,
+    );
     return this.Response(result);
   }
 
   @Get()
   getEntries(@Query() paginationDto: SearchEntriesDto, @GetUser() user: User) {
-    return this.service.getEntriesByAccount(paginationDto, user);
+    return this.service.getEntriesByAccountAsync(paginationDto, user);
   }
 }
