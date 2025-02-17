@@ -71,12 +71,19 @@ export class AccountService extends BaseService<Account> {
     user: User,
   ): Promise<Account> {
     try {
+      const accountType =
+        await this.catAccountTypeService.getAccountTypeByPublicIdAsync(
+          dto.accountTypeId,
+        );
+
+      //aqui
       let account = this.repository.create({
         name: dto.name,
         user,
         balance: dto.balance,
         initialBalance: dto.balance,
         isDefault: dto.isDefault,
+        typeId: accountType.id,
       });
       account = await this.repository.save(account);
       return account;
@@ -132,7 +139,14 @@ export class AccountService extends BaseService<Account> {
       if (pageOptionsDto.hint && pageOptionsDto.hint !== '') {
         filter['name'] = Like(`%${pageOptionsDto.hint}%`);
       }
-      return await this.Search(pageOptionsDto, filter);
+
+      const queryBuilder = this.repository
+        .createQueryBuilder('t')
+        .leftJoinAndSelect('t.type', 'accountType')
+        .where(filter)
+        .orderBy(`t.${pageOptionsDto.orderBy}`, pageOptionsDto.order);
+
+      return await this.SearchByQuery(queryBuilder, pageOptionsDto);
     } catch (error) {
       this.ThrowException('AccountService::getAccountsByUser', error);
     }
@@ -176,20 +190,26 @@ export class AccountService extends BaseService<Account> {
     user: User,
   ): Promise<Account> {
     try {
-      let account = await this.getAccountByPublicIdAsync(accountId, user);
+      const account = await this.getAccountByPublicIdAsync(accountId, user);
       if (!account) {
         throw new BadRequestException('Account not found');
       }
+      const accountType =
+        await this.catAccountTypeService.getAccountTypeByPublicIdAsync(
+          dto.accountTypeId,
+        );
 
-      account = await this.repository.save({
-        id: account.id,
+      await this.repository.save({
+        ...account,
         name: dto.name,
         isDefault: dto.isDefault,
-        balance: dto.balance,
+        type: accountType,
       });
-      // account.name = updatedValue.name;
-      // account.balance = updatedValue.balance;
-      return account;
+
+      //TODO: It is needed to create a mechanism to update the balance
+      //in case of required creating an entry
+
+      return await this.getAccountByPublicIdAsync(accountId, user);
     } catch (error) {
       this.ThrowException('AccountService::updateAccount', error);
     }

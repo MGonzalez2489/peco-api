@@ -44,4 +44,10 @@ export class CatAccountTypeService extends BaseService<AccountType> {
   ): Promise<AccountType | undefined> {
     return await this.catAccountTypeRepo.findOneBy({ name: value.toString() });
   }
+
+  async getAccountTypeByPublicIdAsync(
+    publicId: string,
+  ): Promise<AccountType | undefined> {
+    return await this.catAccountTypeRepo.findOneBy({ publicId });
+  }
 }

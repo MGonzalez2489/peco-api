@@ -1,9 +1,9 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 import { Exclude } from 'class-transformer';
-import { Entry } from './entry.entity';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 import { PBaseEntity } from '../_base';
-import { User } from '../user.entity';
 import { AccountType } from '../catalogs';
+import { User } from '../user.entity';
+import { Entry } from './entry.entity';
 
 @Entity()
 export class Account extends PBaseEntity {
@@ -38,7 +38,7 @@ export class Account extends PBaseEntity {
   entries: Entry[];
 
   //
-  @ManyToOne(() => AccountType)
+  @ManyToOne(() => AccountType, (type) => type.accounts, { eager: true })
   @JoinColumn({
     name: 'typeId',
     foreignKeyConstraintName: 'FK_Account_AccountType',

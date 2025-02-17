@@ -62,12 +62,17 @@ export class EntryService extends BaseService<Entry> {
         : undefined;
 
       // Create a filter object to specify the account, category, and entry type
-      const filter = {
-        accountId: account ? account.id : undefined,
-        categoryId: category ? category.id : undefined,
-        typeId: entryType ? entryType.id : undefined,
-      };
-
+      const filter = {};
+      if (account) {
+        filter['accountId'] = account.id;
+      }
+      if (category) {
+        filter['categoryId'] = category.id;
+      }
+      if (entryType) {
+        filter['typeId'] = entryType.id;
+      }
+      //
       // Create a query builder to retrieve the entries
       const query = this.repository.createQueryBuilder('entry');
 

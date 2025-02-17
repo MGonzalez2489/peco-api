@@ -37,9 +37,9 @@ export class UserService extends BaseService<User> {
    * @returns The user with the specified public ID, or null if not found.
    * @throws {InternalServerErrorException} If an error occurs while searching for the user.
    */
-  async findUserByPublicIdAsync(id: string): Promise<User | null> {
+  async findUserByPublicIdAsync(publicId: string): Promise<User | null> {
     try {
-      return this.repository.findOneBy({ publicId: id });
+      return this.repository.findOneBy({ publicId });
     } catch (error) {
       this.ThrowException('UserService::findUserByPublicId', error);
     }

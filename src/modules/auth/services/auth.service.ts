@@ -63,11 +63,11 @@ export class AuthService extends BaseService<any> {
    * Registers a new user with the provided email and password.
    *
    * @param dto The registration data transfer object.
-   * @returns The newly created user.
+   * @returns A promise resolving to a token DTO containing the access token for the new user.
    * @throws {ConflictException} If the email is already in use.
    * @throws {BadRequestException} If the email or password is missing.
    */
-  async registerAsync(dto: RegisterDto): Promise<User> {
+  async registerAsync(dto: RegisterDto): Promise<TokenDto> {
     try {
       // Input validation
       if (!dto.email || !dto.password) {
@@ -81,13 +81,15 @@ export class AuthService extends BaseService<any> {
         throw new ConflictException('Email already in use.');
       }
 
-      const hashedPassword = await this.cryptoService.encryptText(dto.password);
-      const newUser = await this.userService.createAsync({
+      await this.userService.createAsync({
         email: dto.email,
-        password: hashedPassword,
+        password: dto.password,
       });
 
-      return newUser;
+      return await this.signInAsync({
+        email: dto.email,
+        password: dto.password,
+      });
     } catch (error) {
       this.ThrowException('AuthService::register', error);
     }
