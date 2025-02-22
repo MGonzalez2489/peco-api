@@ -1,14 +1,22 @@
+import { Exclude } from 'class-transformer';
 import { BeforeInsert, Column, Entity, OneToMany } from 'typeorm';
 import { PBaseEntity } from './_base';
-import { Exclude } from 'class-transformer';
-import { Account } from './economy/account.entity';
 import { EntryCategory } from './economy';
+import { Account } from './economy/account.entity';
 
 @Entity()
 export class User extends PBaseEntity {
   //////////Properties
   @Column({ unique: true })
   email: string;
+
+  @Column({ nullable: true })
+  firstName: string;
+  @Column({ nullable: true })
+  lastName: string;
+
+  @Column({ nullable: true })
+  dateOfBirth: string;
 
   @Column({ nullable: false })
   @Exclude()
