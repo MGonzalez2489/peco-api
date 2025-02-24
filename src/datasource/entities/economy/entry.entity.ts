@@ -25,7 +25,7 @@ export class Entry extends PBaseEntity {
   @Column({ nullable: false })
   typeId: number;
 
-  @ManyToOne(() => EntryStatus)
+  @ManyToOne(() => EntryStatus, { eager: true })
   @JoinColumn({
     name: 'statusId',
     foreignKeyConstraintName: 'FK_Entry_EntryStatus',

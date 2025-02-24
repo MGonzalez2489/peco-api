@@ -1,4 +1,4 @@
 export enum EntryTypeEnum {
-  Income,
-  Outcome,
+  Income = 'income',
+  Outcome = 'outcome',
 }

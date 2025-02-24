@@ -1,6 +1,6 @@
 export enum EntryStatusEnum {
-  Applied,
-  Planned,
-  Canceled,
-  Deleted,
+  Applied = 'applied',
+  Planned = 'planned',
+  Canceled = 'canceled',
+  Deleted = 'deleted',
 }

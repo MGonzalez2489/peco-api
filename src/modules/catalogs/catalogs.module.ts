@@ -1,17 +1,32 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AccountType, EntryType } from 'src/datasource/entities/catalogs';
+import {
+  AccountType,
+  EntryStatus,
+  EntryType,
+} from 'src/datasource/entities/catalogs';
 import { CatalogsController } from './controllers/catalogs.controller';
 import {
   CatAccountTypeService,
   CatalogsService,
   CatEntryTypeService,
 } from './services';
+import { CatEntryStatusService } from './services/cat-entry-status.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([EntryType, AccountType])],
+  imports: [TypeOrmModule.forFeature([EntryType, EntryStatus, AccountType])],
   controllers: [CatalogsController],
-  providers: [CatalogsService, CatEntryTypeService, CatAccountTypeService],
-  exports: [CatalogsService, CatEntryTypeService, CatAccountTypeService],
+  providers: [
+    CatalogsService,
+    CatEntryTypeService,
+    CatEntryStatusService,
+    CatAccountTypeService,
+  ],
+  exports: [
+    CatalogsService,
+    CatEntryTypeService,
+    CatEntryStatusService,
+    CatAccountTypeService,
+  ],
 })
 export class CatalogsModule {}

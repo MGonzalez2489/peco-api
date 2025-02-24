@@ -1,13 +1,13 @@
 import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { EntryService } from '../services/entry.service';
-import { CreateEntryDto } from '../dtos';
-import { GetUser } from 'src/common/decorators';
-import { User } from 'src/datasource/entities';
 import { BaseController } from 'src/common/controllers/base.controller';
+import { GetUser } from 'src/common/decorators';
 import { ResponseDto } from 'src/common/dtos/responses';
+import { User } from 'src/datasource/entities';
 import { Entry } from 'src/datasource/entities/economy';
+import { CreateEntryDto } from '../dtos';
 import { SearchEntriesDto } from '../dtos/search.dto';
+import { EntryService } from '../services/entry.service';
 
 @Controller('entries')
 @ApiTags('Entries')
@@ -15,12 +15,8 @@ export class EntryController extends BaseController<Entry> {
   constructor(private readonly service: EntryService) {
     super();
   }
-  // @Get()
-  // getAllEntries(@Query() paginationDto: PageOptionsDto, @GetUser() user: User) {
-  //   return this.service.getAllEntries(paginationDto, user);
-  // }
 
-  @Post(':accountId/entry')
+  @Post(':accountId/new')
   async createIncome(
     @Body() createDto: CreateEntryDto,
     @Param('accountId') accountId: string,

@@ -15,6 +15,9 @@ import { AccountService } from '../../accounts/services/account.service';
 import { EntryCategoryService } from '../../entry-category/services/entry-category.service';
 import { CreateEntryDto, EntryDto } from '../dtos';
 import { SearchEntriesDto } from '../dtos/search.dto';
+import { CatEntryStatusService } from 'src/modules/catalogs/services/cat-entry-status.service';
+import { EntryStatusEnum, EntryTypeEnum } from 'src/modules/catalogs/enums';
+import { EntryStatus } from 'src/datasource/entities/catalogs';
 
 @Injectable()
 export class EntryService extends BaseService<Entry> {
@@ -25,6 +28,8 @@ export class EntryService extends BaseService<Entry> {
     readonly categoryService: EntryCategoryService,
     @Inject(CatEntryTypeService)
     readonly catEntryTypeService: CatEntryTypeService,
+    @Inject(CatEntryStatusService)
+    readonly catEntryStatusService: CatEntryStatusService,
   ) {
     super(repository);
   }
@@ -81,6 +86,7 @@ export class EntryService extends BaseService<Entry> {
         .leftJoinAndSelect('entry.account', 'account')
         .leftJoinAndSelect('entry.category', 'category')
         .leftJoinAndSelect('entry.type', 'type')
+        .leftJoinAndSelect('entry.status', 'status')
         .where(filter)
         .andWhere({
           createdAt: MoreThanOrEqual(new Date(searchDto.fromDate)),
@@ -135,23 +141,30 @@ export class EntryService extends BaseService<Entry> {
         dto.categoryId,
         user,
       );
+
       const entryType =
         await this.catEntryTypeService.getEntryTypeByPublicIdAsync(
           dto.entryTypeId,
         );
 
+      const entryStatus =
+        await this.catEntryStatusService.getEntryStatusByValueAsync(
+          EntryStatusEnum.Applied,
+        );
+
       const entry = this.repository.create({
         amount: dto.amount,
         description: dto.description,
-        typeId: entryType.id,
+        type: entryType,
         account: account,
-        categoryId: category.id,
+        category: category,
+        status: entryStatus,
       });
 
       await this.repository.save(entry);
 
       let newAccBalance = account.balance;
-      if (entryType.name === 'income') {
+      if (entryType.name === EntryTypeEnum.Income.toString()) {
         newAccBalance += entry.amount;
       } else {
         newAccBalance -= entry.amount;
