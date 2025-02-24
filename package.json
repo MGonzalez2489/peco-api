@@ -18,7 +18,10 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "init": "ts-node ./node_modules/typeorm-extension/bin/cli.cjs db:drop -d src/datasource/datasource.ts"
+    "db-drop": "ts-node ./node_modules/typeorm-extension/bin/cli.cjs db:drop -d ./db-initializer.ts",
+    "db-create": "ts-node ./node_modules/typeorm-extension/bin/cli.cjs db:create -d ./db-initializer.ts",
+    "seed": "ts-node ./node_modules/typeorm-extension/bin/cli.cjs seed:run -d ./db-initializer.ts",
+    "init": "npm run build && npm run db-drop && npm run db-create && npm run seed"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",

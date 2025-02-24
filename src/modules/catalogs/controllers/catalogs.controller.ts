@@ -3,22 +3,14 @@ import { ApiTags } from '@nestjs/swagger';
 import { Public } from 'src/common/decorators';
 import { PageOptionsDto } from 'src/common/dtos/pagination';
 import { CatAccountTypeService, CatEntryTypeService } from '../services';
-import { CatalogsService } from '../services/catalogs.service';
 
 @Controller('catalogs')
 @ApiTags('Catalogs')
 export class CatalogsController {
   constructor(
-    private readonly catService: CatalogsService,
     private readonly catEntryTypeService: CatEntryTypeService,
     private readonly catAccountTypeService: CatAccountTypeService,
   ) {}
-
-  @Get('InitCatalogs')
-  @Public()
-  async initCatalogs() {
-    return await this.catService.initCatalogs();
-  }
 
   @Get('entry-types')
   @Public()
