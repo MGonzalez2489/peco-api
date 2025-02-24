@@ -1,8 +1,8 @@
-import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
-import { Account } from './account.entity';
 import { Exclude } from 'class-transformer';
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { PBaseEntity } from '../_base';
-import { EntryType } from '../catalogs';
+import { EntryStatus, EntryType } from '../catalogs';
+import { Account } from './account.entity';
 import { EntryCategory } from './entry-category.entity';
 
 @Entity()
@@ -24,6 +24,17 @@ export class Entry extends PBaseEntity {
   @Exclude()
   @Column({ nullable: false })
   typeId: number;
+
+  @ManyToOne(() => EntryStatus)
+  @JoinColumn({
+    name: 'statusId',
+    foreignKeyConstraintName: 'FK_Entry_EntryStatus',
+  })
+  status: EntryStatus;
+
+  @Exclude()
+  @Column({ nullable: false })
+  statusId: number;
 
   //Categories
   @ManyToOne(() => EntryCategory, (cat) => cat.subCategories)

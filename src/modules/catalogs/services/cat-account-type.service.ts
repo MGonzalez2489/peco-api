@@ -3,8 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { PageOptionsDto } from 'src/common/dtos/pagination';
 import { BaseService } from 'src/common/services';
 import { AccountType } from 'src/datasource/entities/catalogs';
-import { AccountTypeEnum } from 'src/modules/economy/accounts/enums/account-type.enum';
 import { Repository } from 'typeorm';
+import { AccountTypeEnum } from '../enums';
 
 @Injectable()
 export class CatAccountTypeService extends BaseService<AccountType> {

@@ -11,7 +11,7 @@ import { CatalogsModule } from './modules/catalogs/catalogs.module';
 import { AccountsModule, EntryModule } from './modules/economy';
 import { EntryCategoryModule } from './modules/economy/entry-category/entry-category.module';
 
-const envFilePath = `${__dirname}/config/${process.env.NODE_ENV || ''}.env`;
+const envFilePath = `${__dirname}/../../${process.env.NODE_ENV || ''}.env`;
 
 @Module({
   imports: [

@@ -11,7 +11,7 @@ import { CatAccountTypeService } from 'src/modules/catalogs/services';
 import { Like, Repository } from 'typeorm';
 import { CreateAccountDto } from '../dto';
 
-import { AccountTypeEnum } from '../enums/account-type.enum';
+import { AccountTypeEnum } from 'src/modules/catalogs/enums';
 import * as AccountConstants from './../constants';
 
 @Injectable()
