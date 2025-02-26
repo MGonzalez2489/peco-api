@@ -94,6 +94,7 @@ export class EntryService extends BaseService<Entry> {
         .andWhere({
           createdAt: LessThanOrEqual(new Date(searchDto.toDate)),
         })
+        .andWhere('account.userId = :userId', { userId: user.id })
         .orderBy(`entry.${searchDto.orderBy}`, searchDto.order);
 
       // Retrieve the entries from the database
