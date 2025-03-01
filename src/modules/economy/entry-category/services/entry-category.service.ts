@@ -8,7 +8,10 @@ import { BaseService } from 'src/common/services';
 import { User } from 'src/datasource/entities';
 import { EntryCategory } from 'src/datasource/entities/economy';
 import { Repository } from 'typeorm';
-import { EntryCategoryCreateDto } from '../dto/entry-category.dto';
+import {
+  EntryCategoryCreateDto,
+  EntryCategoryUpdateDto,
+} from '../dto/entry-category.dto';
 
 @Injectable()
 export class EntryCategoryService extends BaseService<EntryCategory> {
@@ -85,5 +88,15 @@ export class EntryCategoryService extends BaseService<EntryCategory> {
     });
 
     return await this.repository.save(newCategory);
+  }
+
+  async update(dto: EntryCategoryUpdateDto, categoryId: string) {
+    const cat = await this.repository.findOneBy({ publicId: categoryId });
+    await this.repository.save({
+      id: cat.id,
+      name: dto.name,
+      isVisible: dto.isVisible,
+    });
+    return await this.repository.findOneBy({ publicId: categoryId });
   }
 }
