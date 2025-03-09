@@ -10,6 +10,7 @@ import { EntryCategory } from 'src/datasource/entities/economy';
 import { Repository } from 'typeorm';
 import {
   EntryCategoryCreateDto,
+  EntryCategoryDto,
   EntryCategoryUpdateDto,
 } from '../dto/entry-category.dto';
 
@@ -32,21 +33,34 @@ export class EntryCategoryService extends BaseService<EntryCategory> {
   async getAllAsync(
     user: User,
     pageOptions: PageOptionsDto,
-  ): Promise<PaginatedResponseDto<EntryCategory>> {
-    const categories = await this.Search(pageOptions, { userId: user.id });
+  ): Promise<PaginatedResponseDto<EntryCategoryDto>> {
+    const filter = {};
+    filter['userId'] = user.id;
 
-    categories.data = categories.data
+    const query = this.repository.createQueryBuilder('category');
+    query
+      .leftJoinAndSelect('category.parent', 'parent')
+      .where(filter)
+      .orderBy(`category.${pageOptions.orderBy}`, pageOptions.order);
+
+    const response = await this.SearchByQuery(query, pageOptions);
+
+    response.data = response.data
       .filter((cat) => !cat.parentId)
-      .map((cat) => ({
-        ...cat,
-        subCategories: categories.data.filter((c) => c.parentId == cat.id),
-      }));
+      .map((f) => {
+        const dto = new EntryCategoryDto(f);
+        dto.subCategories = response.data
+          .filter((g) => g.parentId === f.id)
+          .map((h) => new EntryCategoryDto(h));
 
-    return categories;
+        return dto;
+      });
+
+    return response;
   }
 
   /**
-   * Creates a new category for a user.
+   * xx.
    *
    * @param user The user object.
    * @param createCategoryDto Category creation data.
@@ -56,10 +70,11 @@ export class EntryCategoryService extends BaseService<EntryCategory> {
     catId: string,
     user: User,
   ): Promise<EntryCategory | null> {
-    return await this.repository.findOneBy({
-      publicId: catId,
-      userId: user.id,
+    const result = await this.repository.findOne({
+      where: { publicId: catId, userId: user.id },
+      relations: ['parent'],
     });
+    return result;
   }
 
   /**
@@ -74,29 +89,38 @@ export class EntryCategoryService extends BaseService<EntryCategory> {
     categoryDto: EntryCategoryCreateDto,
     user: User,
     isDefault: boolean = false,
-  ): Promise<EntryCategory | null> {
-    const parentCategory = await this.getByPublicIdAsync(
-      categoryDto.parentId,
-      user,
-    );
-
-    const newCategory = this.repository.create({
+  ): Promise<EntryCategoryDto | null> {
+    let parentCategory: EntryCategory | undefined;
+    console.log('-1');
+    if (categoryDto.parentId) {
+      parentCategory = await this.getByPublicIdAsync(
+        categoryDto.parentId,
+        user,
+      );
+    }
+    let newCategory = this.repository.create({
       name: categoryDto.name,
       userId: user.id,
       parentId: parentCategory?.id,
       isDefault,
     });
-
-    return await this.repository.save(newCategory);
+    newCategory = await this.repository.save(newCategory);
+    const result = await this.getByPublicIdAsync(newCategory.publicId, user);
+    return new EntryCategoryDto(result);
   }
 
-  async update(dto: EntryCategoryUpdateDto, categoryId: string) {
+  async update(
+    dto: EntryCategoryUpdateDto,
+    categoryId: string,
+  ): Promise<EntryCategoryDto> {
     const cat = await this.repository.findOneBy({ publicId: categoryId });
     await this.repository.save({
       id: cat.id,
       name: dto.name,
       isVisible: dto.isVisible,
     });
-    return await this.repository.findOneBy({ publicId: categoryId });
+    const catEntity = await this.repository.findOneBy({ publicId: categoryId });
+
+    return new EntryCategoryDto(catEntity);
   }
 }

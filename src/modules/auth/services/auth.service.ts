@@ -50,8 +50,11 @@ export class AuthService extends BaseService<any> {
 
       const payload = { sub: user.publicId };
       const token = await this.jwtService.signAsync(payload);
+      const decodedToken = this.jwtService.decode(token);
+
       const res: TokenDto = {
         access_token: token,
+        expiresAt: new Date(decodedToken.exp * 1000).toISOString(),
       };
 
       return res;

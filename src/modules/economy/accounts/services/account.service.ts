@@ -86,6 +86,7 @@ export class AccountService extends BaseService<Account> {
         typeId: accountType.id,
       });
       account = await this.repository.save(account);
+      account.type = accountType;
       return account;
     } catch (error) {
       this.ThrowException('AccountService::createAccount', error);
