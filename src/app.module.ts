@@ -10,6 +10,7 @@ import { HttpLoggerMiddleware } from './common/middlewares';
 import { CatalogsModule } from './modules/catalogs/catalogs.module';
 import { AccountsModule, EntryModule } from './modules/economy';
 import { EntryCategoryModule } from './modules/economy/entry-category/entry-category.module';
+import { PlannedEntriesModule } from './modules/economy/planned-entries/planned-entries.module';
 
 const envFilePath = `${__dirname}/../../${process.env.NODE_ENV || ''}.env`;
 
@@ -28,6 +29,7 @@ const envFilePath = `${__dirname}/../../${process.env.NODE_ENV || ''}.env`;
     EntryCategoryModule,
     CatalogsModule,
     AuthModule,
+    PlannedEntriesModule,
   ],
   providers: [
     {

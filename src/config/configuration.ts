@@ -10,7 +10,8 @@ export default () => ({
     username: process.env.DB_USER || 'unknown',
     password: process.env.DB_PASSWORD || 'unknown',
     database: process.env.DB_NAME || 'unknown',
-    synchronize: false, //process.env.DB_SYNC === 'true' || false,
-    entities: [`${__dirname}/../**/**.entity{.ts,.js}`], // this will automatically load all entity file in the src folder
+    synchronize: true, //process.env.DB_SYNC === 'true' || false,
+    // entities: [`${__dirname}/../**/**.entity{.ts,.js}`], // this will automatically load all entity file in the src folder
+    entities: [`${__dirname}/../../**/**.entity{.ts,.js}`], // this will automatically load all entity file in the src folder
   },
 });
