@@ -1,5 +1,9 @@
 import { Exclude } from 'class-transformer';
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import {
+  DaysOfWeekEnum,
+  PlannedEntryRecurrencyEnum,
+} from '../../../common/enums';
 import { PBaseEntity } from '../_base';
 import { EntryType } from '../catalogs';
 import { User } from '../user.entity';
@@ -15,46 +19,36 @@ export class PlannedEntry extends PBaseEntity {
 
   //planed info
   //ver si se repite o es de una sola ocacion
-  // @Column({
-  //   type: 'enum',
-  //   enum: PlannedEntryFrecuencyEnum,
-  //   default: PlannedEntryFrecuencyEnum.ONE_TIME,
-  // })
-  // frecuency: PlannedEntryFrecuencyEnum;
+  @Column()
+  frecuency: number;
 
-  //es : cuando termina la frecuencia
-  // @Column({
-  //   type: 'enum',
-  //   enum: PlannedEntryFrecuencyEndEnum,
-  //   default: null,
-  //   nullable: true,
-  // })
-  // frecuencyEnd: PlannedEntryFrecuencyEnum;
+  // es : cuando termina la frecuencia
+  @Column({
+    nullable: true,
+  })
+  frecuencyEnd: number;
 
   @Column()
   startDate: string;
 
-  // @Column({
-  //   type: 'enum',
-  //   enum: PlannedEntryRecurrencyEnum,
-  //   default: null,
-  //   nullable: true,
-  // })
-  // recurrency: PlannedEntryRecurrencyEnum;
+  @Column({
+    nullable: true,
+  })
+  recurrency: number;
 
   @Column({ nullable: true })
   endDate: string;
 
-  // @Column({
-  //   type: 'enum',
-  //   enum: DaysOfWeekEnum,
-  //   default: null,
-  //   nullable: true,
-  // })
-  // dayOfWeek: DaysOfWeekEnum;
+  @Column({
+    type: 'enum',
+    enum: DaysOfWeekEnum,
+    default: null,
+    nullable: true,
+  })
+  dayOfWeek: DaysOfWeekEnum;
 
-  // @Column({ nullable: true })
-  // dayOfMonth: number;
+  @Column({ nullable: true })
+  dayOfMonth: number;
 
   ///////////////////Relations
   //User

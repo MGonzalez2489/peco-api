@@ -4,11 +4,11 @@ import { PageOptionsDto } from 'src/common/dtos/pagination';
 import { BaseService } from 'src/common/services';
 import { User } from 'src/datasource/entities';
 import { PlannedEntry } from 'src/datasource/entities/economy/planned-entry.entity';
+import { CatEntryTypeService } from 'src/modules/catalogs/services';
 import { Repository } from 'typeorm';
+import { EntryCategoryService } from '../../entry-category/services/entry-category.service';
 import { PlannedEntryCreateDto } from '../dto/planned-entry.dto';
 import { PlannedEntryFrecuencyEnum } from 'src/common/enums';
-import { CatEntryTypeService } from 'src/modules/catalogs/services';
-import { EntryCategoryService } from '../../entry-category/services/entry-category.service';
 
 @Injectable()
 export class PlannedEntriesService extends BaseService<PlannedEntry> {
@@ -50,7 +50,7 @@ export class PlannedEntriesService extends BaseService<PlannedEntry> {
       const values = {
         description: dto.description,
         amount: dto.amount,
-        frecuency: PlannedEntryFrecuencyEnum.ONE_TIME,
+        frecuency: Number(PlannedEntryFrecuencyEnum[dto.frecuency]),
         frecuencyEnd: null,
         startDate: dto.startDate,
         recurrency: null,

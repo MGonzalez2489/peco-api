@@ -14,7 +14,6 @@ import { IDatabaseConfiguration } from 'src/config/iConfiguration.interface';
         const dbConfig = configService.get<IDatabaseConfiguration>(
           ConfigNameEnum.database,
         );
-        console.log('dbconfig', dbConfig);
         return {
           type: 'mysql',
           ...dbConfig,
