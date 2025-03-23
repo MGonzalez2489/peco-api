@@ -28,7 +28,7 @@ export class PlannedEntryCreateDto {
 
   @IsString()
   @IsOptional()
-  recuencyEnd: PlannedEntryFrecuencyEndEnum;
+  frecuencyEnd: PlannedEntryFrecuencyEndEnum;
 
   @IsString()
   @IsOptional()

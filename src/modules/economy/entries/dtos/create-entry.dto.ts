@@ -12,4 +12,7 @@ export class CreateEntryDto {
 
   @IsUUID()
   entryTypeId: string;
+
+  @IsString()
+  accountId: string;
 }

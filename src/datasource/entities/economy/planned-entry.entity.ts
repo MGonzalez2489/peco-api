@@ -1,9 +1,5 @@
 import { Exclude } from 'class-transformer';
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
-import {
-  DaysOfWeekEnum,
-  PlannedEntryRecurrencyEnum,
-} from '../../../common/enums';
 import { PBaseEntity } from '../_base';
 import { EntryType } from '../catalogs';
 import { User } from '../user.entity';
@@ -20,13 +16,13 @@ export class PlannedEntry extends PBaseEntity {
   //planed info
   //ver si se repite o es de una sola ocacion
   @Column()
-  frecuency: number;
+  frecuency: string;
 
   // es : cuando termina la frecuencia
   @Column({
     nullable: true,
   })
-  frecuencyEnd: number;
+  frecuencyEnd: string;
 
   @Column()
   startDate: string;
@@ -34,18 +30,16 @@ export class PlannedEntry extends PBaseEntity {
   @Column({
     nullable: true,
   })
-  recurrency: number;
+  recurrency: string;
 
   @Column({ nullable: true })
   endDate: string;
 
   @Column({
-    type: 'enum',
-    enum: DaysOfWeekEnum,
     default: null,
     nullable: true,
   })
-  dayOfWeek: DaysOfWeekEnum;
+  dayOfWeek: string;
 
   @Column({ nullable: true })
   dayOfMonth: number;

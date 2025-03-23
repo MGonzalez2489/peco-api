@@ -21,6 +21,6 @@ export class PlannedEntriesController extends BaseController<PlannedEntry> {
 
   @Post()
   async create(@Body() dto: PlannedEntryCreateDto, @GetUser() user: User) {
-    return this.service.createAsync(dto, user);
+    return this.Response(await this.service.createAsync(dto, user));
   }
 }

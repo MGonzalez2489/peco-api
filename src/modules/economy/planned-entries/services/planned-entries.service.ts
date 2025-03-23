@@ -8,7 +8,6 @@ import { CatEntryTypeService } from 'src/modules/catalogs/services';
 import { Repository } from 'typeorm';
 import { EntryCategoryService } from '../../entry-category/services/entry-category.service';
 import { PlannedEntryCreateDto } from '../dto/planned-entry.dto';
-import { PlannedEntryFrecuencyEnum } from 'src/common/enums';
 
 @Injectable()
 export class PlannedEntriesService extends BaseService<PlannedEntry> {
@@ -50,13 +49,13 @@ export class PlannedEntriesService extends BaseService<PlannedEntry> {
       const values = {
         description: dto.description,
         amount: dto.amount,
-        frecuency: Number(PlannedEntryFrecuencyEnum[dto.frecuency]),
-        frecuencyEnd: null,
+        frecuency: dto.frecuency,
+        frecuencyEnd: dto.frecuencyEnd,
         startDate: dto.startDate,
-        recurrency: null,
-        endDate: null,
-        dayOfWeek: null,
-        dayOfMonth: null,
+        recurrency: dto.recurrency,
+        endDate: dto.endDate,
+        dayOfWeek: dto.dayOfWeek,
+        dayOfMonth: dto.dayOfMonth,
         userId: user.id,
         typeId: entryType.id,
         categoryId: category.id,
@@ -67,6 +66,18 @@ export class PlannedEntriesService extends BaseService<PlannedEntry> {
       return entry;
     } catch (error) {
       this.ThrowException('PLannedEntriesService::create', error);
+    }
+  }
+
+  getEnumKeyByString<T extends { [key: string]: string }>(
+    enumType: T,
+    key: string,
+  ) {
+    const keys = Object.keys(enumType);
+    if (keys.some((f) => f.toLowerCase() === key.toLowerCase())) {
+      return key;
+    } else {
+      throw new Error(`Invalid enum key ${key}`);
     }
   }
 }

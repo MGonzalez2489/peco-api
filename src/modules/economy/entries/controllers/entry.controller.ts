@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { BaseController } from 'src/common/controllers/base.controller';
 import { GetUser } from 'src/common/decorators';
@@ -17,16 +17,11 @@ export class EntryController extends BaseController<Entry> {
   }
 
   @Post(':accountId/new')
-  async createIncome(
+  async createEntry(
     @Body() createDto: CreateEntryDto,
-    @Param('accountId') accountId: string,
     @GetUser() user: User,
   ): Promise<ResponseDto<Entry>> {
-    const result = await this.service.createEntryAsync(
-      createDto,
-      accountId,
-      user,
-    );
+    const result = await this.service.createEntryAsync(createDto, user);
     return this.Response(result);
   }
 
