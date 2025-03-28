@@ -4,7 +4,7 @@ import {
   PageOptionsDto,
   PaginatedResponseDto,
 } from 'src/common/dtos/pagination';
-import { BaseService } from 'src/common/services';
+import { BaseService } from '../../../../common/services';
 import { User } from 'src/datasource/entities';
 import { Account } from 'src/datasource/entities/economy/account.entity';
 import { CatAccountTypeService } from 'src/modules/catalogs/services';
