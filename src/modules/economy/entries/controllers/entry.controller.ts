@@ -16,7 +16,7 @@ export class EntryController extends BaseController<Entry> {
     super();
   }
 
-  @Post(':accountId/new')
+  @Post()
   async createEntry(
     @Body() createDto: CreateEntryDto,
     @GetUser() user: User,

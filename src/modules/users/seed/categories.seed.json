@@ -8,15 +8,15 @@
     ]
   },
   {
-    "name": "Compras"
+    "name": "Servicios",
+    "subCategories": [
+      { "name": "Luz" },
+      { "name": "Gas" },
+      { "name": "Internet" }
+    ]
   },
   {
-    "name": "Vivienda"
-  },
-  {
-    "name": "Transporte"
-  },
-  {
-    "name": "Ingresos"
+    "name": "Ingresos",
+    "subCategories": [{ "name": "Sueldo" }]
   }
 ]
