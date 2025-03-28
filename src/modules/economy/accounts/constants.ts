@@ -1,4 +1,4 @@
-import { AccountTypeEnum } from 'src/modules/catalogs/enums';
+import { AccountTypeEnum } from '@catalogs/enums';
 
 export const DEFAULT_NAME = 'default';
 

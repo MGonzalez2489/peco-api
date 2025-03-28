@@ -1,6 +1,6 @@
+import { EntryCategory } from '@datasource/entities/economy';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { EntryCategory } from 'src/datasource/entities/economy';
 import { EntryCategoryController } from './controllers/entry-category.controller';
 import { EntryCategoryService } from './services/entry-category.service';
 

@@ -1,15 +1,15 @@
+import { BaseController } from '@common/controllers/base.controller';
+import { GetUser } from '@common/decorators';
+import { PageOptionsDto } from '@common/dtos/pagination';
+import { User } from '@datasource/entities';
+import { EntryCategory } from '@datasource/entities/economy';
 import { Body, Controller, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { BaseController } from 'src/common/controllers/base.controller';
-import { User } from 'src/datasource/entities';
-import { GetUser } from 'src/common/decorators';
-import { PageOptionsDto } from 'src/common/dtos/pagination';
-import { EntryCategoryService } from '../services/entry-category.service';
-import { EntryCategory } from 'src/datasource/entities/economy';
 import {
   EntryCategoryCreateDto,
   EntryCategoryUpdateDto,
 } from '../dto/entry-category.dto';
+import { EntryCategoryService } from '../services/entry-category.service';
 
 @Controller('entry-category')
 @ApiTags('Entry Category')

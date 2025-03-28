@@ -1,9 +1,9 @@
+import { CommonModule } from '@common/common.module';
+import { ConfigNameEnum } from '@config/config-name.enum';
+import { IDatabaseConfiguration } from '@config/iConfiguration.interface';
 import { Global, Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { CommonModule } from 'src/common/common.module';
-import { ConfigNameEnum } from 'src/config/config-name.enum';
-import { IDatabaseConfiguration } from 'src/config/iConfiguration.interface';
 
 @Global()
 @Module({

@@ -1,7 +1,7 @@
+import { BaseService } from '@common/services';
+import { AccountType, EntryType } from '@datasource/entities/catalogs';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { BaseService } from 'src/common/services';
-import { AccountType, EntryType } from 'src/datasource/entities/catalogs';
 import { Repository } from 'typeorm';
 
 //seed

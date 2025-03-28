@@ -17,6 +17,18 @@
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "paths": {
+      "@datasource/*": ["./src/datasource/*"],
+      "@common/*": ["./src/common/*"],
+      "@config/*": ["./src/config/*"],
+      "@auth/*": ["./src/modules/auth/*"],
+      "@users/*": ["./src/modules/users/*"],
+      "@catalogs/*": ["./src/modules/catalogs/*"],
+      "@accounts/*": ["./src/modules/economy/accounts/*"],
+      "@entries/*": ["./src/modules/economy/entries/*"],
+      "@entry-category/*": ["./src/modules/economy/entry-category/*"],
+      "@planned-entries/*": ["./src/modules/economy/planned-entries/*"]
+    }
   }
 }

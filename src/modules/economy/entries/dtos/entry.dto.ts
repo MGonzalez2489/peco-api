@@ -1,4 +1,4 @@
-import { Entry } from 'src/datasource/entities/economy';
+import { Entry } from '@datasource/entities/economy';
 
 export class EntryDto {
   amount: number;

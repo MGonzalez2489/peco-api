@@ -1,10 +1,10 @@
-import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import {
   AccountType,
   EntryStatus,
   EntryType,
-} from 'src/datasource/entities/catalogs';
+} from '@datasource/entities/catalogs';
+import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { CatalogsController } from './controllers/catalogs.controller';
 import {
   CatAccountTypeService,

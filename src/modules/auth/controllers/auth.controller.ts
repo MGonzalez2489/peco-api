@@ -1,9 +1,9 @@
+import { BaseController } from '@common/controllers/base.controller';
+import { ApiModelOkResponse, GetUser, Public } from '@common/decorators';
+import { ResponseDto } from '@common/dtos/responses';
+import { User } from '@datasource/entities';
 import { Body, Controller, Patch, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { BaseController } from 'src/common/controllers/base.controller';
-import { ApiModelOkResponse, GetUser, Public } from 'src/common/decorators';
-import { ResponseDto } from 'src/common/dtos/responses';
-import { User } from 'src/datasource/entities';
 import { ChangePasswordDto, RegisterDto, TokenDto } from '../dto';
 import { AuthService } from '../services/auth.service';
 

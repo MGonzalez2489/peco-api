@@ -1,17 +1,14 @@
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import {
-  PageOptionsDto,
-  PaginatedResponseDto,
-} from 'src/common/dtos/pagination';
-import { BaseService } from '../../../../common/services';
-import { User } from 'src/datasource/entities';
-import { Account } from 'src/datasource/entities/economy/account.entity';
-import { CatAccountTypeService } from 'src/modules/catalogs/services';
 import { Like, Repository } from 'typeorm';
 import { CreateAccountDto } from '../dto';
 
-import { AccountTypeEnum } from 'src/modules/catalogs/enums';
+import { AccountTypeEnum } from '@catalogs/enums';
+import { CatAccountTypeService } from '@catalogs/services';
+import { PageOptionsDto, PaginatedResponseDto } from '@common/dtos/pagination';
+import { BaseService } from '@common/services';
+import { User } from '@datasource/entities';
+import { Account } from '@datasource/entities/economy';
 import * as AccountConstants from './../constants';
 
 @Injectable()

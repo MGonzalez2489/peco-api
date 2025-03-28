@@ -1,5 +1,5 @@
+import { EntryCategory } from '@datasource/entities/economy';
 import { IsBoolean, IsOptional, IsString, IsUUID } from 'class-validator';
-import { EntryCategory } from 'src/datasource/entities/economy';
 
 export class EntryCategoryDto {
   name: string;

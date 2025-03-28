@@ -1,11 +1,11 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { User } from 'src/datasource/entities';
 
-//seeds
-import { AccountService } from 'src/modules/economy/accounts/services/account.service';
-import { EntryCategoryDto } from 'src/modules/economy/entry-category/dto/entry-category.dto';
-import { EntryCategoryService } from 'src/modules/economy/entry-category/services/entry-category.service';
+import { AccountService } from '@accounts/services/account.service';
+import { User } from '@datasource/entities';
+import { EntryCategoryDto } from '@entry-category/dto/entry-category.dto';
+import { EntryCategoryService } from '@entry-category/services/entry-category.service';
 import * as CatSeedData from './../seed/categories.seed.json';
+//seeds
 
 //This service will seed all the default data for a new user
 @Injectable()

@@ -1,11 +1,11 @@
-import { PBaseEntity } from 'src/datasource/entities/_base';
+import { PBaseEntity } from '@datasource/entities/_base';
+import { InternalServerErrorException } from '@nestjs/common';
 import { ObjectLiteral, Repository, SelectQueryBuilder } from 'typeorm';
 import {
-  PageOptionsDto,
   PageMetaDto,
+  PageOptionsDto,
   PaginatedResponseDto,
 } from '../dtos/pagination';
-import { InternalServerErrorException } from '@nestjs/common';
 
 export class BaseService<Entity extends PBaseEntity | any> {
   constructor(protected repository?: Repository<Entity>) {}

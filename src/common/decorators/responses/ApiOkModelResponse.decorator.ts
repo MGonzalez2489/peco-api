@@ -1,6 +1,6 @@
+import { ResponseDto } from '@common/dtos/responses';
 import { applyDecorators, Type } from '@nestjs/common';
 import { ApiExtraModels, ApiOkResponse, getSchemaPath } from '@nestjs/swagger';
-import { ResponseDto } from 'src/common/dtos/responses';
 
 export const ApiModelOkResponse = <TModel extends Type<any>>(model: TModel) => {
   return applyDecorators(

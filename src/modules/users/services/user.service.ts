@@ -1,7 +1,7 @@
+import { BaseService, CryptService } from '@common/services';
+import { User } from '@datasource/entities';
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { BaseService, CryptService } from 'src/common/services';
-import { User } from 'src/datasource/entities';
 import { Repository } from 'typeorm';
 import { UpdateUserDto, UserCreateDto } from '../dto';
 import { UserSeedService } from './user-seed.service';

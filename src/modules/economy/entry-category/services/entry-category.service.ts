@@ -1,12 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import {
-  PageOptionsDto,
-  PaginatedResponseDto,
-} from 'src/common/dtos/pagination';
-import { BaseService } from 'src/common/services';
-import { User } from 'src/datasource/entities';
-import { EntryCategory } from 'src/datasource/entities/economy';
+
+import { PageOptionsDto, PaginatedResponseDto } from '@common/dtos/pagination';
+import { BaseService } from '@common/services';
+import { User } from '@datasource/entities';
+import { EntryCategory } from '@datasource/entities/economy';
 import { Repository } from 'typeorm';
 import {
   EntryCategoryCreateDto,

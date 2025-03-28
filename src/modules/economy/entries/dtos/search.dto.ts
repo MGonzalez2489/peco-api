@@ -1,5 +1,5 @@
+import { PageOptionsDto } from '@common/dtos/pagination';
 import { IsOptional, IsString } from 'class-validator';
-import { PageOptionsDto } from 'src/common/dtos/pagination';
 
 export class SearchEntriesDto extends PageOptionsDto {
   //required

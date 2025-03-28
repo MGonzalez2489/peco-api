@@ -1,8 +1,8 @@
+import { BaseController } from '@common/controllers/base.controller';
+import { GetUser } from '@common/decorators';
+import { User } from '@datasource/entities';
 import { Body, Controller, Get, Put } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { BaseController } from 'src/common/controllers/base.controller';
-import { GetUser } from 'src/common/decorators';
-import { User } from 'src/datasource/entities';
 import { UpdateUserDto } from '../dto';
 import { UserService } from '../services/user.service';
 

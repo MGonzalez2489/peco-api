@@ -1,7 +1,7 @@
+import { Public } from '@common/decorators';
+import { PageOptionsDto } from '@common/dtos/pagination';
 import { Controller, Get, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { Public } from 'src/common/decorators';
-import { PageOptionsDto } from 'src/common/dtos/pagination';
 import { CatAccountTypeService, CatEntryTypeService } from '../services';
 import { CatEntryStatusService } from '../services/cat-entry-status.service';
 

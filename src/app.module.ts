@@ -1,16 +1,17 @@
+import { AccountsModule } from '@accounts/accounts.module';
+import { AuthModule } from '@auth/auth.module';
+import { JwtAuthGuard } from '@auth/guards';
+import { CatalogsModule } from '@catalogs/catalogs.module';
+import { HttpLoggerMiddleware } from '@common/middlewares';
+import configuration from '@config/configuration';
+import { EntryModule } from '@entries/entry.module';
+import { EntryCategoryModule } from '@entry-category/entry-category.module';
 import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { PTypeOrmModule } from './datasource/typeorm.module';
-import configuration from './config/configuration';
-import { UsersModule } from './modules/users/users.module';
-import { AuthModule } from './modules/auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
-import { JwtAuthGuard } from './modules/auth/guards';
-import { HttpLoggerMiddleware } from './common/middlewares';
-import { CatalogsModule } from './modules/catalogs/catalogs.module';
-import { AccountsModule, EntryModule } from './modules/economy';
-import { EntryCategoryModule } from './modules/economy/entry-category/entry-category.module';
-import { PlannedEntriesModule } from './modules/economy/planned-entries/planned-entries.module';
+import { PlannedEntriesModule } from '@planned-entries/planned-entries.module';
+import { UsersModule } from '@users/users.module';
+import { PTypeOrmModule } from './datasource/typeorm.module';
 
 const envFilePath = `${__dirname}/../../${process.env.NODE_ENV || ''}.env`;
 

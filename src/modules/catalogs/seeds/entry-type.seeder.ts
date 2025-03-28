@@ -1,8 +1,8 @@
 import { DataSource } from 'typeorm';
 import { Seeder } from 'typeorm-extension';
-import { EntryType } from './../../../datasource/entities/catalogs';
 
-import * as EntryTypeSeed from './../seeds/entry-type.seed.json';
+import { EntryType } from '@datasource/entities/catalogs';
+import * as EntryTypeSeed from './account-type.seed.json';
 
 export default class EntryTypeSeeder implements Seeder {
   public async run(dataSource: DataSource): Promise<any> {

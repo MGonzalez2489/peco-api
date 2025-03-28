@@ -1,3 +1,13 @@
+import { BaseController } from '@common/controllers/base.controller';
+import {
+  ApiModelOkResponse,
+  ApiOkPaginatedResponse,
+  GetUser,
+} from '@common/decorators';
+import { PageOptionsDto, PaginatedResponseDto } from '@common/dtos/pagination';
+import { ResponseDto } from '@common/dtos/responses';
+import { User } from '@datasource/entities';
+import { Account } from '@datasource/entities/economy';
 import {
   Body,
   Controller,
@@ -9,19 +19,6 @@ import {
   Query,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { BaseController } from '../../../../common/controllers/base.controller';
-import {
-  ApiModelOkResponse,
-  ApiOkPaginatedResponse,
-  GetUser,
-} from 'src/common/decorators';
-import {
-  PageOptionsDto,
-  PaginatedResponseDto,
-} from 'src/common/dtos/pagination';
-import { ResponseDto } from 'src/common/dtos/responses';
-import { User } from 'src/datasource/entities';
-import { Account } from 'src/datasource/entities/economy';
 import { CreateAccountDto } from '../dto';
 import { AccountService } from '../services/account.service';
 

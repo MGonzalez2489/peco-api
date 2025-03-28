@@ -1,3 +1,5 @@
+import { BaseService, CryptService } from '@common/services';
+import { User } from '@datasource/entities';
 import {
   BadRequestException,
   ConflictException,
@@ -5,9 +7,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { BaseService, CryptService } from 'src/common/services';
-import { User } from 'src/datasource/entities';
-import { UserService } from 'src/modules/users/services/user.service';
+import { UserService } from '@users/services';
 import { ChangePasswordDto, RegisterDto, SignInDto, TokenDto } from '../dto';
 
 @Injectable()

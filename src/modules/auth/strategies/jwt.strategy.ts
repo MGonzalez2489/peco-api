@@ -1,11 +1,11 @@
+import { ConfigNameEnum } from '@config/config-name.enum';
+import { IJwtConfiguration } from '@config/iConfiguration.interface';
+import { User } from '@datasource/entities';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
+import { UserService } from '@users/services';
 import { ExtractJwt, Strategy } from 'passport-jwt';
-import { ConfigNameEnum } from 'src/config/config-name.enum';
-import { IJwtConfiguration } from 'src/config/iConfiguration.interface';
-import { User } from 'src/datasource/entities';
-import { UserService } from 'src/modules/users/services/user.service';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
