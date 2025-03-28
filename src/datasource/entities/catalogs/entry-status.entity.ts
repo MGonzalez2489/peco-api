@@ -1,7 +1,7 @@
 import { Column, Entity } from 'typeorm';
 import { PBaseEntity } from '../_base';
 
-@Entity()
+@Entity({ name: 'cat_entry_status' })
 export class EntryStatus extends PBaseEntity {
   @Column({ update: false })
   name: string;

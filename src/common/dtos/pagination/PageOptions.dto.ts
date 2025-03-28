@@ -9,7 +9,7 @@ import {
   Max,
   Min,
 } from 'class-validator';
-import { PaginationOrderEnum } from 'src/common/enums';
+import { PaginationOrderEnum } from '../../../common/enums';
 
 export class PageOptionsDto {
   @ApiPropertyOptional({

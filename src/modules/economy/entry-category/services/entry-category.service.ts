@@ -91,7 +91,6 @@ export class EntryCategoryService extends BaseService<EntryCategory> {
     isDefault: boolean = false,
   ): Promise<EntryCategoryDto | null> {
     let parentCategory: EntryCategory | undefined;
-    console.log('-1');
     if (categoryDto.parentId) {
       parentCategory = await this.getByPublicIdAsync(
         categoryDto.parentId,

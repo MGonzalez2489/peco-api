@@ -115,18 +115,13 @@ export class EntryService extends BaseService<Entry> {
    * Creates a new entry for the given account.
    *
    * @param {CreateEntryDto} dto - The entry data transfer object.
-   * @param {string} accountPublicId - The public ID of the account.
    * @param {User} user - The current user.
    * @returns {Promise<Entry>} The created entry.
    */
-  async createEntryAsync(
-    dto: CreateEntryDto,
-    accountPublicId: string,
-    user: User,
-  ): Promise<Entry> {
+  async createEntryAsync(dto: CreateEntryDto, user: User): Promise<Entry> {
     try {
       const account = await this.accountService.getAccountByPublicIdAsync(
-        accountPublicId,
+        dto.accountId,
         user,
       );
       if (!account) {

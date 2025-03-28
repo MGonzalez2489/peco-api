@@ -2,7 +2,7 @@ import { Column, Entity, OneToMany } from 'typeorm';
 import { PBaseEntity } from '../_base';
 import { Account } from '../economy';
 
-@Entity()
+@Entity({ name: 'cat_account_type' })
 export class AccountType extends PBaseEntity {
   @Column({ update: false })
   name: string;

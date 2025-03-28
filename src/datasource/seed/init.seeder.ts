@@ -50,24 +50,4 @@ export class InitSeeder implements Seeder {
       }
     }
   }
-
-  // private async loadSeeders(): Promise<any[]> {
-  //   const seedersPath = path.join(`${__dirname}../../../`);
-  //   console.log('seedersPath', seedersPath);
-  //   const files = await fs.readdir(seedersPath);
-  //   const seederFiles = files.filter(
-  //     (f) => f.endsWith('.seeder.ts') && f !== 'init.seeder.ts',
-  //   );
-  //
-  //   console.log('seederFiles', seederFiles.length);
-  //   const seeders: any[] = [];
-  //
-  //   for (const file of seederFiles) {
-  //     const module = await import(path.join(seedersPath, file));
-  //     const seeder = module.default;
-  //     seeders.push(seeder);
-  //   }
-  //
-  //   return seeders;
-  // }
 }

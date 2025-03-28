@@ -25,20 +25,6 @@ export class EntryCategory extends PBaseEntity {
   @Column()
   userId: number;
 
-  //Parent-child
-  // @Exclude()
-  // @Column({ nullable: true, default: null })
-  // parentId?: number;
-  //
-  // @JoinColumn({ name: 'parentId' })
-  // parent?: EntryCategory;
-  //
-  // @ManyToOne(() => EntryCategory, (cat) => cat.subCategories)
-  // @JoinColumn({
-  //   name: 'parentId',
-  //   foreignKeyConstraintName: 'FK_Category_Category',
-  // })
-  // subCategories: EntryCategory[];
   // Relación con la categoría padre (ManyToOne)
   @ManyToOne(() => EntryCategory, (category) => category.subCategories, {
     nullable: true,

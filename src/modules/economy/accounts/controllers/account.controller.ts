@@ -9,7 +9,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { BaseController } from 'src/common/controllers/base.controller';
+import { BaseController } from '../../../../common/controllers/base.controller';
 import {
   ApiModelOkResponse,
   ApiOkPaginatedResponse,

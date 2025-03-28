@@ -7,9 +7,12 @@ export class CreateEntryDto {
   @IsString()
   description: string;
 
-  @IsString()
+  @IsUUID()
   categoryId: string;
 
   @IsUUID()
   entryTypeId: string;
+
+  @IsString()
+  accountId: string;
 }

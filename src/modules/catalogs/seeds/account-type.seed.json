@@ -6,5 +6,9 @@
   {
     "name": "debit",
     "displayName": "Debito"
+  },
+  {
+    "name": "saving",
+    "displayName": "Ahorros"
   }
 ]
