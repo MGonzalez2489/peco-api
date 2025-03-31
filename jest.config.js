@@ -14,4 +14,5 @@ module.exports = {
   moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, {
     prefix: '<rootDir>/',
   }),
+  // setupFilesAfterEnv: ['<rootDir>/test/jest-ut-setup.ts'],
 };

@@ -1,38 +1,36 @@
 import { AuthService } from '@auth/services/auth.service';
-import { JwtModule } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
-import { UsersModule } from '@users/users.module';
+import { getDataSourceToken } from '@nestjs/typeorm';
+import { generalImports } from '@test/test-imports';
+import { DataSource } from 'typeorm';
 import { AuthController } from './auth.controller';
 
 describe('AuthController', () => {
   let controller: AuthController;
   let service: AuthService;
+  let dataSource: DataSource;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [
-        UsersModule,
-        JwtModule.registerAsync({
-          useFactory: () => {
-            return {
-              secret: 'secret_test',
-              signOptions: {
-                expiresIn: '2h',
-              },
-            };
-          },
-        }),
-      ],
+      imports: [...generalImports],
       providers: [AuthService],
       controllers: [AuthController],
     }).compile();
 
+    dataSource = module.get<DataSource>(getDataSourceToken());
     controller = module.get<AuthController>(AuthController);
     service = module.get<AuthService>(AuthService);
+  });
+  afterAll(async () => {
+    if (dataSource) {
+      await dataSource.destroy();
+    }
   });
 
   it('should be defined', () => {
     expect(controller).toBeDefined();
     expect(service).toBeDefined();
   });
+
+  it('should regtister a new user', () => {});
 });

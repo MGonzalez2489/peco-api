@@ -15,7 +15,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   ) {
     const jwtConfig = configService.get<IJwtConfiguration>(ConfigNameEnum.jwt);
     super({
-      secretOrKey: jwtConfig.secret,
+      secretOrKey: jwtConfig?.secret || 'testing',
       ignoreExpiration: false, //jwtConfig.ignoreExpiration,
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
     });
