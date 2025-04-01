@@ -14,5 +14,22 @@ module.exports = {
   moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, {
     prefix: '<rootDir>/',
   }),
-  // setupFilesAfterEnv: ['<rootDir>/test/jest-ut-setup.ts'],
+  coveragePathIgnorePatterns: [
+    '/node_modules/',
+    '/dist/',
+    '/index.ts$',
+    '\\.module\\.ts$',
+    '\\.seeder\\.ts$',
+    '\\.enum\\.ts$',
+    '\\.entity\\.ts$',
+    'constants\\.ts$',
+    'main.ts',
+    'jest.config.js',
+    '.eslintrc.js',
+    'db-initializer.ts',
+    'src/config/configuration.ts',
+    'src/config/swagger.config.ts',
+    'src/datasource/datasource.ts',
+    'test/',
+  ],
 };
