@@ -17,7 +17,6 @@ describe('JwtAuthGuard', () => {
   let userService: UserService;
 
   let jwtService: JwtService;
-  let configService: ConfigService;
 
   beforeEach(async () => {
     const moduleRef = await Test.createTestingModule({
@@ -54,7 +53,6 @@ describe('JwtAuthGuard', () => {
     userService = moduleRef.get<UserService>(UserService);
 
     jwtService = moduleRef.get<JwtService>(JwtService);
-    configService = moduleRef.get<ConfigService>(ConfigService);
   });
 
   describe('canActivate', () => {
