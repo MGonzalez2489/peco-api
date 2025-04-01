@@ -48,7 +48,7 @@ export class PageOptionsDto {
 
   @IsString()
   @IsOptional()
-  readonly hint: string;
+  readonly hint?: string;
 
   @IsBoolean()
   @Transform(({ value }) => value === 'true')
