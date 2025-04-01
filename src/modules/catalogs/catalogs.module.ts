@@ -5,13 +5,13 @@ import {
 } from '@datasource/entities/catalogs';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { CatalogsController } from './controllers/catalogs.controller';
 import {
   CatAccountTypeService,
   CatalogsService,
   CatEntryTypeService,
 } from './services';
 import { CatEntryStatusService } from './services/cat-entry-status.service';
+import { CatalogsController } from './controllers/catalogs.controller';
 
 @Module({
   imports: [TypeOrmModule.forFeature([EntryType, EntryStatus, AccountType])],
