@@ -4,6 +4,7 @@ import {
   BadRequestException,
   ConflictException,
   Injectable,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
@@ -28,15 +29,16 @@ export class AuthService extends BaseService<any> {
    */
   async signInAsync(signInRequest: SignInDto): Promise<TokenDto> {
     try {
+      if (!signInRequest.password) {
+        throw new BadRequestException('Password is required');
+      }
+
       const user = await this.userService.findUserByEmailAsync(
         signInRequest.email,
       );
-      if (!user) {
-        throw new UnauthorizedException('User not found');
-      }
 
-      if (!signInRequest.password) {
-        throw new UnauthorizedException('Password is required');
+      if (!user) {
+        throw new NotFoundException('User not found');
       }
 
       const passwordMatch = await this.cryptoService.compare(

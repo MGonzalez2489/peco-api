@@ -26,7 +26,6 @@ export class AuthController extends BaseController<TokenDto> {
       return this.Response(registrationResponse);
     } catch (error) {
       // Handle the error
-      console.error(error);
       throw error;
     }
   }
@@ -45,7 +44,6 @@ export class AuthController extends BaseController<TokenDto> {
       return this.Response(updatePasswordResponse);
     } catch (error) {
       // Handle the error
-      console.error(error);
       throw error;
     }
   }
@@ -61,7 +59,6 @@ export class AuthController extends BaseController<TokenDto> {
       return this.Response(signInResponse);
     } catch (error) {
       // Handle the error
-      console.error(error);
       throw error;
     }
   }

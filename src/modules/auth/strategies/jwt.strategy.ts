@@ -14,14 +14,19 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     private configService: ConfigService,
   ) {
     const jwtConfig = configService.get<IJwtConfiguration>(ConfigNameEnum.jwt);
+
     super({
-      secretOrKey: jwtConfig?.secret || 'testing',
+      secretOrKey: jwtConfig?.secret || 'test',
       ignoreExpiration: false, //jwtConfig.ignoreExpiration,
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
     });
   }
   async validate(payload: any): Promise<User> {
     const { sub } = payload;
+    if (!sub) {
+      throw new UnauthorizedException('Token no valido.');
+    }
+
     const user = await this.userService.findUserByPublicIdAsync(sub);
     if (!user) {
       throw new UnauthorizedException('Token no valido.');

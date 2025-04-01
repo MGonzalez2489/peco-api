@@ -1,30 +1,30 @@
+import { ChangePasswordDto, RegisterDto, TokenDto } from '@auth/dto';
 import { AuthService } from '@auth/services/auth.service';
+import { ResponseDto } from '@common/dtos/responses';
 import { Test, TestingModule } from '@nestjs/testing';
-import { getDataSourceToken } from '@nestjs/typeorm';
-import { generalImports } from '@test/test-imports';
-import { DataSource } from 'typeorm';
 import { AuthController } from './auth.controller';
+import { User } from '@datasource/entities';
 
 describe('AuthController', () => {
   let controller: AuthController;
   let service: AuthService;
-  let dataSource: DataSource;
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [...generalImports],
-      providers: [AuthService],
       controllers: [AuthController],
+      providers: [
+        {
+          provide: AuthService,
+          useValue: {
+            registerAsync: jest.fn(),
+            signInAsync: jest.fn(),
+            changePasswordAsync: jest.fn(),
+          },
+        },
+      ],
     }).compile();
-
-    dataSource = module.get<DataSource>(getDataSourceToken());
     controller = module.get<AuthController>(AuthController);
     service = module.get<AuthService>(AuthService);
-  });
-  afterAll(async () => {
-    if (dataSource) {
-      await dataSource.destroy();
-    }
   });
 
   it('should be defined', () => {
@@ -32,5 +32,135 @@ describe('AuthController', () => {
     expect(service).toBeDefined();
   });
 
-  it('should regtister a new user', () => {});
+  describe('register', () => {
+    it('shouild call authService.registerAsync with the provided registerDto', async () => {
+      const dto: RegisterDto = {
+        email: 'test@test.com',
+        password: '12345',
+      };
+      const tokenDto: TokenDto = { access_token: 'testToken', expiresAt: '' };
+      (service.registerAsync as jest.Mock).mockResolvedValue(tokenDto);
+      await controller.register(dto);
+      expect(service.registerAsync).toHaveBeenCalledWith(dto);
+    });
+
+    it('should return a ResponseDto with the tokenDto on success', async () => {
+      const registerDto: RegisterDto = {
+        email: 'test@example.com',
+        password: 'password123',
+      };
+      const tokenDto: TokenDto = { access_token: 'testToken', expiresAt: '' };
+      (service.registerAsync as jest.Mock).mockResolvedValue(tokenDto);
+
+      const result: ResponseDto<TokenDto> =
+        await controller.register(registerDto);
+
+      expect(result).toEqual({
+        statusCode: 200,
+        isSuccess: true,
+        data: tokenDto,
+      });
+    });
+
+    it('should handle errors from authService.registerAsync', async () => {
+      const registerDto: RegisterDto = {
+        email: 'test@example.com',
+        password: 'password123',
+      };
+      const error = new Error('Registration failed');
+      (service.registerAsync as jest.Mock).mockRejectedValue(error);
+
+      await expect(controller.register(registerDto)).rejects.toThrow(error);
+    });
+  });
+
+  describe('signIn', () => {
+    it('should call authService.signInAsync with the provided signInDto', async () => {
+      const dto: RegisterDto = {
+        email: 'test@test.com',
+        password: '12345',
+      };
+      const tokenDto: TokenDto = { access_token: 'testToken', expiresAt: '' };
+      (service.signInAsync as jest.Mock).mockResolvedValue(tokenDto);
+      await controller.signIn(dto);
+      expect(service.signInAsync).toHaveBeenCalledWith(dto);
+    });
+
+    it('should return a ResponseDto with the tokenDto on success', async () => {
+      const signInDto: RegisterDto = {
+        email: 'test@example.com',
+        password: 'password123',
+      };
+      const tokenDto: TokenDto = { access_token: 'testToken', expiresAt: '' };
+      (service.signInAsync as jest.Mock).mockResolvedValue(tokenDto);
+
+      const result: ResponseDto<TokenDto> = await controller.signIn(signInDto);
+
+      expect(result).toEqual({
+        statusCode: 200,
+        isSuccess: true,
+        data: tokenDto,
+      });
+    });
+
+    it('should handle errors from authService.signInAsync', async () => {
+      const signInDto: RegisterDto = {
+        email: 'test@example.com',
+        password: 'password123',
+      };
+      const error = new Error('SignIn failed');
+      (service.signInAsync as jest.Mock).mockRejectedValue(error);
+
+      await expect(controller.signIn(signInDto)).rejects.toThrow(error);
+    });
+  });
+
+  describe('secure', () => {
+    it('should call authService.changePasswordAsync with the provided changePasswordDto and user', async () => {
+      const dto: ChangePasswordDto = {
+        currentPassword: 'oldPassword',
+        newPassword: 'newPassword',
+      };
+      const user: User = { id: 1 } as User;
+      const tokenDto: TokenDto = { access_token: 'testToken', expiresAt: '' };
+      (service.changePasswordAsync as jest.Mock).mockResolvedValue(tokenDto);
+      await controller.secure(dto, user);
+      expect(service.changePasswordAsync).toHaveBeenCalledWith(dto, user);
+    });
+
+    it('should return a ResponseDto with the tokenDto on success', async () => {
+      const changePasswordDto: ChangePasswordDto = {
+        currentPassword: 'oldPassword',
+        newPassword: 'newPassword',
+      };
+      const user: User = { id: 1 } as User;
+      const tokenDto: TokenDto = { access_token: 'testToken', expiresAt: '' };
+      (service.changePasswordAsync as jest.Mock).mockResolvedValue(tokenDto);
+
+      const result: ResponseDto<TokenDto> = await controller.secure(
+        changePasswordDto,
+        user,
+      );
+
+      expect(result).toEqual({
+        statusCode: 200,
+        isSuccess: true,
+        data: tokenDto,
+      });
+    });
+
+    it('should handle errors from authService.changePasswordAsync', async () => {
+      const changePasswordDto: ChangePasswordDto = {
+        currentPassword: 'oldPassword',
+        newPassword: 'newPassword',
+      };
+      const user: User = { id: 1 } as User;
+      const error = new Error('Change password failed');
+      (service.changePasswordAsync as jest.Mock).mockRejectedValue(error);
+
+      await expect(controller.secure(changePasswordDto, user)).rejects.toThrow(
+        error,
+      );
+    });
+  });
 });

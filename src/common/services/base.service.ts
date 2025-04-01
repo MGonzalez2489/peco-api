@@ -53,7 +53,7 @@ export class BaseService<Entity extends PBaseEntity | any> {
   }
 
   ThrowException(place: string, error: any) {
-    console.log(place, error);
+    // console.log(place, error);
 
     throw error;
   }
