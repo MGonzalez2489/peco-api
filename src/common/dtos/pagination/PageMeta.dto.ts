@@ -21,11 +21,15 @@ export class PageMetaDto {
   readonly hasNextPage: boolean;
 
   constructor({ pageOptionsDto, itemCount }: IPageMetaParameters) {
-    this.page = pageOptionsDto.page - 1;
-    this.take = pageOptionsDto.take;
+    this.page = pageOptionsDto.showAll ? 0 : pageOptionsDto.page - 1;
+    this.take = pageOptionsDto.showAll ? itemCount : pageOptionsDto.take;
     this.itemCount = itemCount;
-    this.pageCount = Math.ceil(this.itemCount / this.take);
-    this.hasPreviousPage = this.page > 1;
-    this.hasNextPage = this.page < this.pageCount;
+    this.pageCount = pageOptionsDto.showAll
+      ? 1
+      : Math.ceil(this.itemCount / this.take);
+    this.hasPreviousPage = pageOptionsDto.showAll ? false : this.page > 1;
+    this.hasNextPage = pageOptionsDto.showAll
+      ? false
+      : this.page < this.pageCount;
   }
 }

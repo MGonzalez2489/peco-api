@@ -6,7 +6,6 @@ import {
   IsInt,
   IsOptional,
   IsString,
-  Max,
   Min,
 } from 'class-validator';
 import { PaginationOrderEnum } from '../../../common/enums';
@@ -36,13 +35,13 @@ export class PageOptionsDto {
 
   @ApiPropertyOptional({
     minimum: 1,
-    maximum: 50,
+    // maximum: 50,
     default: 10,
   })
   @Type(() => Number)
   @IsInt()
   @Min(1)
-  @Max(50)
+  // @Max(50)
   @IsOptional()
   readonly take?: number = 10;
 
@@ -53,6 +52,17 @@ export class PageOptionsDto {
   @IsBoolean()
   @Transform(({ value }) => value === 'true')
   showAll: boolean;
+
+  //period  from
+  @IsString()
+  readonly from: string;
+  //period to
+  @IsString()
+  readonly to: string;
+
+  //period
+  @IsString()
+  readonly period: string;
 
   get skip(): number {
     return (this.page - 1) * this.take;

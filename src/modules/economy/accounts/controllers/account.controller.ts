@@ -1,10 +1,10 @@
+import { SearchAccountDto } from '@accounts/dto/search-account.dto';
 import { BaseController } from '@common/controllers/base.controller';
 import {
   ApiModelOkResponse,
   ApiOkPaginatedResponse,
   GetUser,
 } from '@common/decorators';
-import { PageOptionsDto, PaginatedResponseDto } from '@common/dtos/pagination';
 import { ResponseDto } from '@common/dtos/responses';
 import { User } from '@datasource/entities';
 import { Account } from '@datasource/entities/economy';
@@ -19,7 +19,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { CreateAccountDto } from '../dto';
+import { AccountDto, CreateAccountDto } from '../dto';
 import { AccountService } from '../services/account.service';
 
 @Controller('accounts')
@@ -32,10 +32,40 @@ export class AccountController extends BaseController<any> {
   @Get()
   @ApiOkPaginatedResponse(User)
   async getAllByUserId(
-    @Query() paginationDto: PageOptionsDto,
+    @Query() paginationDto: SearchAccountDto,
     @GetUser() user: User,
-  ): Promise<PaginatedResponseDto<Account>> {
-    return this.service.getAccountsByUserAsync(paginationDto, user);
+  ) {
+    console.log('entro al controller');
+    const response = await this.service.getAccountsByUserAsync(
+      paginationDto,
+      user,
+    );
+
+    const newData: AccountDto[] = await Promise.all(
+      response.data.map(async (acc: Account) => {
+        let kpis = null;
+        if (paginationDto.fetchKPIs) {
+          kpis = await this.service.getAccountKPIs(
+            acc,
+            paginationDto.from,
+            paginationDto.to,
+            paginationDto.period,
+          );
+        }
+
+        return {
+          ...acc,
+          kpis,
+        };
+      }),
+    );
+
+    const newResponse = {
+      ...response,
+      data: newData,
+    };
+
+    return newResponse;
   }
 
   @Get(':accountId')

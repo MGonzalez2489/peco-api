@@ -11,23 +11,27 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { AccountService } from '../../accounts/services/account.service';
 import { EntryCategoryService } from '../../entry-category/services/entry-category.service';
-import { CreateEntryDto, EntryDto } from '../dtos';
+import { CreateEntryDto, EntryDto, EntryKPIRequestDto } from '../dtos';
 import { SearchEntriesDto } from '../dtos/search.dto';
+import { EntryKpiService } from './entry-kpi.service';
 
 @Injectable()
 export class EntryService extends BaseService<Entry> {
   constructor(
     @InjectRepository(Entry) readonly repository: Repository<Entry>,
-    @Inject(AccountService) readonly accountService: AccountService,
+    @Inject(AccountService)
+    readonly accountService: AccountService,
     @Inject(EntryCategoryService)
     readonly categoryService: EntryCategoryService,
     @Inject(CatEntryTypeService)
     readonly catEntryTypeService: CatEntryTypeService,
     @Inject(CatEntryStatusService)
     readonly catEntryStatusService: CatEntryStatusService,
+    @Inject(EntryKpiService)
+    readonly entryKPIService: EntryKpiService,
   ) {
     super(repository);
   }
@@ -86,12 +90,6 @@ export class EntryService extends BaseService<Entry> {
         .leftJoinAndSelect('entry.type', 'type')
         .leftJoinAndSelect('entry.status', 'status')
         .where(filter)
-        .andWhere({
-          createdAt: MoreThanOrEqual(new Date(searchDto.fromDate)),
-        })
-        .andWhere({
-          createdAt: LessThanOrEqual(new Date(searchDto.toDate)),
-        })
         .andWhere('account.userId = :userId', { userId: user.id })
         .orderBy(`entry.${searchDto.orderBy}`, searchDto.order);
 
@@ -172,5 +170,28 @@ export class EntryService extends BaseService<Entry> {
     } catch (error) {
       this.ThrowException('EntriesService::createEntryAsync', error);
     }
+  }
+
+  async getEntriesKPIs(dto: EntryKPIRequestDto) {
+    // let account: Account | undefined;
+    // if (dto.accountId) {
+    //   account = await this.accountService.getAccountByPublicIdAsync(
+    //     dto.accountId,
+    //   );
+    // }
+
+    const response = this.entryKPIService.generateEntriesKPI(dto);
+
+    //1.- Detect labels based on dto.type
+    ////DAILY
+    // From 00 to 23
+    ////WEEK
+    // From sunday to today
+    ////MONTH
+    // From 1st day of the month to today
+    ////YEAR
+    // From Jan to current month
+
+    return response;
   }
 }

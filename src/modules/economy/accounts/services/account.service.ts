@@ -3,12 +3,15 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Like, Repository } from 'typeorm';
 import { CreateAccountDto } from '../dto';
 
+import { SearchAccountDto } from '@accounts/dto/search-account.dto';
 import { AccountTypeEnum } from '@catalogs/enums';
 import { CatAccountTypeService } from '@catalogs/services';
-import { PageOptionsDto, PaginatedResponseDto } from '@common/dtos/pagination';
+import { PaginatedResponseDto } from '@common/dtos/pagination';
 import { BaseService } from '@common/services';
 import { User } from '@datasource/entities';
 import { Account } from '@datasource/entities/economy';
+import { EntryKPIRequestDto } from '@entries/dtos';
+import { EntryKpiService } from '@entries/services/entry-kpi.service';
 import * as AccountConstants from './../constants';
 
 @Injectable()
@@ -17,6 +20,8 @@ export class AccountService extends BaseService<Account> {
     @InjectRepository(Account) readonly repository: Repository<Account>,
     @Inject(CatAccountTypeService)
     private readonly catAccountTypeService: CatAccountTypeService,
+    @Inject(EntryKpiService)
+    private readonly entryKPIService: EntryKpiService,
   ) {
     super(repository);
   }
@@ -126,7 +131,7 @@ export class AccountService extends BaseService<Account> {
    * @throws {Exception} If an error occurs during account retrieval.
    */
   async getAccountsByUserAsync(
-    pageOptionsDto: PageOptionsDto,
+    pageOptionsDto: SearchAccountDto,
     user: User,
   ): Promise<PaginatedResponseDto<Account>> {
     try {
@@ -144,10 +149,28 @@ export class AccountService extends BaseService<Account> {
         .where(filter)
         .orderBy(`t.${pageOptionsDto.orderBy}`, pageOptionsDto.order);
 
-      return await this.SearchByQuery(queryBuilder, pageOptionsDto);
+      console.log('llego hasta aca');
+      const response = await this.SearchByQuery(queryBuilder, pageOptionsDto);
+
+      return response;
     } catch (error) {
       this.ThrowException('AccountService::getAccountsByUser', error);
     }
+  }
+  async getAccountKPIs(
+    account: Account,
+    from: string,
+    to: string,
+    period: string,
+  ) {
+    const search: EntryKPIRequestDto = {
+      from: from,
+      to: to,
+      accountId: account.publicId,
+      type: period,
+    };
+    const accountKPIs = await this.entryKPIService.generateEntriesKPI(search);
+    return accountKPIs;
   }
 
   /**
