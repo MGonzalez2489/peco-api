@@ -22,6 +22,9 @@ export class Account extends PBaseEntity {
   @Column({ readonly: true, default: true })
   isRoot: boolean;
 
+  @Column()
+  color: string;
+
   //////////Relationships
 
   @Exclude()

@@ -13,4 +13,7 @@ export class CreateAccountDto {
 
   @IsString()
   accountTypeId: string;
+
+  @IsString()
+  color: string;
 }

@@ -10,6 +10,9 @@ export class AccountType extends PBaseEntity {
   @Column()
   displayName: string;
 
+  @Column()
+  icon: string;
+
   //relationships
   @OneToMany(() => Account, (acc) => acc.type)
   accounts: Account[];

@@ -52,6 +52,7 @@ export class AccountService extends BaseService<Account> {
         isDefault: true,
         isRoot: true,
         typeId: cashAccountType.id,
+        color: '#42A5F5',
       });
       account = await this.repository.save(account);
       return account;
@@ -86,6 +87,7 @@ export class AccountService extends BaseService<Account> {
         initialBalance: dto.balance,
         isDefault: dto.isDefault,
         typeId: accountType.id,
+        color: dto.color,
       });
       account = await this.repository.save(account);
       account.type = accountType;
@@ -149,7 +151,6 @@ export class AccountService extends BaseService<Account> {
         .where(filter)
         .orderBy(`t.${pageOptionsDto.orderBy}`, pageOptionsDto.order);
 
-      console.log('llego hasta aca');
       const response = await this.SearchByQuery(queryBuilder, pageOptionsDto);
 
       return response;

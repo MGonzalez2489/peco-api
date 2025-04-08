@@ -8,19 +8,15 @@ export class InitSeeder implements Seeder {
   public async run(dataSource: DataSource) {
     const seeders = await this.loadSeeders();
 
-    console.log('seeders', seeders);
-
     await runSeeders(dataSource, { seeds: seeders });
   }
 
   private async loadSeeders(): Promise<any[]> {
     const seedersPath = path.join(__dirname, '../../../'); // Ajusta la ruta según sea necesario
-    console.log('seedersPath', seedersPath);
 
     const seeders: any[] = [];
     await this.readDirectoryRecursively(seedersPath, seeders);
 
-    console.log('seeders found', seeders.length);
     return seeders;
   }
 

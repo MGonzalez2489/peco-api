@@ -35,7 +35,6 @@ export class AccountController extends BaseController<any> {
     @Query() paginationDto: SearchAccountDto,
     @GetUser() user: User,
   ) {
-    console.log('entro al controller');
     const response = await this.service.getAccountsByUserAsync(
       paginationDto,
       user,
