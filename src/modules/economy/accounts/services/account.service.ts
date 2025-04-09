@@ -226,6 +226,7 @@ export class AccountService extends BaseService<Account> {
         name: dto.name,
         isDefault: dto.isDefault,
         type: accountType,
+        color: dto.color,
       });
 
       //TODO: It is needed to create a mechanism to update the balance
