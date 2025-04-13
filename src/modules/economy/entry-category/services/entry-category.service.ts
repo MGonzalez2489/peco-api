@@ -39,7 +39,7 @@ export class EntryCategoryService extends BaseService<EntryCategory> {
     query
       .leftJoinAndSelect('category.parent', 'parent')
       .where(filter)
-      .orderBy(`category.${pageOptions.orderBy}`, pageOptions.order);
+      .orderBy(`category.name`, 'ASC');
 
     const response = await this.SearchByQuery(query, pageOptions);
 
@@ -99,6 +99,8 @@ export class EntryCategoryService extends BaseService<EntryCategory> {
       name: categoryDto.name,
       userId: user.id,
       parentId: parentCategory?.id,
+      color: categoryDto.color,
+      icon: categoryDto.icon,
       isDefault,
     });
     newCategory = await this.repository.save(newCategory);

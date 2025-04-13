@@ -25,6 +25,12 @@ export class EntryCategory extends PBaseEntity {
   @Column()
   userId: number;
 
+  @Column()
+  color: string;
+
+  @Column()
+  icon: string;
+
   // Relación con la categoría padre (ManyToOne)
   @ManyToOne(() => EntryCategory, (category) => category.subCategories, {
     nullable: true,

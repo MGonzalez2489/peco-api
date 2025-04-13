@@ -8,6 +8,8 @@ export class EntryCategoryDto {
   isDefault: boolean;
   isVisible: boolean;
   subCategories: EntryCategoryDto[];
+  icon: string;
+  color: string;
 
   constructor(entity?: EntryCategory) {
     if (entity) {
@@ -17,6 +19,8 @@ export class EntryCategoryDto {
       this.isDefault = entity.isDefault;
       this.isVisible = entity.isVisible;
       this.subCategories = [];
+      this.icon = entity.icon;
+      this.color = entity.color;
     }
   }
 }
@@ -28,6 +32,12 @@ export class EntryCategoryCreateDto {
   @IsOptional()
   @IsUUID()
   parentId: string;
+
+  @IsString()
+  icon: string;
+
+  @IsString()
+  color: string;
 }
 
 export class EntryCategoryUpdateDto {

@@ -22,17 +22,23 @@ export class BaseService<Entity extends PBaseEntity | any> {
         throw new InternalServerErrorException('Repository not implemented');
       }
 
-      const queryBuilder = this.repository.createQueryBuilder();
-      queryBuilder
-        .where(where)
-        .andWhere({
-          createdAt: MoreThanOrEqual(new Date(pageOptionsDto.from)),
-        })
-        .andWhere({
-          createdAt: LessThanOrEqual(new Date(pageOptionsDto.to)),
-        })
+      let queryBuilder = this.repository.createQueryBuilder();
+      queryBuilder.where(where);
 
-        .orderBy(pageOptionsDto.orderBy, pageOptionsDto.order);
+      if (!pageOptionsDto.showAll) {
+        queryBuilder = queryBuilder
+          .andWhere({
+            createdAt: MoreThanOrEqual(new Date(pageOptionsDto.from)),
+          })
+          .andWhere({
+            createdAt: LessThanOrEqual(new Date(pageOptionsDto.to)),
+          });
+      }
+
+      queryBuilder = queryBuilder.orderBy(
+        pageOptionsDto.orderBy,
+        pageOptionsDto.order,
+      );
 
       return await this.applyPagination(pageOptionsDto, queryBuilder);
     } catch (error) {

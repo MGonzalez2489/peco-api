@@ -32,10 +32,14 @@ export class UserSeedService {
   ) {
     for (let i = 0; i < source.length; i++) {
       const element = source[i];
-
       //parent
       const newCat = await this.userCatService.createCategory(
-        { name: element.name, parentId: parentCat?.publicId },
+        {
+          name: element.name,
+          parentId: parentCat?.publicId,
+          icon: element.icon,
+          color: element.color,
+        },
         user,
         true,
       );

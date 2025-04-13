@@ -17,9 +17,11 @@ export class CatalogsController {
   @Get('entry-types')
   @Public()
   async getEntryTypes(@Query() paginationDto: PageOptionsDto) {
-    return await this.catEntryTypeService.getPaginatedEntryTypesAsync(
-      paginationDto,
-    );
+    const response =
+      await this.catEntryTypeService.getPaginatedEntryTypesAsync(paginationDto);
+
+    console.log('response', response);
+    return response;
   }
   @Get('account-types')
   @Public()
