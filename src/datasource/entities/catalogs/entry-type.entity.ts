@@ -8,4 +8,7 @@ export class EntryType extends PBaseEntity {
 
   @Column()
   displayName: string;
+
+  @Column()
+  color: string;
 }

@@ -2,7 +2,7 @@ import { DataSource } from 'typeorm';
 import { Seeder } from 'typeorm-extension';
 
 import { EntryType } from '@datasource/entities/catalogs';
-import * as EntryTypeSeed from './entry-type.seed.json';
+import { EntryTypeSeed } from './entry-type.seed';
 
 export default class EntryTypeSeeder implements Seeder {
   public async run(dataSource: DataSource): Promise<any> {

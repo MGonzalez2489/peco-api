@@ -13,6 +13,7 @@ import { Account } from '@datasource/entities/economy';
 import { EntryKPIRequestDto } from '@entries/dtos';
 import { EntryKpiService } from '@entries/services/entry-kpi.service';
 import * as AccountConstants from './../constants';
+import { ColorEnum } from '@common/enums';
 
 @Injectable()
 export class AccountService extends BaseService<Account> {
@@ -52,7 +53,7 @@ export class AccountService extends BaseService<Account> {
         isDefault: true,
         isRoot: true,
         typeId: cashAccountType.id,
-        color: '#42A5F5',
+        color: ColorEnum.CYAN,
       });
       account = await this.repository.save(account);
       return account;

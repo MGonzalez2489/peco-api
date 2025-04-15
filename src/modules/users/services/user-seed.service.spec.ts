@@ -3,7 +3,7 @@ import { UserSeedService } from './user-seed.service';
 import { AccountService } from '@accounts/services/account.service';
 import { EntryCategoryService } from '@entry-category/services/entry-category.service';
 import { User } from '@datasource/entities';
-import * as CatSeedData from '../seed/categories.seed.json';
+import * as CatSeedData from '../seed/categories.seed';
 import { EntryCategoryDto } from '@entry-category/dto/entry-category.dto';
 
 describe('UserSeedService', () => {

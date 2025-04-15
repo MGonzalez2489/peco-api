@@ -4,7 +4,7 @@ import { AccountService } from '@accounts/services/account.service';
 import { User } from '@datasource/entities';
 import { EntryCategoryDto } from '@entry-category/dto/entry-category.dto';
 import { EntryCategoryService } from '@entry-category/services/entry-category.service';
-import * as CatSeedData from './../seed/categories.seed.json';
+import { CatSeedData } from '@users/seed/categories.seed';
 //seeds
 
 //This service will seed all the default data for a new user
