@@ -1,5 +1,14 @@
 import { Exclude } from 'class-transformer';
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
+import {
+  AfterLoad,
+  BeforeInsert,
+  BeforeUpdate,
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+} from 'typeorm';
 import { PBaseEntity } from '../_base';
 import { AccountType } from '../catalogs';
 import { User } from '../user.entity';
@@ -10,16 +19,13 @@ export class Account extends PBaseEntity {
   @Column()
   name: string;
 
-  @Column('double', { precision: 10, scale: 2 })
+  @Column()
   balance: number;
 
   @Column({ readonly: true })
   initialBalance: number;
 
-  @Column({ default: false })
-  isDefault: boolean;
-
-  @Column({ readonly: true, default: true })
+  @Column({ readonly: true, default: false })
   isRoot: boolean;
 
   @Column()
@@ -51,4 +57,20 @@ export class Account extends PBaseEntity {
   @Exclude()
   @Column({ nullable: false })
   typeId: number;
+
+  @BeforeInsert()
+  updateBalanceToDBInsert() {
+    this.balance *= 1000;
+    this.initialBalance *= 1000;
+  }
+
+  @BeforeUpdate()
+  updateBalanceToDb() {
+    this.balance *= 1000;
+  }
+
+  @AfterLoad()
+  updateBalanceToAPI() {
+    this.balance = this.balance / 1000;
+  }
 }

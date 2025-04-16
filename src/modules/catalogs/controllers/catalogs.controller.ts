@@ -20,7 +20,6 @@ export class CatalogsController {
     const response =
       await this.catEntryTypeService.getPaginatedEntryTypesAsync(paginationDto);
 
-    console.log('response', response);
     return response;
   }
   @Get('account-types')

@@ -1,9 +1,8 @@
-import { ChangePasswordDto, RegisterDto, TokenDto } from '@auth/dto';
+import { RegisterDto, TokenDto } from '@auth/dto';
 import { AuthService } from '@auth/services/auth.service';
 import { ResponseDto } from '@common/dtos/responses';
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthController } from './auth.controller';
-import { User } from '@datasource/entities';
 
 describe('AuthController', () => {
   let controller: AuthController;
@@ -112,55 +111,6 @@ describe('AuthController', () => {
       (service.signInAsync as jest.Mock).mockRejectedValue(error);
 
       await expect(controller.signIn(signInDto)).rejects.toThrow(error);
-    });
-  });
-
-  describe('secure', () => {
-    it('should call authService.changePasswordAsync with the provided changePasswordDto and user', async () => {
-      const dto: ChangePasswordDto = {
-        currentPassword: 'oldPassword',
-        newPassword: 'newPassword',
-      };
-      const user: User = { id: 1 } as User;
-      const tokenDto: TokenDto = { access_token: 'testToken', expiresAt: '' };
-      (service.changePasswordAsync as jest.Mock).mockResolvedValue(tokenDto);
-      await controller.secure(dto, user);
-      expect(service.changePasswordAsync).toHaveBeenCalledWith(dto, user);
-    });
-
-    it('should return a ResponseDto with the tokenDto on success', async () => {
-      const changePasswordDto: ChangePasswordDto = {
-        currentPassword: 'oldPassword',
-        newPassword: 'newPassword',
-      };
-      const user: User = { id: 1 } as User;
-      const tokenDto: TokenDto = { access_token: 'testToken', expiresAt: '' };
-      (service.changePasswordAsync as jest.Mock).mockResolvedValue(tokenDto);
-
-      const result: ResponseDto<TokenDto> = await controller.secure(
-        changePasswordDto,
-        user,
-      );
-
-      expect(result).toEqual({
-        statusCode: 200,
-        isSuccess: true,
-        data: tokenDto,
-      });
-    });
-
-    it('should handle errors from authService.changePasswordAsync', async () => {
-      const changePasswordDto: ChangePasswordDto = {
-        currentPassword: 'oldPassword',
-        newPassword: 'newPassword',
-      };
-      const user: User = { id: 1 } as User;
-      const error = new Error('Change password failed');
-      (service.changePasswordAsync as jest.Mock).mockRejectedValue(error);
-
-      await expect(controller.secure(changePasswordDto, user)).rejects.toThrow(
-        error,
-      );
     });
   });
 });

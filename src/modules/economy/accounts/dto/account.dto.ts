@@ -4,8 +4,6 @@ export interface AccountDto {
   updatedAt: string;
   name: string;
   balance: number;
-  initialBalance: number;
-  isDefault: boolean;
   isRoot: boolean;
   type: AccountTypeDto;
   kpis: any;

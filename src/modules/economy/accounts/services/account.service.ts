@@ -50,7 +50,6 @@ export class AccountService extends BaseService<Account> {
         user,
         balance: 0,
         initialBalance: 0,
-        isDefault: true,
         isRoot: true,
         typeId: cashAccountType.id,
         color: ColorEnum.CYAN,
@@ -86,7 +85,6 @@ export class AccountService extends BaseService<Account> {
         user,
         balance: dto.balance,
         initialBalance: dto.balance,
-        isDefault: dto.isDefault,
         typeId: accountType.id,
         color: dto.color,
       });
@@ -188,10 +186,9 @@ export class AccountService extends BaseService<Account> {
     newBalance: number,
   ): Promise<Account> {
     try {
-      return await this.repository.save({
-        id: id,
-        balance: newBalance,
-      });
+      const account = await this.repository.findOneBy({ id });
+      account.balance = newBalance;
+      return await this.repository.save(account);
     } catch (error) {
       this.ThrowException('AccountService::updateAccountBalance', error);
     }
@@ -225,7 +222,6 @@ export class AccountService extends BaseService<Account> {
       await this.repository.save({
         ...account,
         name: dto.name,
-        isDefault: dto.isDefault,
         type: accountType,
         color: dto.color,
       });
@@ -252,8 +248,8 @@ export class AccountService extends BaseService<Account> {
     try {
       const account = await this.getAccountByPublicIdAsync(publicId, user);
 
-      if (account.isDefault) {
-        throw new BadRequestException("Default account can't be deleted");
+      if (account.isRoot) {
+        throw new BadRequestException("Root account can't be deleted");
       }
 
       await this.repository.softDelete({
