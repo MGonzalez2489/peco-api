@@ -14,9 +14,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { AccountService } from '../../accounts/services/account.service';
 import { EntryCategoryService } from '../../entry-category/services/entry-category.service';
-import { CreateEntryDto, EntryDto, EntryKPIRequestDto } from '../dtos';
+import { CreateEntryDto, EntryDto } from '../dtos';
 import { SearchEntriesDto } from '../dtos/search.dto';
-import { EntryKpiService } from './entry-kpi.service';
 
 @Injectable()
 export class EntryService extends BaseService<Entry> {
@@ -30,8 +29,6 @@ export class EntryService extends BaseService<Entry> {
     readonly catEntryTypeService: CatEntryTypeService,
     @Inject(CatEntryStatusService)
     readonly catEntryStatusService: CatEntryStatusService,
-    @Inject(EntryKpiService)
-    readonly entryKPIService: EntryKpiService,
   ) {
     super(repository);
   }
@@ -170,28 +167,5 @@ export class EntryService extends BaseService<Entry> {
     } catch (error) {
       this.ThrowException('EntriesService::createEntryAsync', error);
     }
-  }
-
-  async getEntriesKPIs(dto: EntryKPIRequestDto) {
-    // let account: Account | undefined;
-    // if (dto.accountId) {
-    //   account = await this.accountService.getAccountByPublicIdAsync(
-    //     dto.accountId,
-    //   );
-    // }
-
-    const response = this.entryKPIService.generateEntriesKPI(dto);
-
-    //1.- Detect labels based on dto.type
-    ////DAILY
-    // From 00 to 23
-    ////WEEK
-    // From sunday to today
-    ////MONTH
-    // From 1st day of the month to today
-    ////YEAR
-    // From Jan to current month
-
-    return response;
   }
 }

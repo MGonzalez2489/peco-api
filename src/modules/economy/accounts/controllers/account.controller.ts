@@ -19,7 +19,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { AccountDto, CreateAccountDto } from '../dto';
+import { CreateAccountDto } from '../dto';
 import { AccountService } from '../services/account.service';
 
 @Controller('accounts')
@@ -35,41 +35,12 @@ export class AccountController extends BaseController<any> {
     @Query() paginationDto: SearchAccountDto,
     @GetUser() user: User,
   ) {
-    const response = await this.service.getAccountsByUserAsync(
-      paginationDto,
-      user,
-    );
-
-    const newData: AccountDto[] = await Promise.all(
-      response.data.map(async (acc: Account) => {
-        let kpis = null;
-        if (paginationDto.fetchKPIs) {
-          kpis = await this.service.getAccountKPIs(
-            acc,
-            paginationDto.from,
-            paginationDto.to,
-            paginationDto.period,
-          );
-        }
-
-        return {
-          ...acc,
-          kpis,
-        };
-      }),
-    );
-
-    const newResponse = {
-      ...response,
-      data: newData,
-    };
-
-    return newResponse;
+    return await this.service.getAccountsByUserAsync(paginationDto, user);
   }
 
-  @Get(':accountId')
+  @Get(':id')
   async getAccountById(
-    @Param('accountId') accountId: string,
+    @Param('id') accountId: string,
     @GetUser() user: User,
   ): Promise<ResponseDto<Account>> {
     const result = await this.service.getAccountByPublicIdAsync(
@@ -89,19 +60,19 @@ export class AccountController extends BaseController<any> {
     return this.Response(result);
   }
 
-  @Put(':accountId')
+  @Put(':id')
   @ApiModelOkResponse(Account)
   async update(
     @Body() dto: CreateAccountDto,
-    @Param('accountId') accountId: string,
+    @Param('id') accountId: string,
     @GetUser() user: User,
   ): Promise<ResponseDto<Account>> {
     const result = await this.service.updateAccountAsync(dto, accountId, user);
     return this.Response(result);
   }
-  @Delete(':accountId')
+  @Delete(':id')
   async delete(
-    @Param('accountId') accountId: string,
+    @Param('id') accountId: string,
     @GetUser() user: User,
   ): Promise<ResponseDto<boolean>> {
     const result = await this.service.deleteAccount(accountId, user);

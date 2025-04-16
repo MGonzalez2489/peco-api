@@ -5,7 +5,7 @@ import { User } from '@datasource/entities';
 import { Entry } from '@datasource/entities/economy';
 import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { CreateEntryDto, EntryKPIRequestDto } from '../dtos';
+import { CreateEntryDto } from '../dtos';
 import { SearchEntriesDto } from '../dtos/search.dto';
 import { EntryService } from '../services/entry.service';
 
@@ -28,11 +28,5 @@ export class EntryController extends BaseController<Entry> {
   @Get()
   getEntries(@Query() paginationDto: SearchEntriesDto, @GetUser() user: User) {
     return this.service.getEntriesByAccountAsync(paginationDto, user);
-  }
-
-  @Get('kpi')
-  async getEntriesKPI(@Query() dto: EntryKPIRequestDto) {
-    const result = await this.service.getEntriesKPIs(dto);
-    return this.Response(result);
   }
 }

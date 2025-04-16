@@ -6,7 +6,6 @@ export interface AccountDto {
   balance: number;
   isRoot: boolean;
   type: AccountTypeDto;
-  kpis: any;
 }
 
 export interface AccountTypeDto {
