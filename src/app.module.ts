@@ -9,7 +9,6 @@ import { EntryCategoryModule } from '@entry-category/entry-category.module';
 import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
-import { PlannedEntriesModule } from '@planned-entries/planned-entries.module';
 import { UsersModule } from '@users/users.module';
 import { PTypeOrmModule } from './datasource/typeorm.module';
 
@@ -30,7 +29,6 @@ const envFilePath = `${__dirname}/../../${process.env.NODE_ENV || ''}.env`;
     EntryCategoryModule,
     CatalogsModule,
     AuthModule,
-    PlannedEntriesModule,
   ],
   providers: [
     {
