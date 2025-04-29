@@ -53,17 +53,6 @@ export class PageOptionsDto {
   @Transform(({ value }) => value === 'true')
   showAll: boolean;
 
-  //period  from
-  @IsString()
-  readonly from: string;
-  //period to
-  @IsString()
-  readonly to: string;
-
-  //period
-  @IsString()
-  readonly period: string;
-
   get skip(): number {
     return (this.page - 1) * this.take;
   }

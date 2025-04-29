@@ -1,4 +1,4 @@
-import { IsBoolean, IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsNumber, IsString } from 'class-validator';
 
 export class CreateAccountDto {
   @IsString()
@@ -6,10 +6,6 @@ export class CreateAccountDto {
 
   @IsNumber()
   balance: number;
-
-  @IsBoolean()
-  @IsOptional()
-  isDefault?: boolean;
 
   @IsString()
   accountTypeId: string;

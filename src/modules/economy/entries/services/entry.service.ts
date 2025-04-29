@@ -8,10 +8,11 @@ import {
   BadRequestException,
   Inject,
   Injectable,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { LessThanOrEqual, Like, MoreThanOrEqual, Repository } from 'typeorm';
 import { AccountService } from '../../accounts/services/account.service';
 import { EntryCategoryService } from '../../entry-category/services/entry-category.service';
 import { CreateEntryDto, EntryDto } from '../dtos';
@@ -31,6 +32,19 @@ export class EntryService extends BaseService<Entry> {
     readonly catEntryStatusService: CatEntryStatusService,
   ) {
     super(repository);
+  }
+
+  async getEntryById(publicId: string, user: User) {
+    const entry = await this.repository.findOneBy({ publicId });
+    if (!entry) {
+      throw new NotFoundException(`No entry found with id ${publicId}`);
+    }
+
+    if (entry.account.userId !== user.id) {
+      throw new UnauthorizedException('Aunauthorized information access');
+    }
+
+    return entry;
   }
 
   /**
@@ -76,6 +90,9 @@ export class EntryService extends BaseService<Entry> {
       if (entryType) {
         filter['typeId'] = entryType.id;
       }
+      if (searchDto.description) {
+        filter['description'] = Like(`%${searchDto.description}%`);
+      }
       //
       // Create a query builder to retrieve the entries
       const query = this.repository.createQueryBuilder('entry');
@@ -88,16 +105,23 @@ export class EntryService extends BaseService<Entry> {
         .leftJoinAndSelect('entry.status', 'status')
         .where(filter)
         .andWhere('account.userId = :userId', { userId: user.id })
+        .andWhere({
+          createdAt: MoreThanOrEqual(new Date(searchDto.from)),
+        })
+        .andWhere({
+          createdAt: LessThanOrEqual(new Date(searchDto.to)),
+        })
+
         .orderBy(`entry.${searchDto.orderBy}`, searchDto.order);
 
       // Retrieve the entries from the database
       const response = await this.SearchByQuery(query, searchDto);
 
       // Map the response data to the EntryDto type
-      const mappedData: EntryDto[] = response.data.map(
-        (entry: Entry) => new EntryDto(entry),
-      );
-      response.data = mappedData;
+      // const mappedData: EntryDto[] = response.data.map(
+      //   (entry: Entry) => new EntryDto(entry),
+      // );
+      // response.data = mappedData;
 
       return response;
     } catch (error) {

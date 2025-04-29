@@ -16,4 +16,13 @@ export class SearchEntriesDto extends PageOptionsDto {
   @IsOptional()
   @IsString()
   readonly entryTypeId?: string;
+
+  @IsString()
+  from: string;
+
+  @IsString()
+  to: string;
+
+  @IsString()
+  period: string;
 }

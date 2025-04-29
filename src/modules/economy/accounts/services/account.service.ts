@@ -76,17 +76,19 @@ export class AccountService extends BaseService<Account> {
           dto.accountTypeId,
         );
 
-      //aqui
-      let account = this.repository.create({
+      const account = this.repository.create({
         name: dto.name,
         user,
         balance: dto.balance,
         initialBalance: dto.balance,
-        typeId: accountType.id,
+        type: accountType,
         color: dto.color,
       });
-      account = await this.repository.save(account);
-      account.type = accountType;
+      await this.repository.save(account);
+
+      account.balance = dto.balance;
+      account.initialBalance = dto.balance;
+
       return account;
     } catch (error) {
       this.ThrowException('AccountService::createAccount', error);

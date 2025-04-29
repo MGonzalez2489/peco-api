@@ -1,12 +1,6 @@
 import { PBaseEntity } from '@datasource/entities/_base';
 import { InternalServerErrorException } from '@nestjs/common';
-import {
-  LessThanOrEqual,
-  MoreThanOrEqual,
-  ObjectLiteral,
-  Repository,
-  SelectQueryBuilder,
-} from 'typeorm';
+import { ObjectLiteral, Repository, SelectQueryBuilder } from 'typeorm';
 import {
   PageMetaDto,
   PageOptionsDto,
@@ -25,16 +19,6 @@ export class BaseService<Entity extends PBaseEntity | any> {
       let queryBuilder = this.repository.createQueryBuilder();
       queryBuilder.where(where);
 
-      if (!pageOptionsDto.showAll) {
-        queryBuilder = queryBuilder
-          .andWhere({
-            createdAt: MoreThanOrEqual(new Date(pageOptionsDto.from)),
-          })
-          .andWhere({
-            createdAt: LessThanOrEqual(new Date(pageOptionsDto.to)),
-          });
-      }
-
       queryBuilder = queryBuilder.orderBy(
         pageOptionsDto.orderBy,
         pageOptionsDto.order,
@@ -49,16 +33,6 @@ export class BaseService<Entity extends PBaseEntity | any> {
     query: SelectQueryBuilder<Entity>,
     pageOptionsDto: PageOptionsDto,
   ) {
-    if (!pageOptionsDto.showAll) {
-      query = query
-        .andWhere({
-          createdAt: MoreThanOrEqual(new Date(pageOptionsDto.from)),
-        })
-        .andWhere({
-          createdAt: LessThanOrEqual(new Date(pageOptionsDto.to)),
-        });
-    }
-
     return await this.applyPagination(pageOptionsDto, query);
   }
 

@@ -14,7 +14,7 @@ export class Entry extends PBaseEntity {
   description: string;
 
   //////////Relationships
-  @ManyToOne(() => EntryType)
+  @ManyToOne(() => EntryType, { eager: true })
   @JoinColumn({
     name: 'typeId',
     foreignKeyConstraintName: 'FK_Entry_EntryType',
@@ -37,7 +37,7 @@ export class Entry extends PBaseEntity {
   statusId: number;
 
   //Categories
-  @ManyToOne(() => EntryCategory, (cat) => cat.subCategories)
+  @ManyToOne(() => EntryCategory, (cat) => cat.subCategories, { eager: true })
   @JoinColumn({
     name: 'categoryId',
     foreignKeyConstraintName: 'FK_Entry_Category',
@@ -48,7 +48,7 @@ export class Entry extends PBaseEntity {
   @Column({ nullable: false })
   categoryId: number;
   //Accounts
-  @ManyToOne(() => Account, (account) => account.entries)
+  @ManyToOne(() => Account, (account) => account.entries, { eager: true })
   @JoinColumn({
     name: 'accountId',
     foreignKeyConstraintName: 'FK_Entry_Account',
