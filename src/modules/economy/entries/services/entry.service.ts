@@ -3,7 +3,7 @@ import { CatEntryStatusService, CatEntryTypeService } from '@catalogs/services';
 import { PaginatedResponseDto } from '@common/dtos/pagination';
 import { BaseService } from '@common/services';
 import { User } from '@datasource/entities';
-import { Entry } from '@datasource/entities/economy';
+import { Entry, EntryCategory } from '@datasource/entities/economy';
 import {
   BadRequestException,
   Inject,
@@ -191,5 +191,95 @@ export class EntryService extends BaseService<Entry> {
     } catch (error) {
       this.ThrowException('EntriesService::createEntryAsync', error);
     }
+  }
+
+  async getEntriesStats(searchDto: SearchEntriesDto, user: User) {
+    const query = await this.generateQueryWithFilters(searchDto, user);
+    const result = await query.getMany();
+
+    const grouped: {
+      [key: string]: { category: EntryCategory; count: number };
+    } = {};
+
+    for (const entry of result) {
+      const categoryPublicId = entry.category.parent
+        ? entry.category?.parent?.publicId
+        : entry.category?.publicId;
+      const category = entry.category.parent
+        ? entry.category.parent
+        : entry.category;
+
+      if (categoryPublicId && category) {
+        if (grouped[categoryPublicId]) {
+          grouped[categoryPublicId].count++;
+        } else {
+          grouped[categoryPublicId] = { category: category, count: 1 };
+        }
+      }
+    }
+
+    return Object.values(grouped);
+  }
+
+  private async generateQueryWithFilters(
+    searchDto: SearchEntriesDto,
+    user: User,
+  ) {
+    // Retrieve the account, category, and entry type if specified
+    const account = searchDto.accountId
+      ? await this.accountService.getAccountByPublicIdAsync(
+          searchDto.accountId,
+          user,
+        )
+      : undefined;
+    const category = searchDto.categoryId
+      ? await this.categoryService.getByPublicIdAsync(
+          searchDto.categoryId,
+          user,
+        )
+      : undefined;
+    const entryType = searchDto.entryTypeId
+      ? await this.catEntryTypeService.getEntryTypeByPublicIdAsync(
+          searchDto.entryTypeId,
+        )
+      : undefined;
+
+    // Create a filter object to specify the account, category, and entry type
+    const filter = {};
+    if (account) {
+      filter['accountId'] = account.id;
+    }
+    if (category) {
+      filter['categoryId'] = category.id;
+    }
+    if (entryType) {
+      filter['typeId'] = entryType.id;
+    }
+    if (searchDto.description) {
+      filter['description'] = Like(`%${searchDto.description}%`);
+    }
+    //
+    // Create a query builder to retrieve the entries
+    const query = this.repository.createQueryBuilder('entry');
+
+    // Add joins and selects to retrieve related data
+    query
+      .leftJoinAndSelect('entry.account', 'account')
+      .leftJoinAndSelect('entry.category', 'category')
+      .leftJoinAndSelect('category.parent', 'parent')
+      .leftJoinAndSelect('entry.type', 'type')
+      .leftJoinAndSelect('entry.status', 'status')
+      .where(filter)
+      .andWhere('account.userId = :userId', { userId: user.id })
+      .andWhere({
+        createdAt: MoreThanOrEqual(new Date(searchDto.from)),
+      })
+      .andWhere({
+        createdAt: LessThanOrEqual(new Date(searchDto.to)),
+      })
+
+      .orderBy(`entry.${searchDto.orderBy}`, searchDto.order);
+
+    return query;
   }
 }

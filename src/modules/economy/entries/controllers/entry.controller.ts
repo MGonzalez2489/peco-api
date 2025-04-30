@@ -30,6 +30,15 @@ export class EntryController extends BaseController<Entry> {
     return this.service.getEntriesByAccountAsync(paginationDto, user);
   }
 
+  @Get('/meters')
+  async getEntriesStats(
+    @Query() paginationDto: SearchEntriesDto,
+    @GetUser() user: User,
+  ) {
+    const response = await this.service.getEntriesStats(paginationDto, user);
+    return this.Response(response);
+  }
+
   @Get(':id')
   async getById(
     @Param('id') id: string,
