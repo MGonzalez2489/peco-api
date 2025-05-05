@@ -114,17 +114,17 @@ export const CatSeedData = [
   },
   {
     name: 'Transporte',
-    color: ColorEnum.GRAY_LIGHT,
+    color: ColorEnum.ORANGE,
     icon: 'pi pi-question-circle',
     subCategories: [
       {
         name: 'Servicio Privado (Uber, Didi..)',
-        color: ColorEnum.GRAY_LIGHT,
+        color: ColorEnum.ORANGE,
         icon: 'pi pi-question-circle',
       },
       {
         name: 'Taxi',
-        color: ColorEnum.GRAY_LIGHT,
+        color: ColorEnum.ORANGE,
         icon: 'pi pi-question-circle',
       },
     ],
@@ -210,103 +210,103 @@ export const CatSeedData = [
   },
   {
     name: 'Comunicacion, PC',
-    color: ColorEnum.VIOLET_LIGHT,
+    color: ColorEnum.VIOLET,
     icon: 'pi pi-question-circle',
     subCategories: [
       {
         name: 'Celular',
-        color: ColorEnum.VIOLET_LIGHT,
+        color: ColorEnum.VIOLET,
         icon: 'pi pi-question-circle',
       },
       {
         name: 'Software, apps, games',
-        color: ColorEnum.VIOLET_LIGHT,
+        color: ColorEnum.VIOLET,
         icon: 'pi pi-question-circle',
       },
     ],
   },
   {
     name: 'Gastos financieros',
-    color: ColorEnum.RED_LIGHT,
+    color: ColorEnum.VIOLET,
     icon: 'pi pi-question-circle',
     subCategories: [
       {
         name: 'Asesores',
-        color: ColorEnum.RED_LIGHT,
+        color: ColorEnum.VIOLET,
         icon: 'pi pi-question-circle',
       },
       {
         name: 'Intereses',
-        color: ColorEnum.RED_LIGHT,
+        color: ColorEnum.VIOLET,
         icon: 'pi pi-question-circle',
       },
       {
         name: 'Impuestos',
-        color: ColorEnum.RED_LIGHT,
+        color: ColorEnum.VIOLET,
         icon: 'pi pi-question-circle',
       },
     ],
   },
   {
     name: 'Inversiones',
-    color: ColorEnum.GREEN_LIGHT,
+    color: ColorEnum.GREEN,
     icon: 'pi pi-question-circle',
     subCategories: [
       {
         name: 'Ahorros',
-        color: ColorEnum.GREEN_LIGHT,
+        color: ColorEnum.GREEN,
         icon: 'pi pi-question-circle',
       },
       {
         name: 'Bienes raices',
-        color: ColorEnum.GREEN_LIGHT,
+        color: ColorEnum.GREEN,
         icon: 'pi pi-question-circle',
       },
     ],
   },
   {
     name: 'Ingresos',
-    color: ColorEnum.YELLOW_DARK,
+    color: ColorEnum.FUCHSIA,
     icon: 'pi pi-question-circle',
     subCategories: [
       {
         name: 'Cheques y cupones',
-        color: ColorEnum.YELLOW_DARK,
+        color: ColorEnum.FUCHSIA,
         icon: 'pi pi-question-circle',
       },
       {
         name: 'Regalos',
-        color: ColorEnum.YELLOW_DARK,
+        color: ColorEnum.FUCHSIA,
         icon: 'pi pi-question-circle',
       },
       {
         name: 'Intereses, dividendos',
-        color: ColorEnum.YELLOW_DARK,
+        color: ColorEnum.FUCHSIA,
         icon: 'pi pi-question-circle',
       },
       {
         name: 'Rentas',
-        color: ColorEnum.YELLOW_DARK,
+        color: ColorEnum.FUCHSIA,
         icon: 'pi pi-question-circle',
       },
       {
         name: 'Loteria',
-        color: ColorEnum.YELLOW_DARK,
+        color: ColorEnum.FUCHSIA,
         icon: 'pi pi-question-circle',
       },
       {
         name: 'Reembolsos',
-        color: ColorEnum.YELLOW_DARK,
+        color: ColorEnum.FUCHSIA,
         icon: 'pi pi-question-circle',
       },
       {
         name: 'Salario',
-        color: ColorEnum.YELLOW_DARK,
+        color: ColorEnum.FUCHSIA,
         icon: 'pi pi-question-circle',
       },
       {
         name: 'Ventas',
-        color: ColorEnum.YELLOW_DARK,
+        color: ColorEnum.FUCHSIA,
         icon: 'pi pi-question-circle',
       },
     ],
