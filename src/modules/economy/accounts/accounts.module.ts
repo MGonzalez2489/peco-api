@@ -5,6 +5,8 @@ import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AccountController } from './controllers/account.controller';
 import { AccountService } from './services/account.service';
+import { AccountsKpiService } from './services/accounts-kpi.service';
+import { AccountKpiController } from './controllers/account-kpi.controller';
 
 @Module({
   imports: [
@@ -12,8 +14,8 @@ import { AccountService } from './services/account.service';
     CatalogsModule,
     forwardRef(() => EntryModule),
   ],
-  providers: [AccountService],
+  providers: [AccountService, AccountsKpiService],
   exports: [AccountService],
-  controllers: [AccountController],
+  controllers: [AccountController, AccountKpiController],
 })
 export class AccountsModule {}

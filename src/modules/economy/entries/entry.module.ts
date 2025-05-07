@@ -5,7 +5,7 @@ import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { EntryCategoryModule } from '../entry-category/entry-category.module';
 import { EntryController } from './controllers/entry.controller';
-import { EntryService } from './services/entry.service';
+import { EntryService, EntriesKpiService } from './services';
 
 @Module({
   imports: [
@@ -15,7 +15,7 @@ import { EntryService } from './services/entry.service';
     EntryCategoryModule,
   ],
   controllers: [EntryController],
-  providers: [EntryService],
-  exports: [EntryService],
+  providers: [EntryService, EntriesKpiService],
+  exports: [EntryService, EntriesKpiService],
 })
 export class EntryModule {}
