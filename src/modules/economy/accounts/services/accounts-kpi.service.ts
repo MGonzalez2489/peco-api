@@ -1,6 +1,7 @@
 import { AccountResponseKpiDto, AccountSearchKpiDto } from '@accounts/dto';
 import { EntryTypeEnum } from '@catalogs/enums';
 import { BaseService } from '@common/services';
+import { GetPeriodByType } from '@common/utils';
 import { User } from '@datasource/entities';
 import { Account } from '@datasource/entities/economy';
 import { EntriesKpiService } from '@entries/services';
@@ -18,8 +19,6 @@ export class AccountsKpiService extends BaseService<Account> {
     @InjectRepository(Account) readonly repository: Repository<Account>,
     @Inject(EntriesKpiService)
     private readonly entriesKpiService: EntriesKpiService,
-    // @Inject(CatAccountTypeService)
-    // private readonly catAccountTypeService: CatAccountTypeService,
   ) {
     super(repository);
   }
@@ -50,9 +49,11 @@ export class AccountsKpiService extends BaseService<Account> {
 
       const accIds = accounts.map((f) => f.id);
 
+      const period = GetPeriodByType(filters.periodType);
+
       const resEntries = await this.entriesKpiService.searchIncomesOutcomesKPIs(
-        filters.from,
-        filters.to,
+        period.from,
+        period.to,
         accIds,
       );
       const incomes = resEntries.filter(
@@ -71,6 +72,7 @@ export class AccountsKpiService extends BaseService<Account> {
       );
 
       const result: AccountResponseKpiDto = {
+        period: period,
         incomes: {
           totalAmount: incomesTotalAmout,
           totalCount: incomes.length,
