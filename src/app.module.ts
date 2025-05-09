@@ -3,11 +3,13 @@ import { AuthModule } from '@auth/auth.module';
 import { JwtAuthGuard } from '@auth/guards';
 import { CatalogsModule } from '@catalogs/catalogs.module';
 import { HttpLoggerMiddleware } from '@common/middlewares';
+import { ConfigNameEnum } from '@config/config-name.enum';
 import configuration from '@config/configuration';
+import { IAssetsConfiguration } from '@config/iConfiguration.interface';
 import { EntryModule } from '@entries/entry.module';
 import { EntryCategoryModule } from '@entry-category/entry-category.module';
 import { MiddlewareConsumer, Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { UsersModule } from '@users/users.module';
@@ -15,9 +17,6 @@ import { join } from 'path';
 import { PTypeOrmModule } from './datasource/typeorm.module';
 
 const envFilePath = `${__dirname}/../../${process.env.NODE_ENV || ''}.env`;
-
-const fPath = join(__dirname, '/../', '/../', 'uploads/');
-console.log(fPath); //http://localhost:3000/test.jpeg
 
 @Module({
   imports: [
@@ -27,11 +26,30 @@ console.log(fPath); //http://localhost:3000/test.jpeg
       envFilePath: [envFilePath],
       isGlobal: true,
     }),
-    //TODO: set path to the config service
-    //TODO: design an static folder structure/strategy to separate uploads from app files
-    ServeStaticModule.forRoot({
-      rootPath: fPath,
-      serveRoot: '/uploads/',
+    ServeStaticModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: async (configService: ConfigService) => {
+        const assetsConfig = configService.get<IAssetsConfiguration>(
+          ConfigNameEnum.assets,
+        );
+        const rootPath = join(
+          __dirname,
+          assetsConfig.rootPath,
+          assetsConfig.assetsPath,
+          assetsConfig.uploadsPath,
+        );
+        const serveRoot = join(
+          '/',
+          assetsConfig.assetsPath,
+          assetsConfig.uploadsPath,
+        );
+        return [
+          {
+            rootPath,
+            serveRoot,
+          },
+        ];
+      },
     }),
     PTypeOrmModule,
     UsersModule,

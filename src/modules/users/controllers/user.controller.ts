@@ -33,7 +33,6 @@ export class UserController extends BaseController<User> {
       storage: diskStorage({
         destination: './uploads', // Especifica la carpeta donde se guardarán los archivos
         filename: (req, file, cb) => {
-          // Genera un nombre de archivo único
           const uniqueSuffix =
             Date.now() + '-' + Math.round(Math.random() * 1e9);
           console.log('file', file);

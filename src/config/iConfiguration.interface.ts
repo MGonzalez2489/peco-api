@@ -17,3 +17,9 @@ export interface IDatabaseConfiguration {
   readonly database: string;
   readonly synchronize: boolean;
 }
+
+export interface IAssetsConfiguration {
+  readonly rootPath: string;
+  readonly assetsPath: string;
+  readonly uploadsPath: string;
+}
