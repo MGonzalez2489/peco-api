@@ -9,4 +9,6 @@ export class UpdateUserDto {
 
   @IsString()
   dateOfBirth?: string;
+
+  avatar?: File;
 }

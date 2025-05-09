@@ -1,5 +1,5 @@
 import { Exclude } from 'class-transformer';
-import { BeforeInsert, Column, Entity, OneToMany } from 'typeorm';
+import { AfterLoad, BeforeInsert, Column, Entity, OneToMany } from 'typeorm';
 import { PBaseEntity } from './_base';
 import { Account, EntryCategory } from './economy';
 
@@ -21,6 +21,9 @@ export class User extends PBaseEntity {
   @Exclude()
   password: string;
 
+  @Column({ nullable: true })
+  avatar: string;
+
   //////////Relationships
   @OneToMany(() => Account, (account) => account.user)
   @Exclude()
@@ -34,5 +37,10 @@ export class User extends PBaseEntity {
   @BeforeInsert()
   format() {
     this.email = this.email.trim().toLowerCase();
+  }
+
+  @AfterLoad()
+  avatarFormat() {
+    this.avatar = this.avatar ? `${global.appUrl}/${this.avatar}` : null;
   }
 }

@@ -39,7 +39,8 @@ export class UserService extends BaseService<User> {
    */
   async findUserByPublicIdAsync(publicId: string): Promise<User | null> {
     try {
-      return this.repository.findOneBy({ publicId });
+      const user = await this.repository.findOneBy({ publicId });
+      return user;
     } catch (error) {
       this.ThrowException('UserService::findUserByPublicId', error);
     }
@@ -92,12 +93,16 @@ export class UserService extends BaseService<User> {
     }
   }
 
-  async update(user: User, dto: UpdateUserDto) {
+  async update(user: User, dto: UpdateUserDto, avatar?: Express.Multer.File) {
+    //TODO: If user.avatar and avatar, remove user.avatar from local folder.
+    //TODO: use a default avatar img and make (?) user.avatar not null
+    //TODO: Think on a CDN to handle uploads
     await this.repository.save({
       ...user,
       firstName: dto.firstName,
       lastName: dto.lastName,
       dateOfBirth: dto.dateOfBirth,
+      avatar: avatar?.path ?? null,
     });
     return await this.repository.findOneBy({ id: user.id });
   }
