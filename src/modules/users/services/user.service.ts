@@ -2,6 +2,7 @@ import { BaseService, CryptService } from '@common/services';
 import { User } from '@datasource/entities';
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { StorageService } from 'src/modules/storage/storage.service';
 import { Repository } from 'typeorm';
 import { UpdateUserDto, UserCreateDto } from '../dto';
 import { UserSeedService } from './user-seed.service';
@@ -12,6 +13,7 @@ export class UserService extends BaseService<User> {
     @InjectRepository(User) protected readonly repository: Repository<User>,
     @Inject(CryptService) private readonly cryptoService: CryptService,
     @Inject(UserSeedService) private readonly userSeedService: UserSeedService,
+    @Inject(StorageService) private readonly storageService: StorageService,
   ) {
     super(repository);
   }
@@ -94,15 +96,19 @@ export class UserService extends BaseService<User> {
   }
 
   async update(user: User, dto: UpdateUserDto, avatar?: Express.Multer.File) {
-    //TODO: If user.avatar and avatar, remove user.avatar from local folder.
     //TODO: use a default avatar img and make (?) user.avatar not null
-    //TODO: Think on a CDN to handle uploads
+    //TODO: Think on a blob storage to handle uploads
+
+    if (user.avatar && avatar) {
+      await this.storageService.deleteUploadFile(user.avatar);
+    }
+
     await this.repository.save({
       ...user,
       firstName: dto.firstName,
       lastName: dto.lastName,
       dateOfBirth: dto.dateOfBirth,
-      avatar: avatar?.path ?? null,
+      avatar: avatar?.filename ?? null,
     });
     return await this.repository.findOneBy({ id: user.id });
   }

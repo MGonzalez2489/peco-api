@@ -39,8 +39,12 @@ export class User extends PBaseEntity {
     this.email = this.email.trim().toLowerCase();
   }
 
+  //TODO: View if 'assets/uploads' may come from config service
+  //if not, this formatter function needs to be moved out of the entity
   @AfterLoad()
   avatarFormat() {
-    this.avatar = this.avatar ? `${global.appUrl}/${this.avatar}` : null;
+    this.avatar = this.avatar
+      ? `${global.appUrl}/assets/uploads/${this.avatar}`
+      : null;
   }
 }

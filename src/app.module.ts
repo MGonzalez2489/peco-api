@@ -15,6 +15,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { UsersModule } from '@users/users.module';
 import { join } from 'path';
 import { PTypeOrmModule } from './datasource/typeorm.module';
+import { StorageModule } from './modules/storage/storage.module';
 
 const envFilePath = `${__dirname}/../../${process.env.NODE_ENV || ''}.env`;
 
@@ -52,6 +53,7 @@ const envFilePath = `${__dirname}/../../${process.env.NODE_ENV || ''}.env`;
       },
     }),
     PTypeOrmModule,
+    StorageModule,
     UsersModule,
     AccountsModule,
     EntryModule,
