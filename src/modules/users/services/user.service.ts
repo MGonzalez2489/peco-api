@@ -2,6 +2,7 @@ import { BaseService, CryptService } from '@common/services';
 import { User } from '@datasource/entities';
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { StorageService } from 'src/modules/storage/storage.service';
 import { Repository } from 'typeorm';
 import { UpdateUserDto, UserCreateDto } from '../dto';
 import { UserSeedService } from './user-seed.service';
@@ -12,6 +13,7 @@ export class UserService extends BaseService<User> {
     @InjectRepository(User) protected readonly repository: Repository<User>,
     @Inject(CryptService) private readonly cryptoService: CryptService,
     @Inject(UserSeedService) private readonly userSeedService: UserSeedService,
+    @Inject(StorageService) private readonly storageService: StorageService,
   ) {
     super(repository);
   }
@@ -39,7 +41,8 @@ export class UserService extends BaseService<User> {
    */
   async findUserByPublicIdAsync(publicId: string): Promise<User | null> {
     try {
-      return this.repository.findOneBy({ publicId });
+      const user = await this.repository.findOneBy({ publicId });
+      return user;
     } catch (error) {
       this.ThrowException('UserService::findUserByPublicId', error);
     }
@@ -92,12 +95,20 @@ export class UserService extends BaseService<User> {
     }
   }
 
-  async update(user: User, dto: UpdateUserDto) {
+  async update(user: User, dto: UpdateUserDto, avatar?: Express.Multer.File) {
+    //TODO: use a default avatar img and make (?) user.avatar not null
+    //TODO: Think on a blob storage to handle uploads
+
+    if (user.avatar && avatar) {
+      await this.storageService.deleteUploadFile(user.avatar);
+    }
+
     await this.repository.save({
       ...user,
       firstName: dto.firstName,
       lastName: dto.lastName,
       dateOfBirth: dto.dateOfBirth,
+      avatar: avatar?.filename ?? null,
     });
     return await this.repository.findOneBy({ id: user.id });
   }

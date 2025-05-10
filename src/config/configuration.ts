@@ -1,4 +1,9 @@
 export default () => ({
+  assets: {
+    rootPath: '/../../',
+    assetsPath: 'assets/',
+    uploadsPath: 'uploads/',
+  },
   jwt: {
     secret: process.env.JWT_SECRET || 'qwerty',
     expiresIn: '5h', //process.env.JWT_EXPIRATION || '60s',

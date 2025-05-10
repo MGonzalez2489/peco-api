@@ -29,5 +29,7 @@ async function bootstrap() {
     console.log('listening on port 3000');
   });
   console.log('==========================================');
+  const url = await app.getUrl();
+  global.appUrl = url;
 }
 bootstrap();
