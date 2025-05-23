@@ -1,0 +1,17 @@
+[
+  {
+    "name": "cash",
+    "displayName": "Efectivo",
+    "icon": "pi pi-money-bill"
+  },
+  {
+    "name": "debit",
+    "displayName": "Debito",
+    "icon": "pi pi-credit-card"
+  },
+  {
+    "name": "saving",
+    "displayName": "Ahorros",
+    "icon": "pi pi-wallet"
+  }
+]
