@@ -155,7 +155,7 @@ export class EntryService extends BaseService<Entry> {
       const entry = this.repository.create({
         amount: dto.amount,
         description: dto.description,
-        prevBalance: account.balance,
+        prevAccBalance: account.balance,
         typeId: entryType!.id,
         account: account,
         categoryId: category!.id,

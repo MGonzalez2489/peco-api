@@ -2,10 +2,10 @@ import { BaseService, CryptService } from '@common/services';
 import { User } from '@datasource/entities';
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { StorageService } from 'src/modules/storage/storage.service';
 import { Repository } from 'typeorm';
 import { UpdateUserDto, UserCreateDto } from '../dto';
 import { UserSeedService } from './user-seed.service';
+import { StorageService } from '@storage/storage.service';
 
 @Injectable()
 export class UserService extends BaseService<User> {
@@ -114,6 +114,7 @@ export class UserService extends BaseService<User> {
       lastName: dto.lastName,
       dateOfBirth: dto.dateOfBirth,
       avatar: avatar ? `uploads/${avatar.filename}` : user.avatar, // avatar?.filename,
+      avatarFullPath: avatar ? avatar.path : '',
     });
     return await this.repository.findOneBy({ id: user.id });
   }

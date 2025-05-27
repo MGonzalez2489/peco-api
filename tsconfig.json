@@ -29,6 +29,7 @@
       "@entries/*": ["./src/modules/economy/entries/*"],
       "@entry-category/*": ["./src/modules/economy/entry-category/*"],
       "@planned-entries/*": ["./src/modules/economy/planned-entries/*"],
+      "@storage/*": ["./src/modules/storage/*"],
       "@test/*": ["./test/*"]
     }
   }

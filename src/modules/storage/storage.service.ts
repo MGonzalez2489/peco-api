@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { ConfigNameEnum } from '@config/config-name.enum';
 import { IAssetsConfiguration } from '@config/iConfiguration.interface';
 import { Injectable } from '@nestjs/common';

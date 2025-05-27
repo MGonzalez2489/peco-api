@@ -27,8 +27,14 @@ export class Account extends PBaseEntity {
   @Column({ readonly: true, default: false })
   isRoot: boolean;
 
-  @Column()
-  color: string;
+  @Column({ nullable: true })
+  color?: string;
+
+  @Column({ nullable: true })
+  bank?: string;
+
+  @Column({ nullable: true })
+  accountNumber?: string;
 
   //////////Relationships
 

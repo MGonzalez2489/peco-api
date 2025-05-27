@@ -19,13 +19,8 @@ export class AuthController extends BaseController<TokenDto> {
   async signIn(
     @Body() signInRequest: RegisterDto,
   ): Promise<ResponseDto<TokenDto>> {
-    try {
-      const signInResponse = await this.service.signInAsync(signInRequest);
-      return this.Response(signInResponse);
-    } catch (error) {
-      // Handle the error
-      throw error;
-    }
+    const signInResponse = await this.service.signInAsync(signInRequest);
+    return this.Response(signInResponse);
   }
 
   @Post('register')
@@ -34,13 +29,8 @@ export class AuthController extends BaseController<TokenDto> {
   async register(
     @Body() registrationRequest: RegisterDto,
   ): Promise<ResponseDto<TokenDto>> {
-    try {
-      const registrationResponse =
-        await this.service.registerAsync(registrationRequest);
-      return this.Response(registrationResponse);
-    } catch (error) {
-      // Handle the error
-      throw error;
-    }
+    const registrationResponse =
+      await this.service.registerAsync(registrationRequest);
+    return this.Response(registrationResponse);
   }
 }

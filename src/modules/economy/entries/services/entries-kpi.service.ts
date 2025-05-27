@@ -1,4 +1,5 @@
 import { CatEntryTypeService, CatEntryStatusService } from '@catalogs/services';
+import { BaseService } from '@common/services';
 import { Entry } from '@datasource/entities/economy';
 import { EntryCategoryService } from '@entry-category/services/entry-category.service';
 import { Inject, Injectable } from '@nestjs/common';
@@ -6,7 +7,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm';
 
 @Injectable()
-export class EntriesKpiService {
+export class EntriesKpiService extends BaseService<Entry> {
   constructor(
     @InjectRepository(Entry) readonly repository: Repository<Entry>,
 
@@ -16,7 +17,9 @@ export class EntriesKpiService {
     readonly catEntryTypeService: CatEntryTypeService,
     @Inject(CatEntryStatusService)
     readonly catEntryStatusService: CatEntryStatusService,
-  ) {}
+  ) {
+    super();
+  }
 
   async searchIncomesOutcomesKPIs(
     from: string,
@@ -38,6 +41,11 @@ export class EntriesKpiService {
         });
 
       return query.getMany();
-    } catch (error) {}
+    } catch (error) {
+      this.ThrowException(
+        'EntriesKpiService::searchIncomesOutcomesKPIs',
+        error,
+      );
+    }
   }
 }

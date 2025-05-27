@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { ChangePasswordDto, RegisterDto, SignInDto, TokenDto } from '@auth/dto';
 import { CryptService } from '@common/services';
 import { User } from '@datasource/entities';
@@ -74,11 +75,12 @@ describe('AuthService', () => {
       (jwtService.signAsync as jest.Mock).mockResolvedValue(token);
       (jwtService.decode as jest.Mock).mockReturnValue(decodedToken);
 
-      const result: TokenDto = await service.signInAsync(signInDto);
+      const result: TokenDto | undefined = await service.signInAsync(signInDto);
 
       expect(userService.findUserByEmailAsync).toHaveBeenCalledWith(
         signInDto.email,
       );
+
       expect(cryptoService.compare).toHaveBeenCalledWith(
         signInDto.password,
         user.password,
@@ -129,7 +131,8 @@ describe('AuthService', () => {
       (userService.createAsync as jest.Mock).mockResolvedValue(undefined);
       service.signInAsync = jest.fn().mockResolvedValue(tokenDto);
 
-      const result: TokenDto = await service.registerAsync(registerDto);
+      const result: TokenDto | undefined =
+        await service.registerAsync(registerDto);
 
       expect(userService.findUserByEmailAsync).toHaveBeenCalledWith(
         registerDto.email,
@@ -178,7 +181,7 @@ describe('AuthService', () => {
         undefined,
       );
 
-      const result: User = await service.changePasswordAsync(
+      const result: User | undefined = await service.changePasswordAsync(
         changePasswordDto,
         user,
       );

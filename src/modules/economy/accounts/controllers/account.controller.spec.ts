@@ -102,7 +102,6 @@ describe('AccountController', () => {
       const dto: CreateAccountDto = {
         name: 'Test Account',
         balance: 100,
-        isDefault: false,
         accountTypeId: '123',
       };
       const user = { id: 1 } as User;
@@ -114,7 +113,6 @@ describe('AccountController', () => {
       const dto: CreateAccountDto = {
         name: 'Test Account',
         balance: 100,
-        isDefault: false,
         accountTypeId: '123',
       };
       const user = { id: 1 } as User;
@@ -136,7 +134,6 @@ describe('AccountController', () => {
       const dto: CreateAccountDto = {
         name: 'Test Account',
         balance: 100,
-        isDefault: false,
         accountTypeId: '123',
       };
       const accountId = '123';
@@ -153,7 +150,6 @@ describe('AccountController', () => {
       const dto: CreateAccountDto = {
         name: 'Test Account',
         balance: 100,
-        isDefault: false,
         accountTypeId: '123',
       };
       const accountId = '123';

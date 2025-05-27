@@ -24,6 +24,9 @@ export class User extends PBaseEntity {
   @Column({ nullable: true })
   avatar: string;
 
+  @Column({ nullable: true })
+  avatarFullPath: string;
+
   //////////Relationships
   @OneToMany(() => Account, (account) => account.user)
   @Exclude()

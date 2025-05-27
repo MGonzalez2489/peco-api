@@ -20,7 +20,7 @@ export class Entry extends PBaseEntity {
   amount: number;
 
   @Column()
-  prevBalance: number;
+  prevAccBalance: number;
 
   @Column()
   description: string;
@@ -84,6 +84,6 @@ export class Entry extends PBaseEntity {
   @AfterLoad()
   updateBalanceToAPI() {
     this.amount = this.amount / 1000;
-    this.prevBalance = this.prevBalance / 1000;
+    this.prevAccBalance = this.prevAccBalance / 1000;
   }
 }
