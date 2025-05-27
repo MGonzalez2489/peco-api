@@ -42,11 +42,9 @@ export class User extends PBaseEntity {
   //TODO: View if 'assets/uploads' may come from config service
   //if not, this formatter function needs to be moved out of the entity
   //Arreglar este after load to map server address and avatar address
-  // @AfterLoad()
-  // avatarFormat() {
-  //   this.avatar =
-  //     this.avatar !== null
-  //       ? `${global.appUrl}/assets/uploads/${this.avatar}`
-  //       : '';
-  // }
+  @AfterLoad()
+  avatarFormat() {
+    this.avatar =
+      this.avatar !== null ? `${global.appUrl}/assets/${this.avatar}` : '';
+  }
 }

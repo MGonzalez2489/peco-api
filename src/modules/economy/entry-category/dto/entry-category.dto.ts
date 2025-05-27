@@ -1,5 +1,12 @@
+import { EntryType } from '@datasource/entities/catalogs';
 import { EntryCategory } from '@datasource/entities/economy';
-import { IsBoolean, IsOptional, IsString, IsUUID } from 'class-validator';
+import {
+  IsBoolean,
+  IsNumber,
+  IsOptional,
+  IsString,
+  IsUUID,
+} from 'class-validator';
 
 export class EntryCategoryDto {
   name: string;
@@ -10,6 +17,7 @@ export class EntryCategoryDto {
   subCategories: EntryCategoryDto[];
   icon: string;
   color: string;
+  forType: EntryType;
 
   constructor(entity?: EntryCategory) {
     if (entity) {
@@ -21,6 +29,7 @@ export class EntryCategoryDto {
       this.subCategories = [];
       this.icon = entity.icon;
       this.color = entity.color;
+      this.forType = entity.forType;
     }
   }
 }
@@ -38,6 +47,9 @@ export class EntryCategoryCreateDto {
 
   @IsString()
   color: string;
+
+  @IsNumber()
+  forTypeId: number;
 }
 
 export class EntryCategoryUpdateDto {

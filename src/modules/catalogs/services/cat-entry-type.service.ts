@@ -14,6 +14,10 @@ export class CatEntryTypeService extends BaseService<EntryType> {
     super(catEntryTypeRepo);
   }
 
+  async getAllEntryTypes() {
+    return this.repository?.find();
+  }
+
   /**
    * Retrieves a paginated list of entry types based on the provided pagination options.
    * @param paginationDto The pagination options to use for retrieving the entry types.

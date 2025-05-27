@@ -9,6 +9,7 @@ import { User } from '@datasource/entities';
 import { EntryCategoryDto } from '@entry-category/dto/entry-category.dto';
 import { EntryCategoryService } from '@entry-category/services/entry-category.service';
 import { CatSeedData } from '@users/seed/categories.seed';
+import { CatEntryTypeService } from '@catalogs/services';
 //seeds
 
 //This service will seed all the default data for a new user
@@ -18,6 +19,8 @@ export class UserSeedService {
     @Inject(AccountService) private readonly accountService: AccountService,
     @Inject(EntryCategoryService)
     private readonly userCatService: EntryCategoryService,
+    @Inject(CatEntryTypeService)
+    private readonly catEntryTypeService: CatEntryTypeService,
   ) {}
 
   async seed(user: User) {
@@ -30,6 +33,8 @@ export class UserSeedService {
     user: User,
     parentCat?: EntryCategoryDto,
   ) {
+    const eTypes = await this.catEntryTypeService.getAllEntryTypes();
+
     for (let i = 0; i < source.length; i++) {
       const element = source[i];
       //parent
@@ -39,6 +44,7 @@ export class UserSeedService {
           parentId: parentCat?.publicId,
           icon: element.icon,
           color: element.color,
+          forTypeId: eTypes!.find((f) => f.name === element.forTypeId)!.id,
         },
         user,
         true,

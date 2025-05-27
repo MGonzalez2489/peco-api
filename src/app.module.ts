@@ -37,13 +37,14 @@ const envFilePath = `${__dirname}/../../${process.env.NODE_ENV || ''}.env`;
           __dirname,
           assetsConfig!.rootPath,
           assetsConfig!.assetsPath,
-          assetsConfig!.uploadsPath,
+          // assetsConfig!.uploadsPath,
         );
         const serveRoot = join(
           '/',
           assetsConfig!.assetsPath,
-          assetsConfig!.uploadsPath,
+          // assetsConfig!.uploadsPath,
         );
+        console.log('Serving static files', serveRoot);
         return [
           {
             rootPath,

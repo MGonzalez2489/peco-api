@@ -8,7 +8,7 @@ import { StorageService } from './storage.service';
   imports: [
     MulterModule.registerAsync({
       inject: [ConfigService],
-      useFactory: async (configService: ConfigService) => ({
+      useFactory: (configService: ConfigService) => ({
         storage: new StorageProvider(configService).getMulterStorage(),
       }),
     }),

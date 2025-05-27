@@ -21,7 +21,7 @@
     "db-drop": "ts-node ./node_modules/typeorm-extension/bin/cli.cjs db:drop -d ./db-initializer.ts",
     "db-create": "ts-node ./node_modules/typeorm-extension/bin/cli.cjs db:create -d ./db-initializer.ts",
     "seed": "ts-node -r tsconfig-paths/register ./node_modules/typeorm-extension/bin/cli.cjs seed:run -d ./db-initializer.ts",
-    "init": "npm run build && npm run db-drop && npm run db-create && npm run seed && npm run start:dev"
+    "init": "npm run build && npm run db-drop && npm run db-create && npm run seed && npm run start:debug"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",

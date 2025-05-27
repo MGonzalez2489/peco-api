@@ -1,8 +1,9 @@
+import { Exclude } from 'class-transformer';
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 import { PBaseEntity } from '../_base';
-import { User } from '../user.entity';
-import { Exclude } from 'class-transformer';
+import { EntryType } from '../catalogs';
 import { Entry } from '../economy';
+import { User } from '../user.entity';
 
 @Entity()
 export class EntryCategory extends PBaseEntity {
@@ -30,6 +31,17 @@ export class EntryCategory extends PBaseEntity {
 
   @Column()
   icon: string;
+
+  @Exclude()
+  @Column({ nullable: false })
+  forTypeId: number;
+
+  @ManyToOne(() => EntryType)
+  @JoinColumn({
+    name: 'forTypeId',
+    foreignKeyConstraintName: 'FK_EntryCategory_EntryType',
+  })
+  forType: EntryType;
 
   // Relación con la categoría padre (ManyToOne)
   @ManyToOne(() => EntryCategory, (category) => category.subCategories, {

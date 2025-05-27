@@ -33,6 +33,7 @@ export class UserController extends BaseController<User> {
     @Body() dto: UpdateUserDto,
     @UploadedFile() avatar: Express.Multer.File,
   ) {
+    console.log('avatar', avatar);
     const result = await this.service.update(user, dto, avatar);
     return this.Response(result);
   }

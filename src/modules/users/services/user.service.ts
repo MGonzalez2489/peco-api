@@ -65,6 +65,7 @@ export class UserService extends BaseService<User> {
       const user = this.repository.create({
         email: dto.email,
         password: await this.cryptoService.encryptText(dto.password),
+        avatar: 'images/avatar-placeholder.webp',
       });
       await this.repository.save(user);
 
@@ -99,8 +100,12 @@ export class UserService extends BaseService<User> {
     //TODO: use a default avatar img and make (?) user.avatar not null
     //TODO: Think on a blob storage to handle uploads
 
-    if (user.avatar && avatar) {
-      await this.storageService.deleteUploadFile(user.avatar);
+    if (
+      user.avatar &&
+      avatar &&
+      !user.avatar.includes('avatar-placeholder.webp')
+    ) {
+      this.storageService.deleteUploadFile(user.avatar);
     }
 
     await this.repository.save({
@@ -108,6 +113,7 @@ export class UserService extends BaseService<User> {
       firstName: dto.firstName,
       lastName: dto.lastName,
       dateOfBirth: dto.dateOfBirth,
+      avatar: avatar ? `uploads/${avatar.filename}` : user.avatar, // avatar?.filename,
     });
     return await this.repository.findOneBy({ id: user.id });
   }

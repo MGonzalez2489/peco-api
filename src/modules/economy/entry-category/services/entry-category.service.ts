@@ -38,6 +38,7 @@ export class EntryCategoryService extends BaseService<EntryCategory> {
     const query = this.repository.createQueryBuilder('category');
     query
       .leftJoinAndSelect('category.parent', 'parent')
+      .leftJoinAndSelect('category.forType', 'forType')
       .where(filter)
       .orderBy(`category.name`, 'ASC');
 
@@ -102,6 +103,7 @@ export class EntryCategoryService extends BaseService<EntryCategory> {
       color: categoryDto?.color,
       icon: categoryDto?.icon,
       isDefault,
+      forTypeId: categoryDto.forTypeId,
     });
     newCategory = await this.repository.save(newCategory);
     const result = await this.getByPublicIdAsync(newCategory.publicId, user);
