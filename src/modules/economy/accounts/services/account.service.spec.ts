@@ -1,6 +1,7 @@
 import { AccountTypeEnum } from '@catalogs/enums';
 import { CatAccountTypeService } from '@catalogs/services';
 import { PageOptionsDto, PaginatedResponseDto } from '@common/dtos/pagination';
+import { PaginationOrderEnum } from '@common/enums';
 import { User } from '@datasource/entities';
 import { Account } from '@datasource/entities/economy';
 import { BadRequestException } from '@nestjs/common';
@@ -10,12 +11,13 @@ import { Repository } from 'typeorm';
 import { CreateAccountDto } from '../dto';
 import * as AccountConstants from './../constants';
 import { AccountService } from './account.service';
-import { PaginationOrderEnum } from '@common/enums';
+import { EntryService } from '@entries/services';
 
 describe('AccountService', () => {
   let service: AccountService;
   let repository: Repository<Account>;
   let catAccountTypeService: CatAccountTypeService;
+  let entryService: EntryService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -26,10 +28,12 @@ describe('AccountService', () => {
           useValue: {
             create: jest.fn(),
             save: jest.fn(),
+            findOne: jest.fn(),
             findOneBy: jest.fn(),
             createQueryBuilder: jest.fn().mockReturnValue({
               leftJoinAndSelect: jest.fn().mockReturnThis(),
               where: jest.fn().mockReturnThis(),
+              andWhere: jest.fn().mockReturnThis(),
               orderBy: jest.fn().mockReturnThis(),
             }),
             softDelete: jest.fn(),
@@ -42,6 +46,12 @@ describe('AccountService', () => {
             getAccountTypeByPublicIdAsync: jest.fn(),
           },
         },
+        {
+          provide: EntryService,
+          useValue: {
+            reassignEntriesToAccount: jest.fn(),
+          },
+        },
       ],
     }).compile();
 
@@ -50,12 +60,14 @@ describe('AccountService', () => {
     catAccountTypeService = module.get<CatAccountTypeService>(
       CatAccountTypeService,
     );
+    entryService = module.get<EntryService>(EntryService);
   });
 
   it('should be defined', () => {
     expect(service).toBeDefined();
     expect(repository).toBeDefined();
     expect(catAccountTypeService).toBeDefined();
+    expect(entryService).toBeDefined();
   });
 
   describe('createRootAccountAsync', () => {
@@ -77,7 +89,6 @@ describe('AccountService', () => {
         user,
         balance: 0,
         initialBalance: 0,
-        isDefault: true,
         isRoot: true,
         typeId: accountType.id,
       } as Account;
@@ -97,7 +108,6 @@ describe('AccountService', () => {
       const dto: CreateAccountDto = {
         name: 'Test Account',
         balance: 100,
-        isDefault: false,
         accountTypeId: '123',
       };
       const user = { id: 1 } as User;
@@ -112,7 +122,6 @@ describe('AccountService', () => {
         publicId: '123412341234',
         balance: dto.balance,
         initialBalance: dto.balance,
-        isDefault: dto.isDefault,
         typeId: accountType.id,
         type: accountType,
       } as Account;
@@ -131,18 +140,20 @@ describe('AccountService', () => {
 
   describe('getAccountByPublicIdAsync', () => {
     it('should throw BadRequestException if publicId is not provided', async () => {
-      await expect(service.getAccountByPublicIdAsync(null)).rejects.toThrow(
+      await expect(service.getAccountByPublicIdAsync('')).rejects.toThrow(
         BadRequestException,
       );
     });
 
-    it('should call findOneBy with correct parameters', async () => {
+    it('should call findOne with correct parameters', async () => {
       const publicId = '123';
       const user = { id: 1 } as User;
       await service.getAccountByPublicIdAsync(publicId, user);
-      expect(repository.findOneBy).toHaveBeenCalledWith({
-        publicId,
-        userId: user.id,
+      expect(repository.findOne).toHaveBeenCalledWith({
+        where: {
+          publicId,
+          userId: user.id,
+        },
       });
     });
   });
@@ -162,6 +173,7 @@ describe('AccountService', () => {
       const mockQueryBuilder = {
         leftJoinAndSelect: jest.fn().mockReturnThis(),
         where: jest.fn().mockReturnThis(),
+        andWhere: jest.fn().mockReturnThis(),
         orderBy: jest.fn().mockReturnThis(),
       };
       (repository.createQueryBuilder as jest.Mock).mockReturnValue(
@@ -182,6 +194,14 @@ describe('AccountService', () => {
     it('should call repository.save with correct parameters', async () => {
       const id = 1;
       const newBalance = 200;
+      //aqui
+
+      const account = {
+        id: 1,
+        balance: 0,
+      } as Account;
+      (repository.findOneBy as jest.Mock).mockReturnValue(account);
+
       await service.updateAccountBalanceAsync(id, newBalance);
       expect(repository.save).toHaveBeenCalledWith({ id, balance: newBalance });
     });
@@ -192,7 +212,6 @@ describe('AccountService', () => {
       const dto: CreateAccountDto = {
         name: 'Test Account',
         balance: 100,
-        isDefault: false,
         accountTypeId: '123',
       };
       const accountId = '123';
@@ -207,12 +226,11 @@ describe('AccountService', () => {
       const dto: CreateAccountDto = {
         name: 'Test Account',
         balance: 100,
-        isDefault: false,
         accountTypeId: '123',
       };
       const accountId = '123';
       const user = { id: 1 } as User;
-      const account = { id: 1, publicId: accountId } as Account;
+      const account = { id: 1, publicId: accountId, balance: 1 } as Account;
       const accountType = { id: 123 };
       service.getAccountByPublicIdAsync = jest.fn().mockResolvedValue(account);
 
@@ -227,10 +245,15 @@ describe('AccountService', () => {
   });
 
   describe('deleteAccount', () => {
-    it('should throw BadRequestException if account is default', async () => {
+    it('should throw BadRequestException if account is root', async () => {
       const publicId = '123';
       const user = { id: 1 } as User;
-      const account = { id: 1, isDefault: true } as Account;
+      const account = { id: 1, isRoot: true } as Account;
+
+      const rootAccount = { id: 1, userId: 1 } as Account;
+
+      (repository.findOneBy as jest.Mock).mockReturnValue(rootAccount);
+
       service.getAccountByPublicIdAsync = jest.fn().mockResolvedValue(account);
       await expect(service.deleteAccount(publicId, user)).rejects.toThrow(
         BadRequestException,
@@ -240,9 +263,19 @@ describe('AccountService', () => {
     it('should call repository.softDelete with correct parameters', async () => {
       const publicId = '123';
       const user = { id: 1 } as User;
-      const account = { id: 1, isDefault: false } as Account;
-      service.getAccountByPublicIdAsync = jest.fn().mockResolvedValue(account);
 
+      const rootAccount = { id: 1, userId: 1 } as Account;
+      const account = { id: 2 } as Account;
+
+      (repository.findOneBy as jest.Mock).mockReturnValue(rootAccount);
+      service.getRootAccountAsync = jest.fn().mockResolvedValue(rootAccount);
+
+      service.getAccountByPublicIdAsync = jest.fn().mockResolvedValue(account);
+      // (service.getRootAccountAsync(user) as jest.Mock).mockReturnValue(
+      //   rootAccount,
+      // );
+
+      //
       await service.deleteAccount(publicId, user);
 
       expect(repository.softDelete).toHaveBeenCalledWith({

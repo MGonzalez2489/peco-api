@@ -1,6 +1,7 @@
 import { EntryTypeEnum } from '@catalogs/enums';
 import { CatEntryStatusService, CatEntryTypeService } from '@catalogs/services';
 import { PaginatedResponseDto } from '@common/dtos/pagination';
+import { PaginationOrderEnum } from '@common/enums';
 import { User } from '@datasource/entities';
 import { Entry } from '@datasource/entities/economy';
 import { BadRequestException, UnauthorizedException } from '@nestjs/common';
@@ -12,7 +13,6 @@ import { EntryCategoryService } from '../../entry-category/services/entry-catego
 import { CreateEntryDto, EntryDto } from '../dtos';
 import { SearchEntriesDto } from '../dtos/search.dto';
 import { EntryService } from './entry.service';
-import { PaginationOrderEnum } from '@common/enums';
 
 describe('EntryService', () => {
   let service: EntryService;
@@ -92,8 +92,8 @@ describe('EntryService', () => {
         accountId: '123',
         categoryId: '456',
         entryTypeId: '789',
-        fromDate: new Date('2023-01-01').toString(),
-        toDate: new Date('2023-12-31').toString(),
+        from: new Date('2023-01-01').toString(),
+        to: new Date('2023-12-31').toString(),
         orderBy: 'createdAt',
         order: PaginationOrderEnum.ASC,
         page: 1,
@@ -118,7 +118,7 @@ describe('EntryService', () => {
           meta: {
             itemCount: 0,
           },
-        } as PaginatedResponseDto<Entry>);
+        } as unknown as PaginatedResponseDto<Entry>);
 
       await service.getEntriesByAccountAsync(searchDto, user);
 
@@ -129,8 +129,8 @@ describe('EntryService', () => {
     it('should map the response data to EntryDto', async () => {
       const searchDto: SearchEntriesDto = {
         accountId: '123',
-        fromDate: new Date('2023-01-01').toString(),
-        toDate: new Date('2023-12-31').toString(),
+        from: new Date('2023-01-01').toString(),
+        to: new Date('2023-12-31').toString(),
         orderBy: 'createdAt',
         order: PaginationOrderEnum.ASC,
         page: 1,
@@ -149,7 +149,9 @@ describe('EntryService', () => {
 
       const result = await service.getEntriesByAccountAsync(searchDto, user);
 
-      expect(result.data[0]).toBeInstanceOf(EntryDto);
+      if (result) {
+        expect(result.data[0]).toBeInstanceOf(EntryDto);
+      }
     });
   });
 

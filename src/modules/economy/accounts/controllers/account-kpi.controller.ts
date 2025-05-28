@@ -8,6 +8,7 @@ import { ApiTags } from '@nestjs/swagger';
 
 @Controller('account-kpi')
 @ApiTags('Account-kpi')
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export class AccountKpiController extends BaseController<any> {
   constructor(private readonly service: AccountsKpiService) {
     super();

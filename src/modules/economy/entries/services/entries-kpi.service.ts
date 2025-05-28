@@ -10,7 +10,6 @@ import { LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm';
 export class EntriesKpiService extends BaseService<Entry> {
   constructor(
     @InjectRepository(Entry) readonly repository: Repository<Entry>,
-
     @Inject(EntryCategoryService)
     readonly categoryService: EntryCategoryService,
     @Inject(CatEntryTypeService)

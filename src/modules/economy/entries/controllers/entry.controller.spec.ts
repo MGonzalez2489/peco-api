@@ -79,8 +79,8 @@ describe('EntryController', () => {
     it('should call entryService.getEntriesByAccountAsync with paginationDto and user', async () => {
       const paginationDto: SearchEntriesDto = {
         accountId: '123',
-        fromDate: new Date('2023-01-01').toString(),
-        toDate: new Date('2023-12-31').toString(),
+        from: new Date('2023-01-01').toString(),
+        to: new Date('2023-12-31').toString(),
         orderBy: 'createdAt',
         order: PaginationOrderEnum.ASC,
         page: 1,

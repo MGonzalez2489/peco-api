@@ -16,7 +16,6 @@ import { BaseService } from '@common/services';
 import { User } from '@datasource/entities';
 import { Account } from '@datasource/entities/economy';
 
-import { ColorEnum } from '@common/enums';
 import { EntryService } from '@entries/services';
 import * as AccountConstants from './../constants';
 
@@ -39,7 +38,7 @@ export class AccountService extends BaseService<Account> {
    * @throws {BadRequestException} If the user is not provided.
    * @throws {InternalServerErrorException} If the default account type is not found.
    */
-  async createRootAccountAsync(user: User) {
+  async createRootAccountAsync(user: User | null) {
     if (!user) {
       throw new BadRequestException('user is required');
     }
@@ -57,7 +56,6 @@ export class AccountService extends BaseService<Account> {
         initialBalance: 0,
         isRoot: true,
         typeId: cashAccountType!.id,
-        color: ColorEnum.CYAN,
       });
       account = await this.repository.save(account);
       return account;
@@ -87,7 +85,6 @@ export class AccountService extends BaseService<Account> {
         balance: dto.balance,
         initialBalance: dto.balance,
         typeId: accountType!.id,
-        color: dto.color,
       });
       await this.repository.save(account);
 
@@ -217,7 +214,6 @@ export class AccountService extends BaseService<Account> {
         ...account,
         name: dto.name,
         typeId: accountType!.id,
-        color: dto.color,
       });
 
       //TODO: It is needed to create a mechanism to update the balance
@@ -262,6 +258,9 @@ export class AccountService extends BaseService<Account> {
       //
       //
       //updateAccountBalanceAsync
+      console.log(' account', account);
+      console.log('root account', rootAccount);
+
       const amountToTransfer: number =
         await this.entryService.reassignEntriesToAccount(
           account.id,
