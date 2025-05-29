@@ -13,11 +13,11 @@ import { UserSeedService, UserService } from './services';
 @Module({
   imports: [
     TypeOrmModule.forFeature([User]),
-    StorageModule,
     AccountsModule,
     CommonModule,
     CatalogsModule,
     EntryCategoryModule,
+    StorageModule,
   ],
   providers: [UserService, UserSeedService, StorageProvider],
   exports: [UserService],

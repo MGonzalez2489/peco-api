@@ -7,6 +7,7 @@ import { Repository } from 'typeorm';
 import { UpdateUserDto, UserCreateDto } from '../dto';
 import { UserSeedService } from './user-seed.service';
 import { UserService } from './user.service';
+import { StorageService } from '@storage/storage.service';
 
 describe('UserService', () => {
   let service: UserService;
@@ -37,6 +38,10 @@ describe('UserService', () => {
           useValue: {
             seed: jest.fn(),
           },
+        },
+        {
+          provide: StorageService,
+          useValue: {},
         },
       ],
     }).compile();
@@ -186,7 +191,12 @@ describe('UserService', () => {
 
   describe('update', () => {
     it('should save the user with the provided dto and return the updated user', async () => {
-      const user = { id: 1, email: 'test@example.com' } as User;
+      const user = {
+        id: 1,
+        email: 'test@example.com',
+        avatar: '',
+        avatarFullPath: '',
+      } as User;
       const dto: UpdateUserDto = {
         firstName: 'John',
         lastName: 'Doe',

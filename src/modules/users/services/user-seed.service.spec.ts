@@ -5,6 +5,7 @@ import { EntryCategoryService } from '@entry-category/services/entry-category.se
 import { Test, TestingModule } from '@nestjs/testing';
 import { CatSeedData } from '@users/seed/categories.seed';
 import { UserSeedService } from './user-seed.service';
+import { CatEntryTypeService } from '@catalogs/services';
 
 describe('UserSeedService', () => {
   let service: UserSeedService;
@@ -25,6 +26,15 @@ describe('UserSeedService', () => {
           provide: EntryCategoryService,
           useValue: {
             createCategory: jest.fn(),
+          },
+        },
+        {
+          provide: CatEntryTypeService,
+          useValue: {
+            getAllEntryTypes: jest.fn().mockReturnValue([
+              { name: 'income', id: 1 },
+              { name: 'outcome', id: 2 },
+            ]),
           },
         },
       ],
@@ -95,7 +105,13 @@ describe('UserSeedService', () => {
       await service.seed(user);
 
       expect(entryCategoryService.createCategory).toHaveBeenCalledWith(
-        { name: CatSeedData[0].name, parentId: undefined },
+        {
+          name: CatSeedData[0].name,
+          parentId: undefined,
+          color: '#ef4444',
+          forTypeId: 2,
+          icon: 'pi pi-question-circle',
+        },
         user,
         true,
       );
@@ -114,6 +130,9 @@ describe('UserSeedService', () => {
         {
           name: CatSeedData[0].subCategories[0].name,
           parentId: categoryMock.publicId,
+          color: '#ef4444',
+          forTypeId: 2,
+          icon: 'pi pi-question-circle',
         },
         user,
         true,

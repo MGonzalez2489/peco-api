@@ -4,6 +4,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { UpdateUserDto } from '../dto';
 import { UserService } from '../services/user.service';
 import { UserController } from './user.controller';
+import { Readable } from 'stream';
 
 describe('UserController', () => {
   let controller: UserController;
@@ -53,17 +54,27 @@ describe('UserController', () => {
         dateOfBirth: new Date().toString(),
       };
 
+      const readableStream = new Readable({
+        read() {
+          // Implement your data reading logic here
+        },
+      });
+
       const mockFile = {
-        fieldname: 'mockField',
-        originalname: 'mockFile.txt',
+        fieldname: 'avatar',
+        originalname: 'profile.jpg',
         encoding: '7bit',
-        mimetype: 'text/plain',
-        buffer: Buffer.from('mock file content'),
-        size: 14,
+        mimetype: 'image/jpeg',
+        size: 12345,
+        destination: 'uploads/',
+        filename: 'avatar-1234567890-1234567890.jpg',
+        path: 'uploads/avatar-1234567890-1234567890.jpg',
+        buffer: Buffer.alloc(0),
+        stream: readableStream,
       };
 
       await controller.update(user, dto, mockFile);
-      expect(userService.update).toHaveBeenCalledWith(user, dto);
+      expect(userService.update).toHaveBeenCalledWith(user, dto, mockFile);
     });
 
     it('should return a ResponseDto with the updated user', async () => {
@@ -77,7 +88,26 @@ describe('UserController', () => {
 
       (userService.update as jest.Mock).mockResolvedValue(updatedUser);
 
-      const result = await controller.update(user, dto);
+      const readableStream = new Readable({
+        read() {
+          // Implement your data reading logic here
+        },
+      });
+
+      const mockFile = {
+        fieldname: 'avatar',
+        originalname: 'profile.jpg',
+        encoding: '7bit',
+        mimetype: 'image/jpeg',
+        size: 12345,
+        destination: 'uploads/',
+        filename: 'avatar-1234567890-1234567890.jpg',
+        path: 'uploads/avatar-1234567890-1234567890.jpg',
+        buffer: Buffer.alloc(0),
+        stream: readableStream,
+      };
+
+      const result = await controller.update(user, dto, mockFile);
 
       expect(result).toEqual({
         statusCode: 200,
