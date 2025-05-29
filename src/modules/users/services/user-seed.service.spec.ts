@@ -1,10 +1,14 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { UserSeedService } from './user-seed.service';
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { AccountService } from '@accounts/services/account.service';
-import { EntryCategoryService } from '@entry-category/services/entry-category.service';
 import { User } from '@datasource/entities';
-import * as CatSeedData from '../seed/categories.seed';
 import { EntryCategoryDto } from '@entry-category/dto/entry-category.dto';
+import { EntryCategoryService } from '@entry-category/services/entry-category.service';
+import { Test, TestingModule } from '@nestjs/testing';
+import * as CatSeedData from '../seed/categories.seed';
+import { UserSeedService } from './user-seed.service';
 
 describe('UserSeedService', () => {
   let service: UserSeedService;

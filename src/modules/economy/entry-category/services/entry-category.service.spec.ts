@@ -1,16 +1,16 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { EntryCategoryService } from './entry-category.service';
-import { Repository } from 'typeorm';
-import { getRepositoryToken } from '@nestjs/typeorm';
+import { PageOptionsDto, PaginatedResponseDto } from '@common/dtos/pagination';
+import { PaginationOrderEnum } from '@common/enums';
 import { User } from '@datasource/entities';
 import { EntryCategory } from '@datasource/entities/economy';
+import { Test, TestingModule } from '@nestjs/testing';
+import { getRepositoryToken } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import {
   EntryCategoryCreateDto,
   EntryCategoryDto,
   EntryCategoryUpdateDto,
 } from '../dto/entry-category.dto';
-import { PageOptionsDto, PaginatedResponseDto } from '@common/dtos/pagination';
-import { PaginationOrderEnum } from '@common/enums';
+import { EntryCategoryService } from './entry-category.service';
 
 describe('EntryCategoryService', () => {
   let service: EntryCategoryService;
@@ -73,6 +73,11 @@ describe('EntryCategoryService', () => {
           data: [],
           meta: {
             itemCount: 0,
+            page: 1,
+            take: 10,
+            pageCount: 10,
+            hasNextPage: true,
+            hasPreviousPage: true,
           },
         } as PaginatedResponseDto<EntryCategory>);
 
@@ -130,6 +135,9 @@ describe('EntryCategoryService', () => {
       const categoryDto: EntryCategoryCreateDto = {
         name: 'Test Category',
         parentId: '456',
+        icon: '',
+        color: '',
+        forTypeId: 1,
       };
       const user = { id: 1 } as User;
       const parentCategory = { id: 2 } as EntryCategory;
@@ -144,11 +152,24 @@ describe('EntryCategoryService', () => {
         isDefault: true,
         subCategories: [],
         user,
-        parent: null,
+        parent: parentCategory,
         entries: [],
         createdAt: '',
         deletedAt: '',
         updatedAt: '',
+        icon: '',
+        color: '',
+        forTypeId: 1,
+        forType: {
+          id: 1,
+          name: '',
+          publicId: '',
+          displayName: '',
+          color: '',
+          createdAt: '',
+          deletedAt: '',
+          updatedAt: '',
+        },
       };
       const expectedResult = new EntryCategoryDto(newCategory);
 

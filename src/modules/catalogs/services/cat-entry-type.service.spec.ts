@@ -43,7 +43,6 @@ describe('CatEntryTypeService', () => {
       const paginationDto: PageOptionsDto = {
         page: 1,
         take: 10,
-        hint: null,
         showAll: false,
         skip: 0,
       };
@@ -65,7 +64,6 @@ describe('CatEntryTypeService', () => {
       const paginationDto: PageOptionsDto = {
         page: 1,
         take: 10,
-        hint: null,
         showAll: false,
         skip: 0,
       };

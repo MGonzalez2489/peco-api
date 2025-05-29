@@ -1,17 +1,21 @@
+import { AccountService } from '@accounts/services/account.service';
 import { EntryTypeEnum } from '@catalogs/enums';
-import { CatEntryStatusService, CatEntryTypeService } from '@catalogs/services';
+import {
+  CatAccountTypeService,
+  CatEntryStatusService,
+  CatEntryTypeService,
+} from '@catalogs/services';
 import { PaginatedResponseDto } from '@common/dtos/pagination';
 import { PaginationOrderEnum } from '@common/enums';
 import { User } from '@datasource/entities';
 import { Entry } from '@datasource/entities/economy';
+import { CreateEntryDto, EntryDto } from '@entries/dtos';
+import { SearchEntriesDto } from '@entries/dtos/search.dto';
+import { EntryCategoryService } from '@entry-category/services/entry-category.service';
 import { BadRequestException, UnauthorizedException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { AccountService } from '../../accounts/services/account.service';
-import { EntryCategoryService } from '../../entry-category/services/entry-category.service';
-import { CreateEntryDto, EntryDto } from '../dtos';
-import { SearchEntriesDto } from '../dtos/search.dto';
 import { EntryService } from './entry.service';
 
 describe('EntryService', () => {
@@ -39,6 +43,7 @@ describe('EntryService', () => {
             save: jest.fn(),
           },
         },
+
         {
           provide: AccountService,
           useValue: {
@@ -46,6 +51,11 @@ describe('EntryService', () => {
             updateAccountBalanceAsync: jest.fn(),
           },
         },
+        {
+          provide: CatAccountTypeService,
+          useValue: {},
+        },
+
         {
           provide: EntryCategoryService,
           useValue: {
@@ -78,12 +88,12 @@ describe('EntryService', () => {
   });
 
   it('should be defined', () => {
-    expect(service).toBeDefined();
     expect(repository).toBeDefined();
     expect(accountService).toBeDefined();
     expect(categoryService).toBeDefined();
     expect(catEntryTypeService).toBeDefined();
     expect(catEntryStatusService).toBeDefined();
+    expect(service).toBeDefined();
   });
 
   describe('getEntriesByAccountAsync', () => {

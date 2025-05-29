@@ -81,6 +81,9 @@ describe('EntryCategoryController', () => {
       const dto: EntryCategoryCreateDto = {
         name: 'Test Category',
         parentId: '456',
+        icon: '',
+        color: '',
+        forTypeId: 1,
       };
       const user = { id: 1 } as User;
       await controller.create(dto, user);
@@ -95,6 +98,9 @@ describe('EntryCategoryController', () => {
       const dto: EntryCategoryCreateDto = {
         name: 'Test Category',
         parentId: '456',
+        icon: '',
+        color: '',
+        forTypeId: 1,
       };
       const user = { id: 1 } as User;
       const expectedResult = { id: 1 } as EntryCategory;

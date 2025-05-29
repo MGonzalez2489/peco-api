@@ -44,7 +44,7 @@ describe('CatAccountTypeService', () => {
       const paginationDto: PageOptionsDto = {
         page: 1,
         take: 10,
-        hint: null,
+        hint: undefined,
         showAll: false,
         skip: 0,
       };
@@ -66,7 +66,7 @@ describe('CatAccountTypeService', () => {
       const paginationDto: PageOptionsDto = {
         page: 1,
         take: 10,
-        hint: null,
+        hint: undefined,
         showAll: false,
         skip: 0,
       };

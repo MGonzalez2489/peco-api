@@ -1,9 +1,9 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { UserController } from './user.controller';
-import { UserService } from '../services/user.service';
-import { User } from '@datasource/entities';
-import { UpdateUserDto } from '../dto';
 import { ResponseDto } from '@common/dtos/responses';
+import { User } from '@datasource/entities';
+import { Test, TestingModule } from '@nestjs/testing';
+import { UpdateUserDto } from '../dto';
+import { UserService } from '../services/user.service';
+import { UserController } from './user.controller';
 
 describe('UserController', () => {
   let controller: UserController;
@@ -53,7 +53,16 @@ describe('UserController', () => {
         dateOfBirth: new Date().toString(),
       };
 
-      await controller.update(user, dto);
+      const mockFile = {
+        fieldname: 'mockField',
+        originalname: 'mockFile.txt',
+        encoding: '7bit',
+        mimetype: 'text/plain',
+        buffer: Buffer.from('mock file content'),
+        size: 14,
+      };
+
+      await controller.update(user, dto, mockFile);
       expect(userService.update).toHaveBeenCalledWith(user, dto);
     });
 

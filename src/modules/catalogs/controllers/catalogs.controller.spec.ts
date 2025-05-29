@@ -55,7 +55,6 @@ describe('CatalogsController', () => {
       const paginationDto: PageOptionsDto = {
         page: 1,
         take: 10,
-        hint: null,
         showAll: false,
         skip: 0,
       };
@@ -70,7 +69,6 @@ describe('CatalogsController', () => {
       const paginationDto: PageOptionsDto = {
         page: 1,
         take: 10,
-        hint: null,
         showAll: false,
         skip: 0,
       };
@@ -92,7 +90,6 @@ describe('CatalogsController', () => {
       const paginationDto: PageOptionsDto = {
         page: 1,
         take: 10,
-        hint: null,
         showAll: false,
         skip: 0,
       };
@@ -107,7 +104,6 @@ describe('CatalogsController', () => {
       const paginationDto: PageOptionsDto = {
         page: 1,
         take: 10,
-        hint: null,
         showAll: false,
         skip: 0,
       };
@@ -129,7 +125,6 @@ describe('CatalogsController', () => {
       const paginationDto: PageOptionsDto = {
         page: 1,
         take: 10,
-        hint: null,
         showAll: false,
         skip: 0,
       };
@@ -144,7 +139,6 @@ describe('CatalogsController', () => {
       const paginationDto: PageOptionsDto = {
         page: 1,
         take: 10,
-        hint: null,
         showAll: false,
         skip: 0,
       };
