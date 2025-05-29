@@ -43,7 +43,6 @@ describe('EntryService', () => {
             save: jest.fn(),
           },
         },
-
         {
           provide: AccountService,
           useValue: {
@@ -55,7 +54,6 @@ describe('EntryService', () => {
           provide: CatAccountTypeService,
           useValue: {},
         },
-
         {
           provide: EntryCategoryService,
           useValue: {

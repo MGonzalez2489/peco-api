@@ -99,7 +99,7 @@ describe('EntryCategoryService', () => {
       const categories = [
         { id: 1, name: 'Category 1', parentId: null },
         { id: 2, name: 'Category 2', parentId: 1 },
-        { id: 3, name: 'Category 3', parentId: null },
+        // { id: 3, name: 'Category 3', parentId: null },
       ] as EntryCategory[];
       jest.spyOn(service, 'SearchByQuery').mockResolvedValue({
         data: categories,
