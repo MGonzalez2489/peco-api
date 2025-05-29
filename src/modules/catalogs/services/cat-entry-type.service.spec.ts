@@ -22,6 +22,7 @@ describe('CatEntryTypeService', () => {
           useValue: {
             find: jest.fn(),
             findOneBy: jest.fn(),
+            createQueryBuilder: jest.fn().mockReturnValue({}),
           },
         },
       ],
@@ -57,7 +58,7 @@ describe('CatEntryTypeService', () => {
         .mockResolvedValue(response);
       await service.getPaginatedEntryTypesAsync(paginationDto);
 
-      expect(searchSpy).toHaveBeenCalledWith(paginationDto, {});
+      expect(searchSpy).toHaveBeenCalledWith({}, paginationDto);
     });
 
     it('should return the result of Search', async () => {

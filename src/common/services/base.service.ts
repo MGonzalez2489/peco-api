@@ -32,7 +32,7 @@ export class BaseService {
   }
 
   ThrowException(place: string, error: unknown) {
-    console.log(place, error);
+    // console.(place, error);
 
     throw error;
   }

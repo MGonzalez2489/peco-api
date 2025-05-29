@@ -1,3 +1,8 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-unnecessary-type-assertion */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Inject, Injectable } from '@nestjs/common';
 
 import { AccountService } from '@accounts/services/account.service';
@@ -25,7 +30,7 @@ export class UserSeedService {
   }
 
   private async seedCategories(
-    source: unknown[],
+    source: any[],
     user: User,
     parentCat?: EntryCategoryDto,
   ) {

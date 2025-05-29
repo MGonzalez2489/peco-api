@@ -23,6 +23,7 @@ describe('CatEntryStatusService', () => {
           useValue: {
             find: jest.fn(),
             findOneBy: jest.fn(),
+            createQueryBuilder: jest.fn().mockReturnValue({}),
           },
         },
       ],
@@ -44,7 +45,7 @@ describe('CatEntryStatusService', () => {
       const paginationDto: PageOptionsDto = {
         page: 1,
         take: 10,
-        showAll: false,
+        showAll: true,
         skip: 0,
       };
 
@@ -58,7 +59,7 @@ describe('CatEntryStatusService', () => {
         .mockResolvedValue(response);
       await service.getPaginatedEntryStatusAsync(paginationDto);
 
-      expect(searchSpy).toHaveBeenCalledWith(paginationDto, {});
+      expect(searchSpy).toHaveBeenCalledWith({}, paginationDto);
     });
 
     it('should return the result of Search', async () => {

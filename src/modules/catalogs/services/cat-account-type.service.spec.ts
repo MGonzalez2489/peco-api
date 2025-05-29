@@ -23,6 +23,7 @@ describe('CatAccountTypeService', () => {
           useValue: {
             find: jest.fn(),
             findOneBy: jest.fn(),
+            createQueryBuilder: jest.fn().mockReturnValue({}),
           },
         },
       ],
@@ -59,7 +60,7 @@ describe('CatAccountTypeService', () => {
         .mockResolvedValue(response);
       await service.getPaginatedAccountTypesAsync(paginationDto);
 
-      expect(searchSpy).toHaveBeenCalledWith(paginationDto, {});
+      expect(searchSpy).toHaveBeenCalledWith({}, paginationDto);
     });
 
     it('should return the result of Search', async () => {
