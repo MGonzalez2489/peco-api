@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
-import { PageOptionsDto, PaginatedResponseDto } from '@common/dtos/pagination';
+import { PageOptionsDto } from '@common/dtos/pagination';
 import { BaseService } from '@common/services';
 import { User } from '@datasource/entities';
 import { EntryCategory } from '@datasource/entities/economy';
@@ -13,12 +13,12 @@ import {
 } from '../dto/entry-category.dto';
 
 @Injectable()
-export class EntryCategoryService extends BaseService<EntryCategory> {
+export class EntryCategoryService extends BaseService {
   constructor(
     @InjectRepository(EntryCategory)
     protected readonly repository: Repository<EntryCategory>,
   ) {
-    super(repository);
+    super();
   }
 
   /**
@@ -28,10 +28,7 @@ export class EntryCategoryService extends BaseService<EntryCategory> {
    * @param pageOptions Page options for pagination.
    * @returns Categories with subcategories.
    */
-  async getAllAsync(
-    user: User,
-    pageOptions: PageOptionsDto,
-  ): Promise<PaginatedResponseDto<EntryCategoryDto>> {
+  async getAllAsync(user: User, pageOptions: PageOptionsDto) {
     const filter = {};
     filter['userId'] = user.id;
 
@@ -44,17 +41,17 @@ export class EntryCategoryService extends BaseService<EntryCategory> {
 
     const response = await this.SearchByQuery(query, pageOptions);
 
-    response.data = response.data
-      .filter((cat: EntryCategory) => !cat.parentId)
-      .map((f: EntryCategory) => {
-        const dto = new EntryCategoryDto(f);
-        dto.subCategories = response.data
-          .filter((g: EntryCategory) => g.parentId === f.id)
-          .map((h: EntryCategory) => new EntryCategoryDto(h));
-
-        return dto;
-      });
-
+    // response.data = response.data
+    //   .filter((cat: EntryCategory) => !cat.parentId)
+    //   .map((f: EntryCategory) => {
+    //     const dto = new EntryCategoryDto(f);
+    //     dto.subCategories = response.data
+    //       .filter((g: EntryCategory) => g.parentId === f.id)
+    //       .map((h: EntryCategory) => new EntryCategoryDto(h));
+    //
+    //     return dto;
+    //   });
+    //
     return response;
   }
 

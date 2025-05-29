@@ -1,10 +1,9 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { BaseService } from './base.service';
 
 @Injectable()
-export class CryptService extends BaseService<any> {
+export class CryptService extends BaseService {
   constructor() {
     super();
   }

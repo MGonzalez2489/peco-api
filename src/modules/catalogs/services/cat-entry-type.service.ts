@@ -6,16 +6,16 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 @Injectable()
-export class CatEntryTypeService extends BaseService<EntryType> {
+export class CatEntryTypeService extends BaseService {
   constructor(
     @InjectRepository(EntryType)
     protected readonly catEntryTypeRepo: Repository<EntryType>,
   ) {
-    super(catEntryTypeRepo);
+    super();
   }
 
   async getAllEntryTypes() {
-    return this.repository?.find();
+    return this.catEntryTypeRepo.find();
   }
 
   /**
@@ -24,7 +24,8 @@ export class CatEntryTypeService extends BaseService<EntryType> {
    * @returns A promise resolving to the paginated list of entry types.
    */
   async getPaginatedEntryTypesAsync(paginationDto: PageOptionsDto) {
-    return this.Search(paginationDto, {});
+    const queryBuilder = this.catEntryTypeRepo.createQueryBuilder();
+    return this.SearchByQuery(queryBuilder, paginationDto);
   }
   /**
    * Retrieves an entry type by its public ID.

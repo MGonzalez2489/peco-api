@@ -7,7 +7,7 @@ import { Repository } from 'typeorm';
 //seed
 
 @Injectable()
-export class CatalogsService extends BaseService<any> {
+export class CatalogsService extends BaseService {
   constructor(
     @InjectRepository(AccountType)
     protected readonly catAccountTypeRepo: Repository<AccountType>,

@@ -1,8 +1,12 @@
+import { AccountService } from '@accounts/services/account.service';
 import { EntryStatusEnum, EntryTypeEnum } from '@catalogs/enums';
 import { CatEntryStatusService, CatEntryTypeService } from '@catalogs/services';
 import { BaseService } from '@common/services';
 import { User } from '@datasource/entities';
 import { Entry, EntryCategory } from '@datasource/entities/economy';
+import { CreateEntryDto } from '@entries/dtos';
+import { SearchEntriesDto } from '@entries/dtos/search.dto';
+import { EntryCategoryService } from '@entry-category/services/entry-category.service';
 import {
   BadRequestException,
   Inject,
@@ -12,13 +16,9 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { LessThanOrEqual, Like, MoreThanOrEqual, Repository } from 'typeorm';
-import { AccountService } from '../../accounts/services/account.service';
-import { EntryCategoryService } from '../../entry-category/services/entry-category.service';
-import { CreateEntryDto } from '../dtos';
-import { SearchEntriesDto } from '../dtos/search.dto';
 
 @Injectable()
-export class EntryService extends BaseService<Entry> {
+export class EntryService extends BaseService {
   constructor(
     @InjectRepository(Entry) readonly repository: Repository<Entry>,
     @Inject(AccountService)
@@ -30,7 +30,7 @@ export class EntryService extends BaseService<Entry> {
     @Inject(CatEntryStatusService)
     readonly catEntryStatusService: CatEntryStatusService,
   ) {
-    super(repository);
+    super();
   }
 
   async getEntryById(publicId: string, user: User) {

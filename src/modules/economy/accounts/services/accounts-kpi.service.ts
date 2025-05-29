@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-enum-comparison */
 import { AccountResponseKpiDto, AccountSearchKpiDto } from '@accounts/dto';
 import { EntryTypeEnum } from '@catalogs/enums';
 import { BaseService } from '@common/services';
@@ -15,13 +14,13 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 @Injectable()
-export class AccountsKpiService extends BaseService<Account> {
+export class AccountsKpiService extends BaseService {
   constructor(
     @InjectRepository(Account) readonly repository: Repository<Account>,
     @Inject(EntriesKpiService)
     private readonly entriesKpiService: EntriesKpiService,
   ) {
-    super(repository);
+    super();
   }
 
   async getGeneralKPIs(filters: AccountSearchKpiDto, user: User) {
@@ -55,14 +54,14 @@ export class AccountsKpiService extends BaseService<Account> {
         accIds,
       );
       const incomes = resEntries!.filter(
-        (f) => f.type.name === EntryTypeEnum.Income,
+        (f) => f.type.name === EntryTypeEnum.Income.toString(),
       );
       const incomesTotalAmout = incomes.reduce(
         (p: number, c) => p + Number(c.amount),
         0,
       );
       const outcomes = resEntries!.filter(
-        (f) => f.type.name === EntryTypeEnum.Outcome,
+        (f) => f.type.name === EntryTypeEnum.Outcome.toString(),
       );
       const outcomesTotalAmount = outcomes.reduce(
         (p: number, c) => Number(p) + Number(c.amount),

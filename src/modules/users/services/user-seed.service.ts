@@ -1,15 +1,11 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Inject, Injectable } from '@nestjs/common';
 
 import { AccountService } from '@accounts/services/account.service';
+import { CatEntryTypeService } from '@catalogs/services';
 import { User } from '@datasource/entities';
 import { EntryCategoryDto } from '@entry-category/dto/entry-category.dto';
 import { EntryCategoryService } from '@entry-category/services/entry-category.service';
 import { CatSeedData } from '@users/seed/categories.seed';
-import { CatEntryTypeService } from '@catalogs/services';
 //seeds
 
 //This service will seed all the default data for a new user
@@ -29,7 +25,7 @@ export class UserSeedService {
   }
 
   private async seedCategories(
-    source: any[],
+    source: unknown[],
     user: User,
     parentCat?: EntryCategoryDto,
   ) {

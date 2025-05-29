@@ -20,7 +20,7 @@ import { EntryService } from '@entries/services';
 import * as AccountConstants from './../constants';
 
 @Injectable()
-export class AccountService extends BaseService<Account> {
+export class AccountService extends BaseService {
   constructor(
     @InjectRepository(Account) readonly repository: Repository<Account>,
     @Inject(CatAccountTypeService)
@@ -28,7 +28,7 @@ export class AccountService extends BaseService<Account> {
     @Inject(forwardRef(() => EntryService))
     private readonly entryService: EntryService,
   ) {
-    super(repository);
+    super();
   }
   /**
    * Creates a root account for a given user.

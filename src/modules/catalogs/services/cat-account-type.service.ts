@@ -7,12 +7,12 @@ import { Repository } from 'typeorm';
 import { AccountTypeEnum } from '../enums';
 
 @Injectable()
-export class CatAccountTypeService extends BaseService<AccountType> {
+export class CatAccountTypeService extends BaseService {
   constructor(
     @InjectRepository(AccountType)
     protected readonly catAccountTypeRepo: Repository<AccountType>,
   ) {
-    super(catAccountTypeRepo);
+    super();
   }
   /**
    * Retrieves a paginated list of account types based on the provided pagination options.
@@ -21,7 +21,8 @@ export class CatAccountTypeService extends BaseService<AccountType> {
    * @returns A promise resolving to the paginated list of account types.
    */
   async getPaginatedAccountTypesAsync(paginationDto: PageOptionsDto) {
-    return this.Search(paginationDto, {});
+    const query = this.catAccountTypeRepo.createQueryBuilder();
+    return this.SearchByQuery(query, paginationDto);
   }
   /**
    * Retrieves a list of all account types.   *

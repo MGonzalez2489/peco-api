@@ -55,7 +55,7 @@ describe('CatAccountTypeService', () => {
       );
 
       const searchSpy = jest
-        .spyOn(service, 'Search')
+        .spyOn(service, 'SearchByQuery')
         .mockResolvedValue(response);
       await service.getPaginatedAccountTypesAsync(paginationDto);
 
@@ -80,7 +80,7 @@ describe('CatAccountTypeService', () => {
         new PageMetaDto({ pageOptionsDto: paginationDto, itemCount: 10 }),
       );
 
-      jest.spyOn(service, 'Search').mockResolvedValue(response);
+      jest.spyOn(service, 'SearchByQuery').mockResolvedValue(response);
       const result = await service.getPaginatedAccountTypesAsync(paginationDto);
 
       expect(result).toEqual(response);

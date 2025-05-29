@@ -8,14 +8,14 @@ import { UserSeedService } from './user-seed.service';
 import { StorageService } from '@storage/storage.service';
 
 @Injectable()
-export class UserService extends BaseService<User> {
+export class UserService extends BaseService {
   constructor(
     @InjectRepository(User) protected readonly repository: Repository<User>,
     @Inject(CryptService) private readonly cryptoService: CryptService,
     @Inject(UserSeedService) private readonly userSeedService: UserSeedService,
     @Inject(StorageService) private readonly storageService: StorageService,
   ) {
-    super(repository);
+    super();
   }
 
   /**

@@ -7,12 +7,12 @@ import { Repository } from 'typeorm';
 import { EntryStatusEnum } from '../enums';
 
 @Injectable()
-export class CatEntryStatusService extends BaseService<EntryStatus> {
+export class CatEntryStatusService extends BaseService {
   constructor(
     @InjectRepository(EntryStatus)
     protected readonly catEntryStatusRepo: Repository<EntryStatus>,
   ) {
-    super(catEntryStatusRepo);
+    super();
   }
 
   /**
@@ -22,7 +22,8 @@ export class CatEntryStatusService extends BaseService<EntryStatus> {
    * @returns A promise resolving to the paginated list of entry status.
    */
   async getPaginatedEntryStatusAsync(paginationDto: PageOptionsDto) {
-    return this.Search(paginationDto, {});
+    const query = this.catEntryStatusRepo.createQueryBuilder();
+    return this.SearchByQuery(query, paginationDto);
   }
 
   /**

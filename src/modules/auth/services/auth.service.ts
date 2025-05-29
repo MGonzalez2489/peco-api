@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { BaseService, CryptService } from '@common/services';
 import { User } from '@datasource/entities';
 import {
@@ -15,7 +12,7 @@ import { UserService } from '@users/services';
 import { ChangePasswordDto, RegisterDto, SignInDto, TokenDto } from '../dto';
 
 @Injectable()
-export class AuthService extends BaseService<any> {
+export class AuthService extends BaseService {
   constructor(
     private userService: UserService,
     private jwtService: JwtService,
@@ -55,7 +52,7 @@ export class AuthService extends BaseService<any> {
 
       const payload = { sub: user.publicId };
       const token = await this.jwtService.signAsync(payload);
-      const decodedToken = this.jwtService.decode(token);
+      const decodedToken = this.jwtService.decode<{ exp: number }>(token);
 
       const res: TokenDto = {
         access_token: token,

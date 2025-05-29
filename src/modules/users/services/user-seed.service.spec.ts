@@ -1,13 +1,9 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { AccountService } from '@accounts/services/account.service';
 import { User } from '@datasource/entities';
 import { EntryCategoryDto } from '@entry-category/dto/entry-category.dto';
 import { EntryCategoryService } from '@entry-category/services/entry-category.service';
 import { Test, TestingModule } from '@nestjs/testing';
-import * as CatSeedData from '../seed/categories.seed';
+import { CatSeedData } from '@users/seed/categories.seed';
 import { UserSeedService } from './user-seed.service';
 
 describe('UserSeedService', () => {
@@ -79,15 +75,13 @@ describe('UserSeedService', () => {
   describe('seedCategories', () => {
     it('should call createCategory for each category in source', async () => {
       const user = { id: 1 } as User;
-      await (service as any).seedCategories(CatSeedData, user);
+      await service.seed(user);
 
-      //count all items and sub items
-      const array = CatSeedData as Array<any>;
       let totalLength = 0;
-      for (let i = 0; i < array.length; i++) {
+      for (let i = 0; i < CatSeedData.length; i++) {
         totalLength++;
-        if (array[i].subCategories) {
-          totalLength = totalLength + array[i].subCategories.length;
+        if (CatSeedData[i].subCategories) {
+          totalLength = totalLength + CatSeedData[i].subCategories.length;
         }
       }
 
@@ -98,7 +92,7 @@ describe('UserSeedService', () => {
 
     it('should call createCategory with correct parameters', async () => {
       const user = { id: 1 } as User;
-      await (service as any).seedCategories(CatSeedData, user);
+      await service.seed(user);
 
       expect(entryCategoryService.createCategory).toHaveBeenCalledWith(
         { name: CatSeedData[0].name, parentId: undefined },
@@ -114,7 +108,7 @@ describe('UserSeedService', () => {
         categoryMock,
       );
 
-      await (service as any).seedCategories(CatSeedData, user);
+      await service.seed(user);
 
       expect(entryCategoryService.createCategory).toHaveBeenCalledWith(
         {

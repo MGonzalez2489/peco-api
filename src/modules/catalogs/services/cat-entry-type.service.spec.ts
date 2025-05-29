@@ -53,7 +53,7 @@ describe('CatEntryTypeService', () => {
       );
 
       const searchSpy = jest
-        .spyOn(service, 'Search')
+        .spyOn(service, 'SearchByQuery')
         .mockResolvedValue(response);
       await service.getPaginatedEntryTypesAsync(paginationDto);
 
@@ -80,7 +80,7 @@ describe('CatEntryTypeService', () => {
         }),
       );
 
-      jest.spyOn(service, 'Search').mockResolvedValue(response);
+      jest.spyOn(service, 'SearchByQuery').mockResolvedValue(response);
       const result = await service.getPaginatedEntryTypesAsync(paginationDto);
 
       expect(result).toEqual(response);

@@ -1,4 +1,4 @@
-import { CatEntryTypeService, CatEntryStatusService } from '@catalogs/services';
+import { CatEntryStatusService, CatEntryTypeService } from '@catalogs/services';
 import { BaseService } from '@common/services';
 import { Entry } from '@datasource/entities/economy';
 import { EntryCategoryService } from '@entry-category/services/entry-category.service';
@@ -7,7 +7,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm';
 
 @Injectable()
-export class EntriesKpiService extends BaseService<Entry> {
+export class EntriesKpiService extends BaseService {
   constructor(
     @InjectRepository(Entry) readonly repository: Repository<Entry>,
     @Inject(EntryCategoryService)
