@@ -16,7 +16,7 @@ import { UserService } from '../services/user.service';
 
 @Controller('user')
 @ApiTags('User')
-export class UserController extends BaseController<User> {
+export class UserController extends BaseController {
   constructor(private readonly service: UserService) {
     super();
   }

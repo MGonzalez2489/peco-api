@@ -24,7 +24,7 @@ import { AccountService } from '../services/account.service';
 
 @Controller('accounts')
 @ApiTags('Accounts')
-export class AccountController extends BaseController<any> {
+export class AccountController extends BaseController {
   constructor(private readonly service: AccountService) {
     super();
   }
@@ -42,7 +42,7 @@ export class AccountController extends BaseController<any> {
   async getAccountById(
     @Param('id') accountId: string,
     @GetUser() user: User,
-  ): Promise<ResponseDto<Account>> {
+  ): Promise<ResponseDto<Account | null | undefined>> {
     const result = await this.service.getAccountByPublicIdAsync(
       accountId,
       user,
@@ -55,7 +55,7 @@ export class AccountController extends BaseController<any> {
   async create(
     @Body() dto: CreateAccountDto,
     @GetUser() user: User,
-  ): Promise<ResponseDto<Account>> {
+  ): Promise<ResponseDto<Account | undefined>> {
     const result = await this.service.createAccountAsync(dto, user);
     return this.Response(result);
   }
@@ -66,7 +66,7 @@ export class AccountController extends BaseController<any> {
     @Body() dto: CreateAccountDto,
     @Param('id') accountId: string,
     @GetUser() user: User,
-  ): Promise<ResponseDto<Account>> {
+  ): Promise<ResponseDto<Account | undefined | null>> {
     const result = await this.service.updateAccountAsync(dto, accountId, user);
     return this.Response(result);
   }
@@ -74,7 +74,7 @@ export class AccountController extends BaseController<any> {
   async delete(
     @Param('id') accountId: string,
     @GetUser() user: User,
-  ): Promise<ResponseDto<boolean>> {
+  ): Promise<ResponseDto<boolean | undefined>> {
     const result = await this.service.deleteAccount(accountId, user);
     return this.Response(result);
   }

@@ -11,7 +11,7 @@ import { EntryService } from '../services/entry.service';
 
 @Controller('entries')
 @ApiTags('Entries')
-export class EntryController extends BaseController<Entry> {
+export class EntryController extends BaseController {
   constructor(private readonly service: EntryService) {
     super();
   }
@@ -20,7 +20,7 @@ export class EntryController extends BaseController<Entry> {
   async createEntry(
     @Body() createDto: CreateEntryDto,
     @GetUser() user: User,
-  ): Promise<ResponseDto<Entry>> {
+  ): Promise<ResponseDto<Entry | undefined>> {
     const result = await this.service.createEntryAsync(createDto, user);
     return this.Response(result);
   }

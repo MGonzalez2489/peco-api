@@ -2,7 +2,6 @@ import { BaseController } from '@common/controllers/base.controller';
 import { GetUser } from '@common/decorators';
 import { PageOptionsDto } from '@common/dtos/pagination';
 import { User } from '@datasource/entities';
-import { EntryCategory } from '@datasource/entities/economy';
 import { Body, Controller, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import {
@@ -13,7 +12,7 @@ import { EntryCategoryService } from '../services/entry-category.service';
 
 @Controller('entry-category')
 @ApiTags('Entry Category')
-export class EntryCategoryController extends BaseController<EntryCategory> {
+export class EntryCategoryController extends BaseController {
   constructor(private readonly service: EntryCategoryService) {
     super();
   }

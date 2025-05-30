@@ -8,7 +8,7 @@ import { RegisterDto, TokenDto } from '../dto';
 
 @Controller('auth')
 @ApiTags('Auth')
-export class AuthController extends BaseController<TokenDto> {
+export class AuthController extends BaseController {
   constructor(private readonly service: AuthService) {
     super();
   }
@@ -18,7 +18,7 @@ export class AuthController extends BaseController<TokenDto> {
   @Public()
   async signIn(
     @Body() signInRequest: RegisterDto,
-  ): Promise<ResponseDto<TokenDto>> {
+  ): Promise<ResponseDto<TokenDto | undefined>> {
     const signInResponse = await this.service.signInAsync(signInRequest);
     return this.Response(signInResponse);
   }
@@ -28,7 +28,7 @@ export class AuthController extends BaseController<TokenDto> {
   @Public()
   async register(
     @Body() registrationRequest: RegisterDto,
-  ): Promise<ResponseDto<TokenDto>> {
+  ): Promise<ResponseDto<TokenDto | undefined>> {
     const registrationResponse =
       await this.service.registerAsync(registrationRequest);
     return this.Response(registrationResponse);
