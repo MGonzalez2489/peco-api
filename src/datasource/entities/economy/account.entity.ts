@@ -27,6 +27,7 @@ export class Account extends PBaseEntity {
   @Column({ readonly: true, default: false })
   isRoot: boolean;
 
+  //temporarily unused
   @Column({ nullable: true })
   color?: string;
 

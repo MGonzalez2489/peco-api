@@ -57,13 +57,13 @@ export class AccountService extends BaseService {
         isRoot: true,
         typeId: cashAccountType!.id,
       });
+
       account = await this.repository.save(account);
       return account;
     } catch (error) {
       this.ThrowException('AccountService::createDefaultAccount', error);
     }
   }
-
   /**
    * Creates a new account based on the provided DTO.
    *
@@ -85,13 +85,12 @@ export class AccountService extends BaseService {
         balance: dto.balance,
         initialBalance: dto.balance,
         typeId: accountType!.id,
+        bank: dto.bank,
+        accountNumber: dto.accountNumber,
       });
       await this.repository.save(account);
 
-      account.balance = dto.balance;
-      account.initialBalance = dto.balance;
-
-      return account;
+      return await this.getAccountByPublicIdAsync(account.publicId);
     } catch (error) {
       this.ThrowException('AccountService::createAccount', error);
     }

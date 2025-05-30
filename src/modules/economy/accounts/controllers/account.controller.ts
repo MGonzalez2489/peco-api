@@ -55,7 +55,7 @@ export class AccountController extends BaseController {
   async create(
     @Body() dto: CreateAccountDto,
     @GetUser() user: User,
-  ): Promise<ResponseDto<Account | undefined>> {
+  ): Promise<ResponseDto<Account | undefined | null>> {
     const result = await this.service.createAccountAsync(dto, user);
     return this.Response(result);
   }
