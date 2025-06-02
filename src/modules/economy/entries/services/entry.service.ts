@@ -157,7 +157,7 @@ export class EntryService extends BaseService {
         description: dto.description,
         prevAccBalance: account.balance,
         typeId: entryType!.id,
-        account: account,
+        accountId: account.id,
         categoryId: category!.id,
         statusId: entryStatus!.id,
       });
