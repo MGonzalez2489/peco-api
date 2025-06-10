@@ -164,11 +164,11 @@ export class EntryService extends BaseService {
 
       await this.repository.save(entry);
 
-      let newAccBalance = account.balance;
+      let newAccBalance = Number(account.balance);
       if (entryType!.name === EntryTypeEnum.Income.toString()) {
-        newAccBalance += entry.amount;
+        newAccBalance = newAccBalance + Number(entry.amount);
       } else {
-        newAccBalance -= entry.amount;
+        newAccBalance = newAccBalance - Number(entry.amount);
       }
 
       await this.accountService.updateAccountBalanceAsync(
@@ -234,6 +234,32 @@ export class EntryService extends BaseService {
 
     return Number(sum);
   }
+
+  async deleteEntry(id: string, user: User) {
+    const entry = await this.getEntryById(id, user);
+    if (!entry) {
+      throw new NotFoundException(`No entry found with id ${id}`);
+    }
+
+    await this.repository.softDelete({
+      publicId: entry.publicId,
+      id: entry.id,
+    });
+
+    let newAccBalance = entry.account.balance;
+    if (entry.type.name === EntryTypeEnum.Income.toString()) {
+      newAccBalance -= entry.amount;
+    } else {
+      newAccBalance += entry.amount;
+    }
+
+    await this.accountService.updateAccountBalanceAsync(
+      entry.account.id,
+      newAccBalance,
+    );
+    return true;
+  }
+
   private async generateQueryWithFilters(
     searchDto: SearchEntriesDto,
     user: User,

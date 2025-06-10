@@ -1,13 +1,5 @@
 import { Exclude } from 'class-transformer';
-import {
-  AfterLoad,
-  BeforeInsert,
-  BeforeUpdate,
-  Column,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-} from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { PBaseEntity } from '../_base';
 import { EntryStatus, EntryType } from '../catalogs';
 import { Account } from './account.entity';
@@ -16,10 +8,20 @@ import { EntryCategory } from './entry-category.entity';
 @Entity()
 export class Entry extends PBaseEntity {
   //columns
-  @Column()
+  @Column({
+    type: 'decimal',
+    precision: 10, // Define la precisión total de los dígitos
+    scale: 2, // Define el número de dígitos después del punto decimal
+    default: 0, // Opcional: puedes establecer un valor predeterminado
+  })
   amount: number;
 
-  @Column()
+  @Column({
+    type: 'decimal',
+    precision: 10, // Define la precisión total de los dígitos
+    scale: 2, // Define el número de dígitos después del punto decimal
+    default: 0, // Opcional: puedes establecer un valor predeterminado})
+  })
   prevAccBalance: number;
 
   @Column()
@@ -70,20 +72,4 @@ export class Entry extends PBaseEntity {
   @Column()
   @Exclude()
   accountId: number;
-
-  @BeforeInsert()
-  updateBalanceToDBInsert() {
-    this.amount *= 1000;
-  }
-
-  @BeforeUpdate()
-  updateBalanceToDb() {
-    this.amount *= 1000;
-  }
-
-  @AfterLoad()
-  updateBalanceToAPI() {
-    this.amount = this.amount / 1000;
-    this.prevAccBalance = this.prevAccBalance / 1000;
-  }
 }

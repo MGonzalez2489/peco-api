@@ -176,7 +176,11 @@ export class AccountService extends BaseService {
    */
   async updateAccountBalanceAsync(id: number, newBalance: number) {
     try {
-      const account = await this.repository.findOneBy({ id });
+      const account = await this.repository.findOne({
+        where: {
+          id,
+        },
+      });
       account!.balance = newBalance;
       return await this.repository.save(account!);
     } catch (error) {
@@ -252,13 +256,6 @@ export class AccountService extends BaseService {
         publicId: publicId,
         userId: user.id,
       });
-      //transfer entries
-      //
-      //
-      //
-      //updateAccountBalanceAsync
-      console.log(' account', account);
-      console.log('root account', rootAccount);
 
       const amountToTransfer: number =
         await this.entryService.reassignEntriesToAccount(

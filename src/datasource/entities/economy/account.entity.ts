@@ -2,6 +2,7 @@ import { Exclude } from 'class-transformer';
 import {
   AfterLoad,
   BeforeInsert,
+  BeforeUpdate,
   Column,
   Entity,
   JoinColumn,
@@ -18,10 +19,21 @@ export class Account extends PBaseEntity {
   @Column()
   name: string;
 
-  @Column()
+  @Column({
+    type: 'decimal',
+    precision: 10, // Define la precisión total de los dígitos
+    scale: 2, // Define el número de dígitos después del punto decimal
+    default: 0, // Opcional: puedes establecer un valor predeterminado
+  })
   balance: number;
 
-  @Column({ readonly: true })
+  @Column({
+    readonly: true,
+    type: 'decimal',
+    precision: 10, // Define la precisión total de los dígitos
+    scale: 2, // Define el número de dígitos después del punto decimal
+    default: 0, // Opcional: puedes establecer un valor predeterminado
+  })
   initialBalance: number;
 
   @Column({ readonly: true, default: false })
@@ -65,13 +77,14 @@ export class Account extends PBaseEntity {
   typeId: number;
 
   @BeforeInsert()
-  updateBalanceToDBInsert() {
+  @BeforeUpdate()
+  dataToDatabase() {
     this.balance = this.balance * 1000;
     this.initialBalance = this.initialBalance * 1000;
   }
 
   @AfterLoad()
-  updateBalanceToAPI() {
-    this.balance = this.balance / 1000; // Dividir y asegurar 3 decimales
+  dataToAPI() {
+    this.balance = this.balance / 1000;
   }
 }

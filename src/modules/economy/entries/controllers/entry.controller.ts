@@ -3,7 +3,15 @@ import { GetUser } from '@common/decorators';
 import { ResponseDto } from '@common/dtos/responses';
 import { User } from '@datasource/entities';
 import { Entry } from '@datasource/entities/economy';
-import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Query,
+  Delete,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { CreateEntryDto } from '../dtos';
 import { SearchEntriesDto } from '../dtos/search.dto';
@@ -45,6 +53,15 @@ export class EntryController extends BaseController {
     @GetUser() user: User,
   ): Promise<ResponseDto<Entry>> {
     const result = await this.service.getEntryById(id, user);
+    return this.Response(result);
+  }
+
+  @Delete(':id')
+  async delete(
+    @Param('id') id: string,
+    @GetUser() user: User,
+  ): Promise<ResponseDto<boolean | undefined>> {
+    const result = await this.service.deleteEntry(id, user);
     return this.Response(result);
   }
 }
