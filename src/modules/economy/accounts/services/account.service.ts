@@ -217,6 +217,8 @@ export class AccountService extends BaseService {
         ...account,
         name: dto.name,
         typeId: accountType!.id,
+        bank: dto.bank,
+        accountNumber: dto.accountNumber,
       });
 
       //TODO: It is needed to create a mechanism to update the balance

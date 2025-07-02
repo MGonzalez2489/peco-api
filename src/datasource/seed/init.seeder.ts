@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { DataSource } from 'typeorm';
@@ -17,7 +16,6 @@ export class InitSeeder implements Seeder {
 
   private async loadSeeders() {
     const seedersPath = path.join(__dirname, '../../../'); // Ajusta la ruta según sea necesario
-    console.log('path', seedersPath);
 
     const seeders: any[] = [];
     await this.readDirectoryRecursively(seedersPath, seeders);

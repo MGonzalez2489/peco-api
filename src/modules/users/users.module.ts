@@ -2,6 +2,7 @@ import { AccountsModule } from '@accounts/accounts.module';
 import { CatalogsModule } from '@catalogs/catalogs.module';
 import { CommonModule } from '@common/common.module';
 import { User } from '@datasource/entities';
+import { EntryModule } from '@entries/entry.module';
 import { EntryCategoryModule } from '@entry-category/entry-category.module';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -18,6 +19,7 @@ import { UserSeedService, UserService } from './services';
     CatalogsModule,
     EntryCategoryModule,
     StorageModule,
+    EntryModule,
   ],
   providers: [UserService, UserSeedService, StorageProvider],
   exports: [UserService],

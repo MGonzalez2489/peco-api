@@ -46,7 +46,7 @@ export class AccountsKpiService extends BaseService {
 
       const accIds = accounts.map((f) => f.id);
 
-      const period = GetPeriodByType(filters.periodType);
+      const period = GetPeriodByType(filters.periodType)!;
 
       const resEntries = await this.entriesKpiService.searchIncomesOutcomesKPIs(
         period.from,

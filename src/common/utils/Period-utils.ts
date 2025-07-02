@@ -2,23 +2,16 @@ import { PeriodDto } from '@common/dtos';
 import { PeriodTypeEnum } from '@common/enums';
 
 export const GetPeriodByType = (periodType: PeriodTypeEnum) => {
-  let result: PeriodDto;
   switch (periodType) {
     case PeriodTypeEnum.TODAY:
-      result = generateTodayFilter();
-      break;
+      return generateTodayFilter();
     case PeriodTypeEnum.WEEK:
-      result = generateWeekFilter();
-      break;
+      return generateWeekFilter();
     case PeriodTypeEnum.MONTH:
-      result = generateMonthFilter();
-      break;
+      return generateMonthFilter();
     case PeriodTypeEnum.YEAR:
-      result = generateYearFilter();
-      break;
+      return generateYearFilter();
   }
-
-  return result;
 };
 
 const generateTodayFilter = (): PeriodDto => {

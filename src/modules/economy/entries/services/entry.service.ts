@@ -3,7 +3,7 @@ import { EntryStatusEnum, EntryTypeEnum } from '@catalogs/enums';
 import { CatEntryStatusService, CatEntryTypeService } from '@catalogs/services';
 import { BaseService } from '@common/services';
 import { User } from '@datasource/entities';
-import { Entry, EntryCategory } from '@datasource/entities/economy';
+import { Account, Entry, EntryCategory } from '@datasource/entities/economy';
 import { CreateEntryDto } from '@entries/dtos';
 import { SearchEntriesDto } from '@entries/dtos/search.dto';
 import { EntryCategoryService } from '@entry-category/services/entry-category.service';
@@ -123,6 +123,96 @@ export class EntryService extends BaseService {
     }
   }
 
+  async updateEntryAsync(entryId: string, dto: CreateEntryDto, user: User) {
+    try {
+      const entry = await this.repository.findOneBy({ publicId: entryId });
+      if (!entry) {
+        throw new BadRequestException('Entry not found');
+      }
+
+      if (entry.account.userId !== user.id) {
+        throw new BadRequestException('Entry not related');
+      }
+
+      const updateObject = {};
+
+      //entry type
+      if (entry.type.publicId !== dto.entryTypeId) {
+        const newEntryType =
+          await this.catEntryTypeService.getEntryTypeByPublicIdAsync(
+            dto.entryTypeId,
+          );
+
+        updateObject['typeId'] = newEntryType!.id;
+        // entry.typeId = newEntryType!.id;
+        // entry.type = newEntryType!;
+      }
+      //category
+      if (entry.category.publicId !== dto.categoryId) {
+        const newCat = await this.categoryService.getByPublicIdAsync(
+          dto.categoryId,
+          user,
+        );
+        updateObject['categoryId'] = newCat!.id;
+
+        // entry.categoryId = newCat!.id;
+        // entry.category = newCat!;
+      }
+
+      if (entry.description !== dto.description) {
+        updateObject['description'] = dto.description;
+      }
+      // entry.description = dto.description;
+      //account
+      const account = entry.account;
+
+      let newAccount: Account | null | undefined = undefined;
+      if (entry.account.publicId !== dto.accountId) {
+        newAccount = await this.accountService.getAccountByPublicIdAsync(
+          dto.accountId,
+        );
+        updateObject['accountId'] = newAccount!.id;
+
+        if (entry.type.name === EntryTypeEnum.Income.toString()) {
+          account.balance -= entry.amount;
+        }
+        if (entry.type.name === EntryTypeEnum.Outcome.toString()) {
+          account.balance += entry.amount;
+        }
+
+        const accToUpdate = newAccount ? newAccount : entry.account;
+        let newAccBalance = Number(accToUpdate.balance);
+        if (entry.type.name === EntryTypeEnum.Income.toString()) {
+          newAccBalance = newAccBalance + Number(entry.amount);
+        } else {
+          newAccBalance = newAccBalance - Number(entry.amount);
+        }
+
+        await this.accountService.updateAccountBalanceAsync(
+          accToUpdate.id,
+          newAccBalance,
+        );
+
+        await this.accountService.repository.save(account);
+      }
+
+      if (Number(entry.amount) !== Number(dto.amount)) {
+        // entry.amount = dto.amount;
+        updateObject['amount'] = dto.amount;
+      }
+
+      console.log('obj to update', updateObject);
+      await this.repository
+        .createQueryBuilder()
+        .update(Entry)
+        .set(updateObject)
+        .where('id = :id', { id: entry.id })
+        .execute();
+      // return await this.repository.save(entry);
+    } catch (error) {
+      this.ThrowException('EntriesService::updateEntryAsync', error);
+    }
+  }
   async createEntryAsync(dto: CreateEntryDto, user: User) {
     try {
       const account = await this.accountService.getAccountByPublicIdAsync(
@@ -210,7 +300,6 @@ export class EntryService extends BaseService {
   }
 
   async reassignEntriesToAccount(oldAccountId: number, newAccountId: number) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const { sum } = await this.repository
       .createQueryBuilder('entry')
       .leftJoinAndSelect('entry.type', 'type')

@@ -6,6 +6,7 @@ import {
   Controller,
   Get,
   Put,
+  Query,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
@@ -13,6 +14,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiTags } from '@nestjs/swagger';
 import { UpdateUserDto } from '../dto';
 import { UserService } from '../services/user.service';
+import { PeriodTypeEnum } from '@common/enums';
 
 @Controller('user')
 @ApiTags('User')
@@ -34,6 +36,15 @@ export class UserController extends BaseController {
     @UploadedFile() avatar: Express.Multer.File,
   ) {
     const result = await this.service.update(user, dto, avatar);
+    return this.Response(result);
+  }
+
+  @Get('general')
+  async getGeneralInfo(@Query('period') period: string, @GetUser() user: User) {
+    const result = await this.service.getGeneralInfoAsync(
+      PeriodTypeEnum.WEEK,
+      user,
+    );
     return this.Response(result);
   }
 }

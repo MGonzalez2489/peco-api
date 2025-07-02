@@ -3,4 +3,5 @@ export enum PeriodTypeEnum {
   WEEK,
   MONTH,
   YEAR,
+  ALL,
 }

@@ -6,11 +6,12 @@ import { Entry } from '@datasource/entities/economy';
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
+  Put,
   Query,
-  Delete,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { CreateEntryDto } from '../dtos';
@@ -54,6 +55,16 @@ export class EntryController extends BaseController {
   ): Promise<ResponseDto<Entry>> {
     const result = await this.service.getEntryById(id, user);
     return this.Response(result);
+  }
+
+  @Put(':id')
+  async update(
+    @Param('id') id: string,
+    @Body() updateDto: CreateEntryDto,
+    @GetUser() user: User,
+  ): Promise<ResponseDto<Entry>> {
+    const result = await this.service.updateEntryAsync(id, updateDto, user);
+    return this.Response(result!);
   }
 
   @Delete(':id')

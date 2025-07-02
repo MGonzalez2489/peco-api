@@ -24,7 +24,7 @@ async function bootstrap() {
 
   const testNwt = true;
   if (testNwt) {
-    await app.listen(3000, '192.168.0.3');
+    await app.listen(3000, '192.168.0.2');
   } else {
     await app.listen(3000, '0.0.0.0', function () {
       console.log('listening on port 3000');
